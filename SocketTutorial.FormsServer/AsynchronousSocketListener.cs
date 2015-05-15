@@ -24,12 +24,22 @@ namespace SocketTutorial.FormsServer
         {
             // Data buffer for incoming data.
             byte[] bytes = new Byte[1024];
-
+            
             // Establish the local endpoint for the socket.
             // The DNS name of the computer
-            // running the listener is "host.contoso.com".
-            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
+
+            IPAddress[]ipAddresses = Dns.GetHostAddresses(Dns.GetHostName());
+            IPAddress ipAddress = ipAddresses[0]; 
+            foreach (IPAddress IPA in ipAddresses)
+            {
+
+                if (IPA.AddressFamily.ToString() == "InterNetwork")
+                {
+
+                    ipAddress = IPA;
+                    break;
+                }
+            }
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
 
             // Create a TCP/IP socket.
@@ -103,21 +113,21 @@ namespace SocketTutorial.FormsServer
                 // Check for end-of-file tag. If it is not there, read 
                 // more data.
                 content = state.sb.ToString();
-                if (content.IndexOf("<EOF>") > -1)
-                {
+             //   if (content.IndexOf("<EOF>") > -1)
+             //   {
                     // All the data has been read from the 
                     // client. Display it on the console.
                     _screenWriterCall(String.Format("Read {0} bytes from socket. \n Data : {1}",
                         content.Length, content));
                     // Echo the data back to the client.
                     Send(handler, content);
-                }
-                else
+             //   }
+             /*   else
                 {
                     // Not all data received. Get more.
                     handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReadCallback), state);
-                }
+                } */
             }
         }
 
