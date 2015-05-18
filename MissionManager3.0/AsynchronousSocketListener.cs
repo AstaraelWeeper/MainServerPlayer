@@ -40,7 +40,7 @@ namespace SocketTutorial.FormsServer
                     break;
                 }
             }
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 14999);
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 15000);
 
             // Create a TCP/IP socket.
             Socket listener = new Socket(AddressFamily.InterNetwork,
@@ -112,13 +112,14 @@ namespace SocketTutorial.FormsServer
 
                 // Check for end-of-file tag. If it is not there, read 
                 // more data.
-                content = state.sb.ToString();
+                content = state.sb.ToString().Remove(0,2);
              //   if (content.IndexOf("<EOF>") > -1)
              //   {
                     // All the data has been read from the 
                     // client. Display it on the console.
-                    _screenWriterCall(String.Format("Read {0} bytes from socket. \n Data : {1}",
-                        content.Length, content));
+                string message = "Read " + content.Length + "bytes from socket. Data = " + content;
+                _screenWriterCall(message);
+                        
                     // Echo the data back to the client.
                     Send(handler, content);
              //   }

@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsynchronousSocketListener.cs" />
+    <Compile Include="ParseJson.cs" />
     <Compile Include="Server.cs">
       <SubType>Form</SubType>
     </Compile>
