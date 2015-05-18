@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mission Manager 3.0", "Mission Manager 3.0.csproj", "{8CD36931-3E07-46ED-B4F6-362121BA837B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientTest", "..\ClientTest\ClientTest.csproj", "{3DCCB580-0CDE-4AFC-9EB2-21BEB0505125}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +15,10 @@ Global
 		{8CD36931-3E07-46ED-B4F6-362121BA837B}.Debug|x86.Build.0 = Debug|x86
 		{8CD36931-3E07-46ED-B4F6-362121BA837B}.Release|x86.ActiveCfg = Release|x86
 		{8CD36931-3E07-46ED-B4F6-362121BA837B}.Release|x86.Build.0 = Release|x86
+		{3DCCB580-0CDE-4AFC-9EB2-21BEB0505125}.Debug|x86.ActiveCfg = Debug|x86
+		{3DCCB580-0CDE-4AFC-9EB2-21BEB0505125}.Debug|x86.Build.0 = Debug|x86
+		{3DCCB580-0CDE-4AFC-9EB2-21BEB0505125}.Release|x86.ActiveCfg = Release|x86
+		{3DCCB580-0CDE-4AFC-9EB2-21BEB0505125}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

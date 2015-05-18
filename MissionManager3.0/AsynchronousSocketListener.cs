@@ -56,7 +56,7 @@ namespace SocketTutorial.FormsServer
                 {
                     // Set the event to nonsignaled state.
                     allDone.Reset();
-
+                    
                     // Start an asynchronous socket to listen for connections.
                     _screenWriterCall("Waiting for a connection...");
                     listener.BeginAccept(
@@ -155,7 +155,7 @@ namespace SocketTutorial.FormsServer
                 handler.Shutdown(SocketShutdown.Both);
                 handler.Close();
 
-            }
+            }                              
             catch (Exception e)
             {
                 _screenWriterCall(e.ToString());
