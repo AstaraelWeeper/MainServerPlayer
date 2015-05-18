@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SocketTutorial.FormsServer.JSON;
 using System.Reflection;
+using System.IO;
 
 namespace SocketTutorial.FormsServer
 {
@@ -15,8 +16,11 @@ namespace SocketTutorial.FormsServer
         public List<string> InitialParsing(string Json)
         { 
             List<string> initialList = new List<string>();
+
+            StreamReader JsonStream = new StreamReader(Json);
+            string JsonExtract = JsonStream.ReadToEnd(); //extract JSON
             
-            var JSONMessage = JsonConvert.DeserializeObject<JSONMessage>(Json);
+            var JSONMessage = JsonConvert.DeserializeObject<JSONMessage>(JsonExtract);
             PropertyInfo[] JsonProperties = JSONMessage.GetType().GetProperties();//get the properties of the class
 
             foreach (var prop in JsonProperties)
@@ -35,15 +39,8 @@ namespace SocketTutorial.FormsServer
             List<string> list = new List<string>();
             if (JsonMessage[0] == "GetDirectories")
             {
-                var JSONBody = JsonConvert.DeserializeObject<JSONDirClass>(JsonMessage[1]);
-                PropertyInfo[] JsonProperties = JSONBody.GetType().GetProperties();//get the properties of the class
-                foreach (var prop in JsonProperties)
-                {
-                    string name = prop.Name as string; //get property name
-                    string value = prop.GetValue(JSONBody, null) as string; //get property value
-
-                    list.Add(name + ": " + value); //add both to list
-                }
+                //will only receive file path to call a get directories method on to send back
+                list.Add(JsonMessage[1]);
                 
             }
 

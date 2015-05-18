@@ -121,6 +121,7 @@ namespace SocketTutorial.FormsServer
                 _screenWriterCall(message);
                 //callJSONParse
                 MainView mainView = new MainView(content);
+                mainView.Show();
                         
                     // Echo the data back to the client.
                     Send(handler, content);
