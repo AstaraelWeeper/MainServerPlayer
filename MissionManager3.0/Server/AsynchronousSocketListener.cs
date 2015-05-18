@@ -119,6 +119,8 @@ namespace SocketTutorial.FormsServer
                     // client. Display it on the console.
                 string message = "Read " + content.Length + "bytes from socket. Data = " + content;
                 _screenWriterCall(message);
+                //callJSONParse
+                MainView mainView = new MainView(content);
                         
                     // Echo the data back to the client.
                     Send(handler, content);
