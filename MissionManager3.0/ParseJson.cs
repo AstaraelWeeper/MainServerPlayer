@@ -14,33 +14,44 @@ namespace SocketTutorial.FormsServer
     class ParseJson
     {
        
-        public void InitialParsing(string JsonIn) //return JSON
-        { 
-            List<string> initialList = new List<string>();
-
-           // JsonIn = JsonIn.Replace(@"\", string.Empty);
-
-            var JSONMessage = JsonConvert.DeserializeObject<JSONMessage>(JsonIn);
-            PropertyInfo[] JsonProperties = JSONMessage.GetType().GetProperties();//get the properties of the class
-
-            foreach (var prop in JsonProperties)
+        public string InitialParsing(string JsonIn) //return JSON
+        {
+            if (JsonIn == "CONNECTION_ACTIVE")
             {
-                string value = prop.GetValue(JSONMessage, null) as string; //get property value
-                initialList.Add(value);
+                string pies = JsonIn;
+                return pies;
             }
+            else
+            {
+                List<string> initialList = new List<string>();
 
-            ParseJsonMethod(initialList);
+                JsonIn = JsonIn.Replace('#', '/');
+
+                var JSONMessage = JsonConvert.DeserializeObject<JSONMessage>(JsonIn);
+                PropertyInfo[] JsonProperties = JSONMessage.GetType().GetProperties();//get the properties of the class
+
+                foreach (var prop in JsonProperties)
+                {
+                    string value = prop.GetValue(JSONMessage, null) as string; //get property value
+                    initialList.Add(value);
+                }
+
+                string JsonReturn = ParseJsonMethod(initialList);
+                return JsonReturn;
+            }
         }
 
 
 
-        public List<string> ParseJsonMethod(List<string> JsonMessage) //will need to return JSON
+        public string ParseJsonMethod(List<string> JsonMessage) //will need to return JSON
         {
+            string JsonReturn = "";
             List<string> list = new List<string>();
             if (JsonMessage[0] == "GetDirectories")
             {
                 //will only receive file path to call a get directories method on to send back
-                GetDirectories(JsonMessage[1]);
+                JsonReturn = GetDirectories(JsonMessage[1]);
+                return JsonReturn;
                 
             }
 
@@ -54,6 +65,7 @@ namespace SocketTutorial.FormsServer
                     string value = prop.GetValue(JSONBody, null) as string; //get property value
 
                     list.Add(name + ": " + value); //add both to list
+                    return JsonReturn;
                 }
                 
             }
@@ -68,23 +80,24 @@ namespace SocketTutorial.FormsServer
                     string value = prop.GetValue(JSONBody, null) as string; //get property value
 
                     list.Add(name + ": " + value); //add both to list
+                    return JsonReturn;
                 }
                 
             }
-            return list;
+            return JsonReturn;
+            
         }
 
-        void GetDirectories(string path)
+        string GetDirectories(string path)
         {
             var directoryPaths = Directory.GetDirectories(path);
             List<string> directoryNames = new List<string>();
-            List<string> directoryExtensions = new List<string>();
+            
             var filepaths = Directory.GetFiles(path);
             List<string> fileNames = new List<string>();
             List<string> fileExtensions = new List<string>();
 
-            List<JSONDirClass> files = new List<JSONDirClass>();
-            List<JSONDirClass> directories = new List<JSONDirClass>();
+           
             
 
 
@@ -92,7 +105,7 @@ namespace SocketTutorial.FormsServer
             {
                 string extension = System.IO.Path.GetExtension(dir);
                 string name = dir.Substring(0, dir.Length - extension.Length);
-                directoryExtensions.Add(extension);
+                
                 directoryNames.Add(name);
             }
 
@@ -104,46 +117,36 @@ namespace SocketTutorial.FormsServer
                 fileNames.Add(name);
             }
 
-            for (int i = 0; i < directoryPaths.Length; i++) //directories
-            {
-                JSONDirClass JsonDirClass = new JSONDirClass();
-                JsonDirClass.name = directoryNames[i];
-                JsonDirClass.path = directoryPaths[i];
-                JsonDirClass.ext = directoryExtensions[i];
-                JsonDirClass.File.Add(JsonDirClass.name); 
-                JsonDirClass.File.Add(JsonDirClass.ext);
-                JsonDirClass.File.Add(JsonDirClass.path);
-                directories.Add(JsonDirClass);
-            }
-
-            for (int i = 0; i < filepaths.Length; i++)//files
-            {
-                JSONDirClass JsonDirClass = new JSONDirClass();
-                JsonDirClass.name = fileNames[i];
-                JsonDirClass.path = filepaths[i];
-                JsonDirClass.ext = fileExtensions[i];
-                JsonDirClass.File.Add(JsonDirClass.name);
-                JsonDirClass.File.Add(JsonDirClass.ext);
-                JsonDirClass.File.Add(JsonDirClass.path);
-                files.Add(JsonDirClass);
-            }
-
-            CreateJSON(files, directories);
-        }
-
-        void CreateJSON(List<JSONDirClass> files, List<JSONDirClass> directories)
-        {
-            string filesOutput = JsonConvert.SerializeObject(files);
-            string dirsOutput = JsonConvert.SerializeObject(directories);
-
-            //create outerJSON
-
-            JSONMessage jsonoutput = new JSONMessage();
-            jsonoutput.MessageType = "Directories";
-            jsonoutput.MessageBody = filesOutput + dirsOutput;
-
-            string jsonReturn = JsonConvert.SerializeObject(jsonoutput);
             
+            string paths = "\"paths\":[";
+            for (int i = 0; i < directoryPaths.Length; i++) //directories builder
+            {
+                paths += "{\"fileName\":\"" + directoryNames[i] + "\",";
+
+                paths += "\"filePath\":\"" + directoryPaths[i] + "\"";
+
+                paths += "},";
+            }
+
+            for (int i = 0; i < filepaths.Length -1; i++)//files
+            {
+                paths += "{\"fileName\":\"" + fileNames[i] + "\",";
+                paths += "\"fileExtension\":\"" + fileExtensions[i] + "\",";
+                paths += "\"filePath\":\"" + filepaths[i] + "\"";
+
+                paths += "},";
+            }
+
+            int j = filepaths.Length - 1;
+            paths += "{\"fileName\":\"" + fileNames[j] + "\",";
+            paths += "\"fileExtension\":\"" + fileExtensions[j] + "\",";
+            paths += "\"filePath\":\"" + filepaths[j] + "\"";
+
+            paths += "}";
+
+            //string JsonReturn = CreateJSON(files, directories);
+            string JsonReturn = "{" + paths +  "]}";
+            return JsonReturn;
         }
 
     }

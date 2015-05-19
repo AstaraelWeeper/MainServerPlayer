@@ -40,7 +40,7 @@ namespace SocketTutorial.FormsServer
                     break;
                 }
             }
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 14999);
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 15000);
 
             // Create a TCP/IP socket.
             Socket listener = new Socket(AddressFamily.InterNetwork,
@@ -120,11 +120,11 @@ namespace SocketTutorial.FormsServer
                 string message = "Read " + content.Length + "bytes from socket. Data = " + content;
                 _screenWriterCall(message);
                 //callJSONParse
-                MainView mainView = new MainView(content);
-                mainView.Show();
+                ParseJson parseJson = new ParseJson();
+                string JsonReturn = parseJson.InitialParsing(content);
                         
                     // Echo the data back to the client.
-                    Send(handler, content);
+                    Send(handler, JsonReturn);
              //   }
              /*   else
                 {
