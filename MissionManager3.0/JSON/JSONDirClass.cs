@@ -9,7 +9,10 @@ namespace SocketTutorial.FormsServer
 {
     class JSONDirClass
     {
-        [JsonProperty("elr")]
-        public string elr { get; set; }
+        public List<string> File = new List<string>();
+       public string name { get; set; }
+        public string path { get; set; }
+       public  string ext { get; set; }
+
     }
 }

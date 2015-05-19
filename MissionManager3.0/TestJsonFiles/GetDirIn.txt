@@ -1,0 +1,4 @@
+{
+  "MessageType": "GetDirectories",
+  "MessageBody": "C:\\Users\\Rachel Griffiths\\Documents\\Testing\\Mission Manager\\JSON", 
+}

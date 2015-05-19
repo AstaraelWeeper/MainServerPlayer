@@ -40,7 +40,7 @@ namespace SocketTutorial.FormsServer
                     break;
                 }
             }
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 15000);
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 14999);
 
             // Create a TCP/IP socket.
             Socket listener = new Socket(AddressFamily.InterNetwork,

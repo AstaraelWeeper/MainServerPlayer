@@ -14,11 +14,12 @@ namespace SocketTutorial.FormsServer
         public MainView(string Json)
         {
             //test 
-            Json = "C:\\Users\\Rachel Griffiths\\Documents\\Testing\\Mission Manager\\JSON\\GetDirIn.txt";
+            
             //at the moment will display the secondary json
             InitializeComponent();
             ParseJson parseJson = new ParseJson();
-            txtJSONin.Text = parseJson.InitialParsing(Json).ToString();
+            parseJson.InitialParsing(Json);
+            
         }
 
     }

@@ -9,9 +9,9 @@ namespace SocketTutorial.FormsServer.JSON
 {
     class JSONMessage
     {
-        [JsonProperty("MessageType")]
+        [JsonProperty("messageType")]
         public string MessageType { get; set; }
-        [JsonProperty("MessageBody")]
+        [JsonProperty("messageBody")]
         public string MessageBody { get; set; }  
     }
 }
