@@ -13,6 +13,7 @@ namespace SocketTutorial.FormsServer
 {
     class ParseJson
     {
+        private static VideoDisplay videoDisplay = null;
 
         public string InitialParsing(string JsonIn) //return JSON
         {
@@ -55,33 +56,38 @@ namespace SocketTutorial.FormsServer
 
             }
 
-            else if (JsonMessage[0] == "Play")
+            else if (JsonMessage[0] == "LaunchVideo") //get path .mp4?
             {
-                var JSONBody = JsonConvert.DeserializeObject<JSONPlayClass>(JsonMessage[1]);
-                PropertyInfo[] JsonProperties = JSONBody.GetType().GetProperties();//get the properties of the class
-                foreach (var prop in JsonProperties)
-                {
-                    string name = prop.Name as string; //get property name
-                    string value = prop.GetValue(JSONBody, null) as string; //get property value
+              videoDisplay = new VideoDisplay(JsonMessage[1]);
+            }
 
-                    list.Add(name + ": " + value); //add both to list
-                    return JsonReturn;
-                }
-
+            else if (JsonMessage[0] == "LaunchImage") //get path .jpg?
+            {
+                ImageDisplay imageDisplay = new ImageDisplay(JsonMessage[1]);
             }
 
             else if (JsonMessage[0] == "System")
             {
-                var JSONBody = JsonConvert.DeserializeObject<JSONSystemClass>(JsonMessage[1]);
-                PropertyInfo[] JsonProperties = JSONBody.GetType().GetProperties();//get the properties of the class
-                foreach (var prop in JsonProperties)
-                {
-                    string name = prop.Name as string; //get property name
-                    string value = prop.GetValue(JSONBody, null) as string; //get property value
 
-                    list.Add(name + ": " + value); //add both to list
-                    return JsonReturn;
+                if (JsonMessage[1] == "volumeup" || JsonMessage[1] == "volumedown")
+                {
+                    if (videoDisplay == null)
+                    {
+                        JsonReturn = "No Video";//will need changing
+                    }
+                    else
+                    {
+                         //change settings.
+                    }
                 }
+
+                else if (JsonMessage[1] == "restart")
+                {
+                }
+                else if (JsonMessage[1] == "resetmissionmanager")
+                {
+                }
+
 
             }
             return JsonReturn;
