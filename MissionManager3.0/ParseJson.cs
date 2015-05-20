@@ -13,7 +13,7 @@ namespace SocketTutorial.FormsServer
 {
     class ParseJson
     {
-       
+
         public string InitialParsing(string JsonIn) //return JSON
         {
             if (JsonIn == "CONNECTION_ACTIVE")
@@ -25,7 +25,7 @@ namespace SocketTutorial.FormsServer
             {
                 List<string> initialList = new List<string>();
 
-                JsonIn = JsonIn.Replace('#', '/');
+                JsonIn = JsonIn.Replace('#', '\\');
 
                 var JSONMessage = JsonConvert.DeserializeObject<JSONMessage>(JsonIn);
                 PropertyInfo[] JsonProperties = JSONMessage.GetType().GetProperties();//get the properties of the class
@@ -52,7 +52,7 @@ namespace SocketTutorial.FormsServer
                 //will only receive file path to call a get directories method on to send back
                 JsonReturn = GetDirectories(JsonMessage[1]);
                 return JsonReturn;
-                
+
             }
 
             else if (JsonMessage[0] == "Play")
@@ -67,7 +67,7 @@ namespace SocketTutorial.FormsServer
                     list.Add(name + ": " + value); //add both to list
                     return JsonReturn;
                 }
-                
+
             }
 
             else if (JsonMessage[0] == "System")
@@ -82,70 +82,103 @@ namespace SocketTutorial.FormsServer
                     list.Add(name + ": " + value); //add both to list
                     return JsonReturn;
                 }
-                
+
             }
             return JsonReturn;
-            
+
         }
 
         string GetDirectories(string path)
         {
             var directoryPaths = Directory.GetDirectories(path);
             List<string> directoryNames = new List<string>();
-            
+
             var filepaths = Directory.GetFiles(path);
             List<string> fileNames = new List<string>();
             List<string> fileExtensions = new List<string>();
 
-           
-            
 
 
-            foreach (var dir in directoryPaths)
+
+
+            for (int i = 0; i < directoryPaths.Length; i++)
             {
-                string extension = System.IO.Path.GetExtension(dir);
-                string name = dir.Substring(0, dir.Length - extension.Length);
-                
-                directoryNames.Add(name);
+
+                string extension = System.IO.Path.GetExtension(directoryPaths[i]);
+                string name = Path.GetFileName(directoryPaths[i]);
+                string name2 = name.Substring(0, name.Length - extension.Length);
+                name2 = name.Replace(@"\", @"/");
+                directoryPaths[i] = directoryPaths[i].Replace(@"\", @"/");
+                directoryNames.Add(name2);
             }
 
-            foreach (var filepath in filepaths)
+            for (int i = 0; i < filepaths.Length; i++)
             {
-                string extension = System.IO.Path.GetExtension(filepath);
-                string name = filepath.Substring(0, filepath.Length - extension.Length);
+                string extension = System.IO.Path.GetExtension(filepaths[i]);
+                string name = Path.GetFileName(filepaths[i]);
+                string name2 = name.Substring(0, name.Length - extension.Length);
+                filepaths[i] = filepaths[i].Replace(@"\", @"/");
                 fileExtensions.Add(extension);
-                fileNames.Add(name);
+                fileNames.Add(name2);
             }
-
-            
             string paths = "\"paths\":[";
-            for (int i = 0; i < directoryPaths.Length; i++) //directories builder
+            if (directoryPaths.Length > 1) //if/else blocks are because the last entry should not add a comma. this could be a dir or a file
             {
-                paths += "{\"fileName\":\"" + directoryNames[i] + "\",";
+                if (filepaths.Length == 0)
+                {
+                    for (int i = 0; i < directoryPaths.Length - 1; i++) //directories builder
+                    {
+                        paths += "{\"fileName\":\"" + directoryNames[i] + "\",";
 
-                paths += "\"filePath\":\"" + directoryPaths[i] + "\"";
+                        paths += "\"filePath\":\"" + directoryPaths[i] + "\"";
 
-                paths += "},";
+                        paths += "},";
+                    }
+                    int j = directoryPaths.Length - 1;
+                    for (int i = 0; i < directoryPaths.Length; i++) //directories builder
+                    {
+                        paths += "{\"fileName\":\"" + directoryNames[i] + "\",";
+
+                        paths += "\"filePath\":\"" + directoryPaths[i] + "\"";
+
+                        paths += "}";
+                    }
+                }
+                else
+                {
+
+                    for (int i = 0; i < directoryPaths.Length; i++) //directories builder
+                    {
+                        paths += "{\"fileName\":\"" + directoryNames[i] + "\",";
+
+                        paths += "\"filePath\":\"" + directoryPaths[i] + "\"";
+
+                        paths += "},";
+                    }
+                }
             }
-
-            for (int i = 0; i < filepaths.Length -1; i++)//files
+            if (filepaths.Length > 0)
             {
-                paths += "{\"fileName\":\"" + fileNames[i] + "\",";
-                paths += "\"fileExtension\":\"" + fileExtensions[i] + "\",";
-                paths += "\"filePath\":\"" + filepaths[i] + "\"";
+                for (int i = 0; i < filepaths.Length - 1; i++)//files
+                {
+                    paths += "{\"fileName\":\"" + fileNames[i] + "\",";
+                    paths += "\"fileExtension\":\"" + fileExtensions[i] + "\",";
+                    paths += "\"filePath\":\"" + filepaths[i] + "\"";
 
-                paths += "},";
+                    paths += "},";
+                }
+
+
+                int j = filepaths.Length - 1;
+                paths += "{\"fileName\":\"" + fileNames[j] + "\",";
+                paths += "\"fileExtension\":\"" + fileExtensions[j] + "\",";
+                paths += "\"filePath\":\"" + filepaths[j] + "\"";
+
+                paths += "}";
             }
-
-            int j = filepaths.Length - 1;
-            paths += "{\"fileName\":\"" + fileNames[j] + "\",";
-            paths += "\"fileExtension\":\"" + fileExtensions[j] + "\",";
-            paths += "\"filePath\":\"" + filepaths[j] + "\"";
-
-            paths += "}";
 
             //string JsonReturn = CreateJSON(files, directories);
-            string JsonReturn = "{" + paths +  "]}";
+            string JsonReturn = "{" + paths + "]}";
             return JsonReturn;
         }
 
