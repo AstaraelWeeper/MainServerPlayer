@@ -7,12 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace SocketTutorial.FormsServer
 {
     public partial class Server : Form
     {
-        
+        List<string> History = new List<string>();
+
         private Thread ioThread;
         private AsynchronousSocketListener listener;
         private AsynchronousSocketListener.ScreenWriterDelegate screenWriterDelegate;
@@ -51,21 +54,49 @@ namespace SocketTutorial.FormsServer
         [STAThread]
         private void OpenNewFormAction(string message)
         {
+            VideoDisplay videoDisplay = null;
+            string intro = "{\"messageType\":\"LaunchVideo\"\"messageBody:\"\"Launching Video\"";
+            string path = intro.Remove(0, intro.Length);
             if (message.Contains("Launching Video"))
             {
-                string intro = "{\"messageType\":\"LaunchVideo\"\"messageBody:\"\"Launching Video\"";
-                string path = intro.Remove(0, intro.Length);
-                
-                //VideoDisplay videoDisplay = new VideoDisplay(path);
+                History.Add(path);
+                if(videoDisplay == null)
+                {
+                //videoDisplay = new VideoDisplay(path); having issues with threading
+                }
+                else
+                {
+                    videoDisplay.changeVideo(path);
+                    videoDisplay.Focus();
+                }
             }
             else if (message.Contains("Launching Image"))
             {
+                History.Add(path);
+                //ImageDisplay imageDisplay = new ImageDisplay(path);
             }
-            else if (message == "Raising Volume" || message == "Lowering Volume")
+            else if (message.Contains("Raising Volume")) //build it for media player atm
             {
+                if (videoDisplay == null)
+                {
+                    videoDisplay.IncreaseVolume();
+                }
             }
-            else if (message == "Restarting System" || message == "Restarting Mission Manager")
+            else if (message.Contains("Lowering Volume"))
             {
+                if (videoDisplay == null)
+                {
+                    videoDisplay.DecreaseVolume();
+                }
+            }
+            else if (message.Contains("Restarting System"))
+            {
+                Process.Start("shutdown","/r /t 0");
+            }
+            else if(message.Contains("Restarting Mission Manager"))
+            {
+                System.Diagnostics.Process.Start(Application.ExecutablePath); // to start new instance of application
+                this.Close(); //to turn off current app
             }
 
         }

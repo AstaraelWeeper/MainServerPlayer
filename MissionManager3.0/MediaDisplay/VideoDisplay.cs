@@ -14,6 +14,21 @@ namespace SocketTutorial.FormsServer
         public VideoDisplay(string path)
         {
             InitializeComponent();
+            axWindowsMediaPlayer1.URL = path;
+        }
+        public void IncreaseVolume()
+        {
+            axWindowsMediaPlayer1.settings.volume++;
+        }
+        public void DecreaseVolume()
+        {
+            axWindowsMediaPlayer1.settings.volume--;
+        }
+
+        public void changeVideo(string newPath)
+        {
+            axWindowsMediaPlayer1.URL = newPath;
         }
     }
+  
 }
