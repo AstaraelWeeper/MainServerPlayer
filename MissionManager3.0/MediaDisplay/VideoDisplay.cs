@@ -29,6 +29,16 @@ namespace SocketTutorial.FormsServer
         {
             axWindowsMediaPlayer1.URL = newPath;
         }
+
+        public void sendVideoLength()
+        {
+            //initially. can it be found for the initial message?
+        }
+
+        public void updateVideoTime()
+        {
+           //need to send like this regularly { "messageType": "VideoPlayer", "messageBody" : "move-00:04:48" }
+        }
     }
   
 }

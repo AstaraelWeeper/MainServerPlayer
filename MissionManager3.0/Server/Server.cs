@@ -20,13 +20,14 @@ namespace SocketTutorial.FormsServer
         private AsynchronousSocketListener listener;
         private AsynchronousSocketListener.ScreenWriterDelegate screenWriterDelegate;
         public delegate void FormActionDelegate(string message);
+        private FormActionDelegate openNewFormDelegate;
          
         public Server()
         {
             InitializeComponent();
 
             screenWriterDelegate = new AsynchronousSocketListener.ScreenWriterDelegate(WriteToScreen);
-            var openNewFormDelegate = new FormActionDelegate(OpenNewFormAction);
+            openNewFormDelegate = new FormActionDelegate(OpenNewFormAction);
             listener = new AsynchronousSocketListener(screenWriterDelegate,openNewFormDelegate);
                        
         }
@@ -56,24 +57,27 @@ namespace SocketTutorial.FormsServer
         {
             VideoDisplay videoDisplay = null;
             string intro = "{\"messageType\":\"LaunchVideo\"\"messageBody:\"\"Launching Video\"";
-            string path = intro.Remove(0, intro.Length);
+            string path = message.Remove(0, intro.Length);
             if (message.Contains("Launching Video"))
             {
                 History.Add(path);
-                if(videoDisplay == null)
-                {
-                //videoDisplay = new VideoDisplay(path); having issues with threading
-                }
-                else
-                {
-                    videoDisplay.changeVideo(path);
-                    videoDisplay.Focus();
-                }
+              //  if(videoDisplay == null)
+              //  {
+                    if (videoDisplay.InvokeRequired)
+                    {
+                        Invoke(openNewFormDelegate,videoDisplay = new VideoDisplay(path)); //having issues with threading
+                    }
+              //  }
+            //    else
+            //    {
+           //         videoDisplay.changeVideo(path);
+            //        videoDisplay.Focus();
+             //   }
             }
             else if (message.Contains("Launching Image"))
             {
                 History.Add(path);
-                //ImageDisplay imageDisplay = new ImageDisplay(path);
+              //ImageDisplay imageDisplay = new ImageDisplay(path);
             }
             else if (message.Contains("Raising Volume")) //build it for media player atm
             {

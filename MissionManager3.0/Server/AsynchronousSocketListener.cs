@@ -8,6 +8,8 @@ namespace SocketTutorial.FormsServer
 {
     public class AsynchronousSocketListener
     {
+        bool directoryCall;
+        string JsonReturn;
         // Thread signal.
         public static ManualResetEvent allDone = new ManualResetEvent(false);
 
@@ -68,6 +70,11 @@ namespace SocketTutorial.FormsServer
 
                     // Wait until a connection is made before continuing.
                     allDone.WaitOne();
+                    if (!directoryCall)
+                    {
+                        _openFormActionDelegate(JsonReturn);
+                    }
+                    JsonReturn = "";
                 }
 
             }
@@ -124,14 +131,15 @@ namespace SocketTutorial.FormsServer
                 _screenWriterCall(message);
                 //callJSONParse    
                 ParseJson parseJson = new ParseJson();
-                string JsonReturn = parseJson.InitialParsing(content);  
+                JsonReturn = parseJson.InitialParsing(content);  
                 //if it wasn't a directory call, call open Form. 
-                bool directoryCall;               
+                               
                 directoryCall = JsonReturn.Contains("paths");
                 if (!directoryCall)
                 {
                     _openFormActionDelegate(JsonReturn);
                 }
+                
                 // Echo the data back to the client.
                 Send(handler, JsonReturn);
 
@@ -169,6 +177,7 @@ namespace SocketTutorial.FormsServer
 
                 handler.Shutdown(SocketShutdown.Both);
                 handler.Close();
+
 
             }
             catch (Exception e)
