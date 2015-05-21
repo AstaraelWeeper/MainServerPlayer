@@ -6,13 +6,17 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Shell32;
+using System.IO;
 
 namespace SocketTutorial.FormsServer
 {
     public partial class VideoDisplay : Form
     {
-        public VideoDisplay(string path)
+        string path;
+        public VideoDisplay(string pathIn)
         {
+            path = pathIn;
             InitializeComponent();
             axWindowsMediaPlayer1.URL = path;
         }
@@ -27,17 +31,44 @@ namespace SocketTutorial.FormsServer
 
         public void changeVideo(string newPath)
         {
-            axWindowsMediaPlayer1.URL = newPath;
+            path = newPath;
+            axWindowsMediaPlayer1.URL = path;
         }
 
         public void sendVideoLength()
         {
             //initially. can it be found for the initial message?
+            TimeSpan duration;
+
+            if (GetDuration(path, out duration))
+            {
+                //use the returned time to send
+            }
         }
 
         public void updateVideoTime()
         {
            //need to send like this regularly { "messageType": "VideoPlayer", "messageBody" : "move-00:04:48" }
+        }
+
+        public static bool GetDuration(string filename, out TimeSpan duration)
+        {
+            try
+            {
+                var shl = new Shell();
+                var fldr = shl.NameSpace(Path.GetDirectoryName(filename));
+                var itm = fldr.ParseName(Path.GetFileName(filename));
+
+                // Index 27 is the video duration [This may not always be the case]
+                var propValue = fldr.GetDetailsOf(itm, 27);
+
+                return TimeSpan.TryParse(propValue, out duration);
+            }
+            catch (Exception)
+            {
+                duration = new TimeSpan();
+                return false;
+            }
         }
     }
   
