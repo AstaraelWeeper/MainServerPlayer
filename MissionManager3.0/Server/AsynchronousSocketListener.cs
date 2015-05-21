@@ -13,9 +13,12 @@ namespace SocketTutorial.FormsServer
 
         public delegate void ScreenWriterDelegate(string input);
 
-        public AsynchronousSocketListener(ScreenWriterDelegate screenWriterCall)
+        private Server.FormActionDelegate _openFormActionDelegate;
+
+        public AsynchronousSocketListener(ScreenWriterDelegate screenWriterCall, Server.FormActionDelegate openFormAction)
         {
             _screenWriterCall = screenWriterCall;
+            _openFormActionDelegate = openFormAction;
         }
 
         private ScreenWriterDelegate _screenWriterCall;
@@ -24,12 +27,12 @@ namespace SocketTutorial.FormsServer
         {
             // Data buffer for incoming data.
             byte[] bytes = new Byte[1024];
-            
+
             // Establish the local endpoint for the socket.
             // The DNS name of the computer
 
-            IPAddress[]ipAddresses = Dns.GetHostAddresses(Dns.GetHostName());
-            IPAddress ipAddress = ipAddresses[0]; 
+            IPAddress[] ipAddresses = Dns.GetHostAddresses(Dns.GetHostName());
+            IPAddress ipAddress = ipAddresses[0];
             foreach (IPAddress IPA in ipAddresses)
             {
 
@@ -56,7 +59,7 @@ namespace SocketTutorial.FormsServer
                 {
                     // Set the event to nonsignaled state.
                     allDone.Reset();
-                    
+
                     // Start an asynchronous socket to listen for connections.
                     _screenWriterCall("Waiting for a connection...");
                     listener.BeginAccept(
@@ -112,26 +115,33 @@ namespace SocketTutorial.FormsServer
 
                 // Check for end-of-file tag. If it is not there, read 
                 // more data.
-                content = state.sb.ToString().Remove(0,2);
-             //   if (content.IndexOf("<EOF>") > -1)
-             //   {
-                    // All the data has been read from the 
-                    // client. Display it on the console.
+                content = state.sb.ToString().Remove(0, 2);
+                //   if (content.IndexOf("<EOF>") > -1)
+                //   {
+                // All the data has been read from the 
+                // client. Display it on the console.
                 string message = "Read " + content.Length + "bytes from socket. Data = " + content;
                 _screenWriterCall(message);
-                //callJSONParse
+                //callJSONParse    
                 ParseJson parseJson = new ParseJson();
-                string JsonReturn = parseJson.InitialParsing(content);
-                        
-                    // Echo the data back to the client.
-                    Send(handler, JsonReturn);
-             //   }
-             /*   else
+                string JsonReturn = parseJson.InitialParsing(content);  
+                //if it wasn't a directory call, call open Form. 
+                bool directoryCall;               
+                directoryCall = JsonReturn.Contains("paths");
+                if (!directoryCall)
                 {
-                    // Not all data received. Get more.
-                    handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                    new AsyncCallback(ReadCallback), state);
-                } */
+                    _openFormActionDelegate(JsonReturn);
+                }
+                // Echo the data back to the client.
+                Send(handler, JsonReturn);
+
+                //   }
+                /*   else
+                   {
+                       // Not all data received. Get more.
+                       handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                       new AsyncCallback(ReadCallback), state);
+                   } */
             }
         }
 
@@ -139,6 +149,7 @@ namespace SocketTutorial.FormsServer
         {
             // Convert the string data to byte data using ASCII encoding.
             byte[] byteData = Encoding.ASCII.GetBytes(data);
+            _screenWriterCall("Sending: " + data);
 
             // Begin sending the data to the remote device.
             handler.BeginSend(byteData, 0, byteData.Length, 0,
@@ -159,7 +170,7 @@ namespace SocketTutorial.FormsServer
                 handler.Shutdown(SocketShutdown.Both);
                 handler.Close();
 
-            }                              
+            }
             catch (Exception e)
             {
                 _screenWriterCall(e.ToString());

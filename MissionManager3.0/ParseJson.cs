@@ -26,7 +26,7 @@ namespace SocketTutorial.FormsServer
             {
                 List<string> initialList = new List<string>();
 
-                JsonIn = JsonIn.Replace('#', '\\');
+             //  JsonIn = JsonIn.Replace('\\', '/');
 
                 var JSONMessage = JsonConvert.DeserializeObject<JSONMessage>(JsonIn);
                 PropertyInfo[] JsonProperties = JSONMessage.GetType().GetProperties();//get the properties of the class
@@ -56,14 +56,14 @@ namespace SocketTutorial.FormsServer
 
             }
 
-            else if (JsonMessage[0] == "LaunchVideo") //get path .mp4?
+            else if (JsonMessage[0] == "LaunchVideo") 
             {
-              videoDisplay = new VideoDisplay(JsonMessage[1]);
+                JsonReturn = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"Launching Video\"" + JsonMessage[1] + "\"}";
             }
 
             else if (JsonMessage[0] == "LaunchImage") //get path .jpg?
             {
-                ImageDisplay imageDisplay = new ImageDisplay(JsonMessage[1]);
+                JsonReturn = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"Launching Image\"" + JsonMessage[1] + "\"}"; //will this need to be JSON format for android?
             }
 
             else if (JsonMessage[0] == "System")
@@ -73,19 +73,25 @@ namespace SocketTutorial.FormsServer
                 {
                     if (videoDisplay == null)
                     {
-                        JsonReturn = "No Video";//will need changing
+                        JsonReturn = "{\"messageType\":\"NoVideo\", \"messageBody\":\"\"}";//will need changing
                     }
-                    else
+                    else if (JsonMessage[1] =="volumeup")
                     {
-                         //change settings.
+                        JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Raising Volume\"}";  
+                    }
+                    else if (JsonMessage[1] == "volumedown")
+                    {
+                        JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Lowering Volume\"}"; 
                     }
                 }
 
                 else if (JsonMessage[1] == "restart")
                 {
+                    JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Restarting System\"}"; 
                 }
                 else if (JsonMessage[1] == "resetmissionmanager")
                 {
+                    JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Restarting Mission Manager\"}"; 
                 }
 
 

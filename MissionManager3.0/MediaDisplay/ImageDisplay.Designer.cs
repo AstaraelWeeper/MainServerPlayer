@@ -1,4 +1,4 @@
-﻿namespace SocketTutorial.FormsServer.MediaDisplay
+﻿namespace SocketTutorial.FormsServer
 {
     partial class ImageDisplay
     {
