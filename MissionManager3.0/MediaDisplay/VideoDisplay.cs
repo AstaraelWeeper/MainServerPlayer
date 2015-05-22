@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Shell32;
 using System.IO;
+using AxAXVLC;
 
 namespace SocketTutorial.FormsServer
 {
@@ -18,22 +19,18 @@ namespace SocketTutorial.FormsServer
         {
             path = pathIn;
             InitializeComponent();
-            axWindowsMediaPlayer1.URL = path;
-            axWindowsMediaPlayer1.stretchToFit = true;
+           
+            axVLCPlugin21.playlist.add("File:///"+path,null, null);
+            axVLCPlugin21.playlist.playItem(0);
+            
         }
         public void IncreaseVolume()
         {
-            axWindowsMediaPlayer1.settings.volume++;
+          //  axVLCPlugin21.Volume. 
         }
         public void DecreaseVolume()
         {
-            axWindowsMediaPlayer1.settings.volume--;
-        }
-
-        public void changeVideo(string newPath)
-        {
-            path = newPath;
-            axWindowsMediaPlayer1.URL = path;
+           // axWindowsMediaPlayer1.settings.volume--;
         }
 
         public void sendVideoLength()

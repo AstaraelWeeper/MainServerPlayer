@@ -22,6 +22,7 @@ namespace SocketTutorial.FormsServer
         public delegate void FormActionDelegate(string message);
         private FormActionDelegate openNewFormDelegate;
         private VideoDisplay videoDisplay = null;
+        private ImageDisplay imageDisplay = null;
 
         public Server()
         {
@@ -76,27 +77,45 @@ namespace SocketTutorial.FormsServer
                     }
                     else
                     {
-                        videoDisplay.changeVideo(path);
-                        videoDisplay.Focus();
+                        videoDisplay.Close();
+                        videoDisplay = new VideoDisplay(path);
+                        videoDisplay.Show();
                     }
                 }
 
             }
             else if (message.Contains("Launching Image"))
             {
-                History.Add(path);
-                //ImageDisplay imageDisplay = new ImageDisplay(path);
+                if (this.InvokeRequired)
+                {
+                    Invoke(openNewFormDelegate, message); //having issues with threading
+                }
+                else
+                {
+                    History.Add(path);
+
+                    if (imageDisplay == null)
+                    {
+                        imageDisplay = new ImageDisplay(path);
+                        imageDisplay.Show();
+                    }
+                    else
+                    {
+                        imageDisplay.Close();
+                        imageDisplay.Show();
+                    }
+                }
             }
             else if (message.Contains("Raising Volume")) //build it for media player atm
             {
-                if (videoDisplay == null)
+                if (videoDisplay != null)
                 {
                     videoDisplay.IncreaseVolume();
                 }
             }
             else if (message.Contains("Lowering Volume"))
             {
-                if (videoDisplay == null)
+                if (videoDisplay != null)
                 {
                     videoDisplay.DecreaseVolume();
                 }
