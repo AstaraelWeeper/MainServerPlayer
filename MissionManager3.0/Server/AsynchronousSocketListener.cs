@@ -48,39 +48,40 @@ namespace SocketTutorial.FormsServer
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 15000);
 
             // Create a TCP/IP socket.
-            Socket listener = new Socket(AddressFamily.InterNetwork,
-                SocketType.Stream, ProtocolType.Tcp);
-
-            // Bind the socket to the local endpoint and listen for incoming connections.
-            try
+            using (Socket listener = new Socket(AddressFamily.InterNetwork,
+                SocketType.Stream, ProtocolType.Tcp))
             {
-                listener.Bind(localEndPoint);
-                listener.Listen(100);
-
-                while (true)
+                // Bind the socket to the local endpoint and listen for incoming connections.
+                try
                 {
-                    // Set the event to nonsignaled state.
-                    allDone.Reset();
+                    listener.Bind(localEndPoint);
+                    listener.Listen(100);
 
-                    // Start an asynchronous socket to listen for connections.
-                    _screenWriterCall("Waiting for a connection...");
-                    listener.BeginAccept(
-                        new AsyncCallback(AcceptCallback),
-                        listener);
-
-                    // Wait until a connection is made before continuing.
-                    allDone.WaitOne();
-                    if (!directoryCall)
+                    while (true)
                     {
-                        _openFormActionDelegate(JsonReturn);
-                    }
-                    JsonReturn = "";
-                }
+                        // Set the event to nonsignaled state.
+                        allDone.Reset();
 
-            }
-            catch (Exception e)
-            {
-                _screenWriterCall(e.ToString());
+                        // Start an asynchronous socket to listen for connections.
+                        _screenWriterCall("Waiting for a connection...");
+                        listener.BeginAccept(
+                            new AsyncCallback(AcceptCallback),
+                            listener);
+
+                        // Wait until a connection is made before continuing.
+                        allDone.WaitOne();
+                        if (!directoryCall)
+                        {
+                            _openFormActionDelegate(JsonReturn);
+                        }
+                        JsonReturn = "";
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    _screenWriterCall(e.ToString());
+                }
             }
 
             _screenWriterCall("\nPress ENTER to continue...");
@@ -131,15 +132,15 @@ namespace SocketTutorial.FormsServer
                 _screenWriterCall(message);
                 //callJSONParse    
                 ParseJson parseJson = new ParseJson();
-                JsonReturn = parseJson.InitialParsing(content);  
+                JsonReturn = parseJson.InitialParsing(content);
                 //if it wasn't a directory call, call open Form. 
-                               
+
                 directoryCall = JsonReturn.Contains("paths");
                 if (!directoryCall)
                 {
                     _openFormActionDelegate(JsonReturn);
                 }
-                
+
                 // Echo the data back to the client.
                 Send(handler, JsonReturn);
 

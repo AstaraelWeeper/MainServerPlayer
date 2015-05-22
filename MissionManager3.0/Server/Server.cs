@@ -21,15 +21,16 @@ namespace SocketTutorial.FormsServer
         private AsynchronousSocketListener.ScreenWriterDelegate screenWriterDelegate;
         public delegate void FormActionDelegate(string message);
         private FormActionDelegate openNewFormDelegate;
-         
+        private VideoDisplay videoDisplay = null;
+
         public Server()
         {
             InitializeComponent();
 
             screenWriterDelegate = new AsynchronousSocketListener.ScreenWriterDelegate(WriteToScreen);
             openNewFormDelegate = new FormActionDelegate(OpenNewFormAction);
-            listener = new AsynchronousSocketListener(screenWriterDelegate,openNewFormDelegate);
-                       
+            listener = new AsynchronousSocketListener(screenWriterDelegate, openNewFormDelegate);
+
         }
 
         public void WriteToScreen(string message)
@@ -44,7 +45,7 @@ namespace SocketTutorial.FormsServer
             }
         }
 
-        
+
         private void Server_Load(object sender, EventArgs e)
         {
             ioThread = new Thread(new ThreadStart(listener.StartListening));
@@ -55,29 +56,34 @@ namespace SocketTutorial.FormsServer
         [STAThread]
         private void OpenNewFormAction(string message)
         {
-            VideoDisplay videoDisplay = null;
             string intro = "{\"messageType\":\"LaunchVideo\"\"messageBody:\"\"Launching Video\"";
             string path = message.Remove(0, intro.Length);
             if (message.Contains("Launching Video"))
             {
-                History.Add(path);
-              //  if(videoDisplay == null)
-              //  {
-                    if (videoDisplay.InvokeRequired)
+                if (this.InvokeRequired)
+                {
+                    Invoke(openNewFormDelegate, message); //having issues with threading
+                }
+                else
+                {
+                    History.Add(path);
+
+                    if (videoDisplay != null)
                     {
-                        Invoke(openNewFormDelegate,videoDisplay = new VideoDisplay(path)); //having issues with threading
+                        videoDisplay = new VideoDisplay(path);
                     }
-              //  }
-            //    else
-            //    {
-           //         videoDisplay.changeVideo(path);
-            //        videoDisplay.Focus();
-             //   }
+                    else
+                    {
+                        videoDisplay.changeVideo(path);
+                        videoDisplay.Focus();
+                    }
+                }
+
             }
             else if (message.Contains("Launching Image"))
             {
                 History.Add(path);
-              //ImageDisplay imageDisplay = new ImageDisplay(path);
+                //ImageDisplay imageDisplay = new ImageDisplay(path);
             }
             else if (message.Contains("Raising Volume")) //build it for media player atm
             {
@@ -95,9 +101,9 @@ namespace SocketTutorial.FormsServer
             }
             else if (message.Contains("Restarting System"))
             {
-                Process.Start("shutdown","/r /t 0");
+                Process.Start("shutdown", "/r /t 0");
             }
-            else if(message.Contains("Restarting Mission Manager"))
+            else if (message.Contains("Restarting Mission Manager"))
             {
                 System.Diagnostics.Process.Start(Application.ExecutablePath); // to start new instance of application
                 this.Close(); //to turn off current app
@@ -105,7 +111,7 @@ namespace SocketTutorial.FormsServer
 
         }
 
-        
- 
+
+
     }
 }
