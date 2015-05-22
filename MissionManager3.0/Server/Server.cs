@@ -57,7 +57,7 @@ namespace SocketTutorial.FormsServer
         private void OpenNewFormAction(string message)
         {
             string intro = "{\"messageType\":\"LaunchVideo\"\"messageBody:\"\"Launching Video\"";
-            string path = message.Remove(0, intro.Length);
+            string path = message.Remove(0, intro.Length+1);
             path = path.Remove((path.Length - 2), 2);
             if (message.Contains("Launching Video"))
             {
@@ -72,6 +72,7 @@ namespace SocketTutorial.FormsServer
                     if (videoDisplay == null)
                     {
                         videoDisplay = new VideoDisplay(path);
+                        videoDisplay.Show();
                     }
                     else
                     {

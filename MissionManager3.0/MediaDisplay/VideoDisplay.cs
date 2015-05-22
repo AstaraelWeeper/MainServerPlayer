@@ -19,6 +19,7 @@ namespace SocketTutorial.FormsServer
             path = pathIn;
             InitializeComponent();
             axWindowsMediaPlayer1.URL = path;
+            axWindowsMediaPlayer1.stretchToFit = true;
         }
         public void IncreaseVolume()
         {
@@ -69,6 +70,11 @@ namespace SocketTutorial.FormsServer
                 duration = new TimeSpan();
                 return false;
             }
+        }
+
+        private void axWindowsMediaPlayer1_Enter(object sender, EventArgs e)
+        {
+
         }
     }
   
