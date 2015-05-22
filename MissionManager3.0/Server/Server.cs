@@ -58,6 +58,7 @@ namespace SocketTutorial.FormsServer
         {
             string intro = "{\"messageType\":\"LaunchVideo\"\"messageBody:\"\"Launching Video\"";
             string path = message.Remove(0, intro.Length);
+            path = path.Remove((path.Length - 2), 2);
             if (message.Contains("Launching Video"))
             {
                 if (this.InvokeRequired)
@@ -68,7 +69,7 @@ namespace SocketTutorial.FormsServer
                 {
                     History.Add(path);
 
-                    if (videoDisplay != null)
+                    if (videoDisplay == null)
                     {
                         videoDisplay = new VideoDisplay(path);
                     }
