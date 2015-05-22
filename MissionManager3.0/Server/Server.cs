@@ -124,6 +124,10 @@ namespace SocketTutorial.FormsServer
             {
                 Process.Start("shutdown", "/r /t 0");
             }
+            else if (message.Contains("Shutting Down System"))
+            {
+                Process.Start("shutdown", "s /t 0");
+            }
             else if (message.Contains("Restarting Mission Manager"))
             {
                 System.Diagnostics.Process.Start(Application.ExecutablePath); // to start new instance of application

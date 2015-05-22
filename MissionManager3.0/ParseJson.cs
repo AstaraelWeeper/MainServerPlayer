@@ -58,12 +58,12 @@ namespace SocketTutorial.FormsServer
 
             else if (JsonMessage[0] == "LaunchVideo") 
             {
-                JsonReturn = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"Launching Video\"" + JsonMessage[1] + "\"}";
-            }
+                JsonReturn = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"Launching Video " + JsonMessage[1] + "\"}";
+            } 
 
             else if (JsonMessage[0] == "LaunchImage") //get path .jpg?
             {
-                JsonReturn = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"Launching Image\"" + JsonMessage[1] + "\"}";
+                JsonReturn = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"Launching Image " + JsonMessage[1] + "\"}";
             }
 
             else if (JsonMessage[0] == "System")
@@ -85,13 +85,17 @@ namespace SocketTutorial.FormsServer
                     }
                 }
 
-                else if (JsonMessage[1] == "restart")
+                else if (JsonMessage[1] == "restartpc")
                 {
                     JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Restarting System\"}"; 
                 }
-                else if (JsonMessage[1] == "resetmissionmanager")
+                else if (JsonMessage[1] == "restartmissionmanager")
                 {
                     JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Restarting Mission Manager\"}"; 
+                }
+                else if (JsonMessage[1] == "shutdown")
+                {
+                    JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Shutting Down System\"}";
                 }
 
 
