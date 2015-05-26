@@ -183,6 +183,7 @@ namespace SocketTutorial.FormsServer
                     paths += "{\"fileName\":\"" + fileNames[i] + "\",";
                     paths += "\"fileExtension\":\"" + fileExtensions[i] + "\",";
                     paths += "\"filePath\":\"" + filePaths[i] + "\"";
+                    paths += "\"fileSize\":\"" + fileSizes[i] + "\"";
 
                     paths += "},";
                 }
