@@ -183,7 +183,7 @@ namespace SocketTutorial.FormsServer
                     paths += "{\"fileName\":\"" + fileNames[i] + "\",";
                     paths += "\"fileExtension\":\"" + fileExtensions[i] + "\",";
                     paths += "\"filePath\":\"" + filePaths[i] + "\"";
-                    paths += "\"fileSize\":\"" + fileSizes[i] + "\"";
+                    paths += "\"fileSizeInBytes\":\"" + fileSizes[i] + "\"";
 
                     paths += "},";
                 }
@@ -193,7 +193,7 @@ namespace SocketTutorial.FormsServer
                 paths += "{\"fileName\":\"" + fileNames[j] + "\",";
                 paths += "\"fileExtension\":\"" + fileExtensions[j] + "\",";
                 paths += "\"filePath\":\"" + filePaths[j] + "\",";
-                paths += "\"fileSize\":\"" + fileSizes[j] + "\"";
+                paths += "\"fileSizeInBytes\":\"" + fileSizes[j] + "\"";
 
                 paths += "}";
             
