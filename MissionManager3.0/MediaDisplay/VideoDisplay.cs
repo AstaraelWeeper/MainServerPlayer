@@ -14,8 +14,8 @@ namespace SocketTutorial.FormsServer
 {
     public partial class VideoDisplay : Form
     {
-        static string returnPlugin = ""; 
-        string returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}"; 
+        static string returnPlugin = "";
+        string returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}"; 
         string path;
         public VideoDisplay(string pathIn)
         {
@@ -30,7 +30,7 @@ namespace SocketTutorial.FormsServer
         {
                 axVLCPlugin21.playlist.pause();
                 returnPlugin = "Paused";
-                returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}";
+                returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
                 return returnMessage;
         }
 
@@ -38,7 +38,7 @@ namespace SocketTutorial.FormsServer
         {
             axVLCPlugin21.playlist.stop();
             returnPlugin = "Stopped";
-            returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}";
+            returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
             return returnMessage;
         }
 
@@ -46,7 +46,7 @@ namespace SocketTutorial.FormsServer
         {
             axVLCPlugin21.playlist.play();
             returnPlugin = "Paused";
-            returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}";
+            returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
             return returnMessage;
         }
 
@@ -54,12 +54,14 @@ namespace SocketTutorial.FormsServer
         {
             axVLCPlugin21.Volume++; //check if it needs a larger increment
             returnPlugin = "Volume Increased";
+            returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
             return returnMessage;
         }
         public string DecreaseVolume()
         {
             axVLCPlugin21.Volume--;
             returnPlugin = "Volume Decreased";
+            returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
             return returnMessage;
         }
 

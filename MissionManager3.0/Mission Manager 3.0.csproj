@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JSON\JSONMessage.cs" />
+    <Compile Include="MediaDisplay\HandleVideoPlayers.cs" />
     <Compile Include="MediaDisplay\ImageDisplay.cs">
       <SubType>Form</SubType>
     </Compile>

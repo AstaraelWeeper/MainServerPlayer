@@ -15,15 +15,15 @@ namespace SocketTutorial.FormsServer
     public partial class Server : Form
     {
         List<string> History = new List<string>();
-
+        HandleVideoPlayers handleVideoPlayers = new HandleVideoPlayers();
         private Thread ioThread;
         private AsynchronousSocketListener listener;
         private AsynchronousSocketListener.ScreenWriterDelegate screenWriterDelegate;
         public delegate string FormActionDelegate(string message);
         private FormActionDelegate openNewFormDelegate;
-        private VideoDisplay videoDisplay = null;
-        private VideoDisplay videoDisplay2 = null;
+        
         private ImageDisplay imageDisplay = null;
+       
 
         public Server()
         {
@@ -72,48 +72,17 @@ namespace SocketTutorial.FormsServer
                 {
                     History.Add(path);
 
-                    if (videoDisplay == null)
-                    {
-                        videoDisplay = new VideoDisplay(path);
-                        videoDisplay2 = new VideoDisplay(path);
-                        videoDisplay2.Width = 0;
-                        videoDisplay.Show();
-                        videoDisplay2.Show();
-                    }
-                    else
-                    {
-                        videoDisplay.Close();
-                        videoDisplay = new VideoDisplay(path);
-                        videoDisplay2 = new VideoDisplay(path);
-                        videoDisplay2.Width = 0;
-                        videoDisplay.Show();
-                        videoDisplay2.Show();
-                    }
-                    stringReturnMessage = videoDisplay.getVideoLength();
+                    handleVideoPlayers.initialisePlayers(path);
+                    stringReturnMessage = handleVideoPlayers.GetVideoLength();
                     return stringReturnMessage;
                 }
 
             }
-            else if (message.Contains("AmendVideo"))
+            else if (message.Contains("VideoPlayer"))
             {
-                if (videoDisplay != null)
-                {
-                    if (message.Contains("stopping"))
-                    {
-                        videoDisplay.Stop();
-                        videoDisplay2.Stop();
-                    }
-                    else if (message.Contains("pausing"))
-                    {
-                        videoDisplay.Pause();
-                        videoDisplay2.Pause();
-                    }
-                    else if (message.Contains("playing"))
-                    {
-                        videoDisplay.Play();
-                        videoDisplay2.Play();
-                    }
-                }
+                stringReturnMessage = handleVideoPlayers.VideoPlayerControls(message);
+                return stringReturnMessage;
+  
             }
             else if (message.Contains("Launching Image"))
             {
@@ -139,22 +108,7 @@ namespace SocketTutorial.FormsServer
                     return stringReturnMessage;
                 }
             }
-            else if (message.Contains("Raising Volume"))
-            {
-                if (videoDisplay != null)
-                {
-                    stringReturnMessage = videoDisplay.IncreaseVolume();
-                    return stringReturnMessage;
-                }
-            }
-            else if (message.Contains("Lowering Volume"))
-            {
-                if (videoDisplay != null)
-                {
-                    stringReturnMessage = videoDisplay.DecreaseVolume();
-                    return stringReturnMessage;
-                }
-            }
+            
             else if (message.Contains("Restarting System"))
             {
                 Process.Start("shutdown", "/r /t 0");
