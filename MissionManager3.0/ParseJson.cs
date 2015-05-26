@@ -129,6 +129,7 @@ namespace SocketTutorial.FormsServer
             List<string> filePaths = filepaths.ToList();
             List<string> fileNames = new List<string>();
             List<string> fileExtensions = new List<string>();
+            List<string> fileSizes = new List<string>();
 
 
 
@@ -162,6 +163,7 @@ namespace SocketTutorial.FormsServer
                     filePaths[i] = filePaths[i].Replace(@"\", @"/");
                     fileExtensions.Add(extension);
                     fileNames.Add(name2);
+                    fileSizes.Add(filePaths[i].Length.ToString());
                 }
             }
             string paths = "\"paths\":[";
@@ -189,7 +191,8 @@ namespace SocketTutorial.FormsServer
                 int j = filePaths.Count - 1; //needs to look at the list in case the array was empty (if a folder has no files, the list is created and added to)
                 paths += "{\"fileName\":\"" + fileNames[j] + "\",";
                 paths += "\"fileExtension\":\"" + fileExtensions[j] + "\",";
-                paths += "\"filePath\":\"" + filePaths[j] + "\"";
+                paths += "\"filePath\":\"" + filePaths[j] + "\",";
+                paths += "\"fileSize\":\"" + fileSizes[j] + "\"";
 
                 paths += "}";
             

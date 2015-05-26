@@ -100,12 +100,18 @@ namespace SocketTutorial.FormsServer
                 {
                     if (message.Contains("stopping"))
                     {
+                        videoDisplay.Stop();
+                        videoDisplay2.Stop();
                     }
                     else if (message.Contains("pausing"))
                     {
+                        videoDisplay.Pause();
+                        videoDisplay2.Pause();
                     }
                     else if (message.Contains("playing"))
                     {
+                        videoDisplay.Play();
+                        videoDisplay2.Play();
                     }
                 }
             }
