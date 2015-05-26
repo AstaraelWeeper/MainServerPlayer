@@ -14,6 +14,8 @@ namespace SocketTutorial.FormsServer
 {
     public partial class VideoDisplay : Form
     {
+        static string returnPlugin = ""; 
+        string returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}"; 
         string path;
         public VideoDisplay(string pathIn)
         {
@@ -24,23 +26,60 @@ namespace SocketTutorial.FormsServer
             axVLCPlugin21.playlist.playItem(0);
             
         }
-        public void IncreaseVolume()
+        public string Pause()
         {
-          //  axVLCPlugin21.Volume. 
-        }
-        public void DecreaseVolume()
-        {
-           // axWindowsMediaPlayer1.settings.volume--;
+                axVLCPlugin21.playlist.pause();
+                returnPlugin = "Paused";
+                returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}";
+                return returnMessage;
         }
 
-        public void sendVideoLength()
+        public string Stop()
         {
-            //initially. can it be found for the initial message?
+            axVLCPlugin21.playlist.stop();
+            returnPlugin = "Stopped";
+            returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}";
+            return returnMessage;
+        }
+
+        public string Play()
+        {
+            axVLCPlugin21.playlist.play();
+            returnPlugin = "Paused";
+            returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}";
+            return returnMessage;
+        }
+
+        public string IncreaseVolume()
+        {
+            axVLCPlugin21.Volume++; //check if it needs a larger increment
+            returnPlugin = "Volume Increased";
+            return returnMessage;
+        }
+        public string DecreaseVolume()
+        {
+            axVLCPlugin21.Volume--;
+            returnPlugin = "Volume Decreased";
+            return returnMessage;
+        }
+
+        public string getVideoLength()
+        {
+            
             TimeSpan duration;
 
             if (GetDuration(path, out duration))
             {
                 //use the returned time to send
+                returnPlugin = "Video Duration = " + duration;
+                returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}"; 
+                return returnMessage;
+            }
+            else
+            {
+                returnPlugin = "GetDuration Failed";
+                returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}"; 
+                return returnMessage;
             }
         }
 
@@ -69,10 +108,6 @@ namespace SocketTutorial.FormsServer
             }
         }
 
-        private void axWindowsMediaPlayer1_Enter(object sender, EventArgs e)
-        {
-
-        }
     }
   
 }

@@ -70,11 +70,7 @@ namespace SocketTutorial.FormsServer
 
                         // Wait until a connection is made before continuing.
                         allDone.WaitOne();
-                        if (!directoryCall)
-                        {
-                            _openFormActionDelegate(JsonReturn);
-                        }
-                        JsonReturn = "";
+
                     }
 
                 }
@@ -105,6 +101,7 @@ namespace SocketTutorial.FormsServer
 
         public void ReadCallback(IAsyncResult ar)
         {
+            string formMessage = "";
             String content = String.Empty;
 
             // Retrieve the state object and the handler socket
@@ -132,17 +129,18 @@ namespace SocketTutorial.FormsServer
                 _screenWriterCall(message);
                 //callJSONParse    
                 ParseJson parseJson = new ParseJson();
-                JsonReturn = parseJson.InitialParsing(content);
+                JsonReturn = parseJson.InitialParsing(content); //parse message
+                
+                Send(handler, JsonReturn);//send initial message
                 //if it wasn't a directory call, call open Form. 
-
                 directoryCall = JsonReturn.Contains("paths");
                 if (!directoryCall)
                 {
-                    _openFormActionDelegate(JsonReturn);
+                  formMessage = _openFormActionDelegate(JsonReturn);
+                  JsonReturn = "";
                 }
 
-                // Echo the data back to the client.
-                Send(handler, JsonReturn);
+                Send(handler, formMessage); // pass back any info from the video etc. Make a new string
 
                 //   }
                 /*   else
@@ -176,8 +174,8 @@ namespace SocketTutorial.FormsServer
                 int bytesSent = handler.EndSend(ar);
                 _screenWriterCall(String.Format("Sent {0} bytes to client.", bytesSent));
 
-                handler.Shutdown(SocketShutdown.Both);
-                handler.Close();
+             //   handler.Shutdown(SocketShutdown.Both);
+              //  handler.Close();
 
 
             }

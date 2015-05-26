@@ -19,9 +19,10 @@ namespace SocketTutorial.FormsServer
         private Thread ioThread;
         private AsynchronousSocketListener listener;
         private AsynchronousSocketListener.ScreenWriterDelegate screenWriterDelegate;
-        public delegate void FormActionDelegate(string message);
+        public delegate string FormActionDelegate(string message);
         private FormActionDelegate openNewFormDelegate;
         private VideoDisplay videoDisplay = null;
+        private VideoDisplay videoDisplay2 = null;
         private ImageDisplay imageDisplay = null;
 
         public Server()
@@ -55,16 +56,17 @@ namespace SocketTutorial.FormsServer
         }
 
         [STAThread]
-        private void OpenNewFormAction(string message)
+        private string OpenNewFormAction(string message)
         {
-            string intro = "{\"messageType\":\"LaunchVideo\"\"messageBody:\"\"Launching Video\"";
+            string stringReturnMessage = "";
+            string intro = "{\"messageType\":\"LaunchVideo\"\"messageBody:\"\"Launching Video\""; //image will also work as length is the same
             string path = message.Remove(0, intro.Length+1);
             path = path.Remove((path.Length - 2), 2);
             if (message.Contains("Launching Video"))
             {
                 if (this.InvokeRequired)
                 {
-                    Invoke(openNewFormDelegate, message); //having issues with threading
+                    Invoke(openNewFormDelegate, message); 
                 }
                 else
                 {
@@ -73,22 +75,45 @@ namespace SocketTutorial.FormsServer
                     if (videoDisplay == null)
                     {
                         videoDisplay = new VideoDisplay(path);
+                        videoDisplay2 = new VideoDisplay(path);
+                        videoDisplay2.Width = 0;
                         videoDisplay.Show();
+                        videoDisplay2.Show();
                     }
                     else
                     {
                         videoDisplay.Close();
                         videoDisplay = new VideoDisplay(path);
+                        videoDisplay2 = new VideoDisplay(path);
+                        videoDisplay2.Width = 0;
                         videoDisplay.Show();
+                        videoDisplay2.Show();
                     }
+                    stringReturnMessage = videoDisplay.getVideoLength();
+                    return stringReturnMessage;
                 }
 
+            }
+            else if (message.Contains("AmendVideo"))
+            {
+                if (videoDisplay != null)
+                {
+                    if (message.Contains("stopping"))
+                    {
+                    }
+                    else if (message.Contains("pausing"))
+                    {
+                    }
+                    else if (message.Contains("playing"))
+                    {
+                    }
+                }
             }
             else if (message.Contains("Launching Image"))
             {
                 if (this.InvokeRequired)
                 {
-                    Invoke(openNewFormDelegate, message); //having issues with threading
+                    Invoke(openNewFormDelegate, message);
                 }
                 else
                 {
@@ -104,20 +129,24 @@ namespace SocketTutorial.FormsServer
                         imageDisplay.Close();
                         imageDisplay.Show();
                     }
+                    stringReturnMessage = "{\"messageType\":\"LaunchImage\"\"messageBody:\"\"Image Launched\"";
+                    return stringReturnMessage;
                 }
             }
-            else if (message.Contains("Raising Volume")) //build it for media player atm
+            else if (message.Contains("Raising Volume"))
             {
                 if (videoDisplay != null)
                 {
-                    videoDisplay.IncreaseVolume();
+                    stringReturnMessage = videoDisplay.IncreaseVolume();
+                    return stringReturnMessage;
                 }
             }
             else if (message.Contains("Lowering Volume"))
             {
                 if (videoDisplay != null)
                 {
-                    videoDisplay.DecreaseVolume();
+                    stringReturnMessage = videoDisplay.DecreaseVolume();
+                    return stringReturnMessage;
                 }
             }
             else if (message.Contains("Restarting System"))
@@ -133,7 +162,7 @@ namespace SocketTutorial.FormsServer
                 System.Diagnostics.Process.Start(Application.ExecutablePath); // to start new instance of application
                 this.Close(); //to turn off current app
             }
-
+            return stringReturnMessage;
         }
 
 

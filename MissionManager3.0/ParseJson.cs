@@ -59,6 +59,22 @@ namespace SocketTutorial.FormsServer
             else if (JsonMessage[0] == "LaunchVideo") 
             {
                 JsonReturn = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"Launching Video " + JsonMessage[1] + "\"}";
+            }
+
+            else if (JsonMessage[0] == "VideoPlayer")
+            {
+                if (JsonMessage[1] == "Stop")
+                {
+                    JsonReturn = "{\"messageType\":\"AmendVideo\",\"messageBody\":\"Stopping\"}";
+                }
+                else if (JsonMessage[1] == "Pause")
+                {
+                    JsonReturn = "{\"messageType\":\"AmendVideo\",\"messageBody\":\"Pausing\"}";
+                }
+                else if (JsonMessage[1] == "Play")
+                {
+                    JsonReturn = "{\"messageType\":\"AmendVideo\",\"messageBody\":\"Playing\"}";
+                }
             } 
 
             else if (JsonMessage[0] == "LaunchImage") //get path .jpg?
