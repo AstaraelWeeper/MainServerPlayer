@@ -15,8 +15,7 @@ namespace SocketTutorial.FormsServer
 {
     class ParseJson
     {
-        private static VideoDisplay videoDisplay = null;
-        private ImageDisplay imageDisplay = null;
+        PowerpointHandler powerpointHandler = new PowerpointHandler();
         List<string> History = new List<string>();
         HandleVideoPlayers handleVideoPlayers = new HandleVideoPlayers();
         HandleImageViewers handleImageViewers = new HandleImageViewers();
@@ -85,6 +84,12 @@ namespace SocketTutorial.FormsServer
             else if (JsonMessage[0] == "ImageViewer")
             {
                 JsonReturn = handleImageViewers.ImageViewerControls(JsonMessage[1]);
+                return JsonReturn;
+            }
+
+            else if (JsonMessage[0] == "OpenPowerpoint")
+            {
+                JsonReturn = powerpointHandler.initialisePowerpoint(JsonMessage[1]);
                 return JsonReturn;
             }
 

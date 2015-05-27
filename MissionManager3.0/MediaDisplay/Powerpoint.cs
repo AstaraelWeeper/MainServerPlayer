@@ -19,7 +19,7 @@ namespace SocketTutorial.FormsServer
         public Powerpoint()
         {
             InitializeComponent();
-            Process p = Process.Start("calc.exe"); //example
+            Process p = Process.Start("C:\\Program Files (x86)\\OpenOffice 4\\program\\soffice.exe"); //example
             Thread.Sleep(500);
             p.WaitForInputIdle();
             SetParent(p.MainWindowHandle,this.Handle);
@@ -27,11 +27,6 @@ namespace SocketTutorial.FormsServer
 
         }
 
-        void CloseForm()
-        {
-            this.Close();
-        }
-        
 
     }
 }

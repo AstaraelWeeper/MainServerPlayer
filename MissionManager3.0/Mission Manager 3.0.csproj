@@ -65,6 +65,7 @@
     <Compile Include="MediaDisplay\Powerpoint.Designer.cs">
       <DependentUpon>Powerpoint.cs</DependentUpon>
     </Compile>
+    <Compile Include="MediaDisplay\PowerpointHandler.cs" />
     <Compile Include="MediaDisplay\VideoDisplay.cs">
       <SubType>Form</SubType>
     </Compile>
