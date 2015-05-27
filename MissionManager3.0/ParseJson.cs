@@ -19,6 +19,7 @@ namespace SocketTutorial.FormsServer
         private ImageDisplay imageDisplay = null;
         List<string> History = new List<string>();
         HandleVideoPlayers handleVideoPlayers = new HandleVideoPlayers();
+        HandleImageViewers handleImageViewers = new HandleImageViewers();
         public string InitialParsing(string JsonIn) //return JSON
         {
             if (JsonIn == "CONNECTION_ACTIVE")
@@ -63,54 +64,48 @@ namespace SocketTutorial.FormsServer
             else if (JsonMessage[0] == "LaunchVideo")
             {
                 History.Add(JsonMessage[1]);
-                JsonReturn = handleVideoPlayers.initialisePlayers(JsonMessage[1]); //get duration here.
+                JsonReturn = handleVideoPlayers.InitialisePlayers(JsonMessage[1]); //get duration here.
                 return JsonReturn;
             }
 
             else if (JsonMessage[0] == "VideoPlayer")
             {
-               JsonReturn = handleVideoPlayers.VideoPlayerControls(JsonMessage[1]);
-               return JsonReturn;
+                JsonReturn = handleVideoPlayers.VideoPlayerControls(JsonMessage[1]);
+                return JsonReturn;
             }
 
             else if (JsonMessage[0] == "LaunchImage") //get path .jpg?
             {
                 History.Add(JsonMessage[1]);
 
-                if (imageDisplay == null)
-                {
-                    imageDisplay = new ImageDisplay(JsonMessage[1]);
-                    imageDisplay.Show();
-                }
-                else
-                {
-                    imageDisplay.Close();
-                    imageDisplay.Show();
-                }
+                JsonReturn = handleImageViewers.InitialiseViewers(JsonMessage[1]); //get duration here.
+                return JsonReturn;
+            }
 
-                JsonReturn = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"Launched Image " + JsonMessage[1] + "\"}";
+            else if (JsonMessage[0] == "ImageViewer")
+            {
+                JsonReturn = handleImageViewers.ImageViewerControls(JsonMessage[1]);
                 return JsonReturn;
             }
 
             else if (JsonMessage[0] == "System")
             {
 
-                if (JsonMessage[1] == "volumeup" || JsonMessage[1] == "volumedown")
+
+                if (JsonMessage[1] == "volumeup")
                 {
-                    if (videoDisplay == null)
-                    {
-                        JsonReturn = "{\"messageType\":\"NoVideo\", \"messageBody\":\"\"}";
-                    }
-                    else if (JsonMessage[1] == "volumeup")
-                    {
-                        JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Raising Volume\"}";
-                    }
-                    else if (JsonMessage[1] == "volumedown")
-                    {
-                        JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Lowering Volume\"}";
-                    }
+                    //implement
+                    JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"System Volume Raised\"}";
                     return JsonReturn;
                 }
+                else if (JsonMessage[1] == "volumedown")
+                {
+                    //implement
+                    JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"System Volume Lowerer\"}";
+                    return JsonReturn;
+                }
+
+
 
                 else if (JsonMessage[1] == "restartpc")
                 {
@@ -122,7 +117,7 @@ namespace SocketTutorial.FormsServer
                 {
                     System.Diagnostics.Process.Start(Application.ExecutablePath); // to start new instance of application
                     //  this.Close(); //to turn off current app. needs updating
-                    JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Restarting Mission Manager\"}";
+                    JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Application Restarted\"}";
                     return JsonReturn;
                 }
                 else if (JsonMessage[1] == "shutdown")

@@ -14,9 +14,10 @@ namespace SocketTutorial.FormsServer
 {
     public partial class VideoDisplay : Form
     {
+        string path;
         static string returnPlugin = "";
         string returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}"; 
-        string path;
+
         public VideoDisplay(string pathIn)
         {
             path = pathIn;
@@ -45,7 +46,7 @@ namespace SocketTutorial.FormsServer
         public string Play()
         {
             axVLCPlugin21.playlist.play();
-            returnPlugin = "Paused";
+            returnPlugin = "Playing";
             returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
             return returnMessage;
         }
@@ -65,7 +66,7 @@ namespace SocketTutorial.FormsServer
             return returnMessage;
         }
 
-        public string getVideoLength()
+        public string getVideoLength(string path)
         {
             
             TimeSpan duration;
@@ -73,7 +74,7 @@ namespace SocketTutorial.FormsServer
             if (GetDuration(path, out duration))
             {
                 //use the returned time to send
-                returnPlugin = "Video Duration = " + duration;
+                returnPlugin = duration.ToString();
                 returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}"; 
                 return returnMessage;
             }

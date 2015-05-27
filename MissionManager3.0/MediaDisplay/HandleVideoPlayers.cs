@@ -22,7 +22,7 @@ namespace SocketTutorial.FormsServer
         Point videoPlayer1Location = new Point(vid1X,y);
         Point videoPlayer2Location = new Point(vid2X,y);
         
-        public string initialisePlayers(string path)
+        public string InitialisePlayers(string path)
         {
             videoDisplay = new VideoDisplay(path);
                         videoDisplay2 = new VideoDisplay(path);
@@ -36,9 +36,9 @@ namespace SocketTutorial.FormsServer
                         videoDisplay.Show();
                         videoDisplay2.Show();
 
-                   JsonReturn = GetVideoLength();
+                   JsonReturn = videoDisplay.getVideoLength(path);
                    return JsonReturn;
-
+            
         }
 
         private string rotateRight()
@@ -111,11 +111,6 @@ namespace SocketTutorial.FormsServer
             }
         }
 
-        public string GetVideoLength()
-        {
-            string stringReturnMessage = videoDisplay.getVideoLength();
-            return stringReturnMessage;
-        }
         public string VideoPlayerControls(string message)
         {
             string stringReturnMessage = "";
@@ -149,18 +144,20 @@ namespace SocketTutorial.FormsServer
                 }
                 else if (message.Contains("rotate left"))
                 {
-                    rotateLeft();
+                    stringReturnMessage = rotateLeft();
                     return stringReturnMessage;
                 }
 
-                else if (message.Contains("Raising Volume"))
+                else if (message.Contains("Raise Volume"))
                 {
                         stringReturnMessage = videoDisplay.IncreaseVolume();
+                        videoDisplay2.IncreaseVolume();
                         return stringReturnMessage;
                 }
-                else if (message.Contains("Lowering Volume"))
+                else if (message.Contains("Lower Volume"))
                 {
                         stringReturnMessage = videoDisplay.DecreaseVolume();
+                        videoDisplay2.DecreaseVolume();
                         return stringReturnMessage;
                 }
 
