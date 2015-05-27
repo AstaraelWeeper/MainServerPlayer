@@ -14,15 +14,11 @@ namespace SocketTutorial.FormsServer
 {
     public partial class Server : Form
     {
-        List<string> History = new List<string>();
-        HandleVideoPlayers handleVideoPlayers = new HandleVideoPlayers();
+    
         private Thread ioThread;
         private AsynchronousSocketListener listener;
         private AsynchronousSocketListener.ScreenWriterDelegate screenWriterDelegate;
         public delegate string FormActionDelegate(string message);
-        private FormActionDelegate openNewFormDelegate;
-        
-        private ImageDisplay imageDisplay = null;
        
 
         public Server()
@@ -30,8 +26,6 @@ namespace SocketTutorial.FormsServer
             InitializeComponent();
 
             screenWriterDelegate = new AsynchronousSocketListener.ScreenWriterDelegate(WriteToScreen);
-            openNewFormDelegate = new FormActionDelegate(OpenNewFormAction);
-            listener = new AsynchronousSocketListener(screenWriterDelegate, openNewFormDelegate);
 
         }
 
@@ -54,77 +48,6 @@ namespace SocketTutorial.FormsServer
             ioThread.SetApartmentState(ApartmentState.STA);
             ioThread.Start();
         }
-
-        [STAThread]
-        private string OpenNewFormAction(string message)
-        {
-            string stringReturnMessage = "";
-            string intro = "{\"messageType\":\"LaunchVideo\"\"messageBody:\"\"Launching Video\""; //image will also work as length is the same
-            string path = message.Remove(0, intro.Length+1);
-            path = path.Remove((path.Length - 2), 2);
-            if (message.Contains("Launching Video"))
-            {
-                if (this.InvokeRequired)
-                {
-                    Invoke(openNewFormDelegate, message); 
-                }
-                else
-                {
-                    History.Add(path);
-
-                    handleVideoPlayers.initialisePlayers(path);
-                    stringReturnMessage = handleVideoPlayers.GetVideoLength();
-                    return stringReturnMessage;
-                }
-
-            }
-            else if (message.Contains("VideoPlayer"))
-            {
-                stringReturnMessage = handleVideoPlayers.VideoPlayerControls(message);
-                return stringReturnMessage;
-  
-            }
-            else if (message.Contains("Launching Image"))
-            {
-                if (this.InvokeRequired)
-                {
-                    Invoke(openNewFormDelegate, message);
-                }
-                else
-                {
-                    History.Add(path);
-
-                    if (imageDisplay == null)
-                    {
-                        imageDisplay = new ImageDisplay(path);
-                        imageDisplay.Show();
-                    }
-                    else
-                    {
-                        imageDisplay.Close();
-                        imageDisplay.Show();
-                    }
-                    stringReturnMessage = "{\"messageType\":\"LaunchImage\"\"messageBody:\"\"Image Launched\"";
-                    return stringReturnMessage;
-                }
-            }
-            
-            else if (message.Contains("Restarting System"))
-            {
-                Process.Start("shutdown", "/r /t 0");
-            }
-            else if (message.Contains("Shutting Down System"))
-            {
-                Process.Start("shutdown", "s /t 0");
-            }
-            else if (message.Contains("Restarting Mission Manager"))
-            {
-                System.Diagnostics.Process.Start(Application.ExecutablePath); // to start new instance of application
-                this.Close(); //to turn off current app
-            }
-            return stringReturnMessage;
-        }
-
 
 
     }
