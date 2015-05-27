@@ -7,6 +7,8 @@ using Newtonsoft.Json.Linq;
 using SocketTutorial.FormsServer.JSON;
 using System.Reflection;
 using System.IO;
+using System.Diagnostics;
+using System.Windows.Forms;
 
 
 namespace SocketTutorial.FormsServer
@@ -14,7 +16,9 @@ namespace SocketTutorial.FormsServer
     class ParseJson
     {
         private static VideoDisplay videoDisplay = null;
-
+        private ImageDisplay imageDisplay = null;
+        List<string> History = new List<string>();
+        HandleVideoPlayers handleVideoPlayers = new HandleVideoPlayers();
         public string InitialParsing(string JsonIn) //return JSON
         {
             if (JsonIn == "CONNECTION_ACTIVE")
@@ -26,7 +30,7 @@ namespace SocketTutorial.FormsServer
             {
                 List<string> initialList = new List<string>();
 
-             //  JsonIn = JsonIn.Replace('\\', '/');
+                //  JsonIn = JsonIn.Replace('\\', '/');
 
                 var JSONMessage = JsonConvert.DeserializeObject<JSONMessage>(JsonIn);
                 PropertyInfo[] JsonProperties = JSONMessage.GetType().GetProperties();//get the properties of the class
@@ -56,30 +60,36 @@ namespace SocketTutorial.FormsServer
 
             }
 
-            else if (JsonMessage[0] == "LaunchVideo") 
+            else if (JsonMessage[0] == "LaunchVideo")
             {
-                JsonReturn = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"Launching Video " + JsonMessage[1] + "\"}";
+                History.Add(JsonMessage[1]);
+                JsonReturn = handleVideoPlayers.initialisePlayers(JsonMessage[1]); //get duration here.
+                return JsonReturn;
             }
 
             else if (JsonMessage[0] == "VideoPlayer")
             {
-                if (JsonMessage[1] == "Stop")
-                {
-                    JsonReturn = "{\"messageType\":\"AmendVideo\",\"messageBody\":\"Stopping\"}";
-                }
-                else if (JsonMessage[1] == "Pause")
-                {
-                    JsonReturn = "{\"messageType\":\"AmendVideo\",\"messageBody\":\"Pausing\"}";
-                }
-                else if (JsonMessage[1] == "Play")
-                {
-                    JsonReturn = "{\"messageType\":\"AmendVideo\",\"messageBody\":\"Playing\"}";
-                }
-            } 
+               JsonReturn = handleVideoPlayers.VideoPlayerControls(JsonMessage[1]);
+               return JsonReturn;
+            }
 
             else if (JsonMessage[0] == "LaunchImage") //get path .jpg?
             {
-                JsonReturn = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"Launching Image " + JsonMessage[1] + "\"}";
+                History.Add(JsonMessage[1]);
+
+                if (imageDisplay == null)
+                {
+                    imageDisplay = new ImageDisplay(JsonMessage[1]);
+                    imageDisplay.Show();
+                }
+                else
+                {
+                    imageDisplay.Close();
+                    imageDisplay.Show();
+                }
+
+                JsonReturn = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"Launched Image " + JsonMessage[1] + "\"}";
+                return JsonReturn;
             }
 
             else if (JsonMessage[0] == "System")
@@ -91,27 +101,35 @@ namespace SocketTutorial.FormsServer
                     {
                         JsonReturn = "{\"messageType\":\"NoVideo\", \"messageBody\":\"\"}";
                     }
-                    else if (JsonMessage[1] =="volumeup")
+                    else if (JsonMessage[1] == "volumeup")
                     {
-                        JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Raising Volume\"}";  
+                        JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Raising Volume\"}";
                     }
                     else if (JsonMessage[1] == "volumedown")
                     {
-                        JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Lowering Volume\"}"; 
+                        JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Lowering Volume\"}";
                     }
+                    return JsonReturn;
                 }
 
                 else if (JsonMessage[1] == "restartpc")
                 {
-                    JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Restarting System\"}"; 
+                    Process.Start("shutdown", "/r /t 0");
+                    JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Restarting System\"}";
+                    return JsonReturn;
                 }
                 else if (JsonMessage[1] == "restartmissionmanager")
                 {
-                    JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Restarting Mission Manager\"}"; 
+                    System.Diagnostics.Process.Start(Application.ExecutablePath); // to start new instance of application
+                    //  this.Close(); //to turn off current app. needs updating
+                    JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Restarting Mission Manager\"}";
+                    return JsonReturn;
                 }
                 else if (JsonMessage[1] == "shutdown")
                 {
+                    Process.Start("shutdown", "s /t 0");
                     JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Shutting Down System\"}";
+                    return JsonReturn;
                 }
 
 
@@ -178,25 +196,25 @@ namespace SocketTutorial.FormsServer
             }
 
 
-                for (int i = 0; i < filepaths.Length - 1; i++)//files
-                {
-                    paths += "{\"fileName\":\"" + fileNames[i] + "\",";
-                    paths += "\"fileExtension\":\"" + fileExtensions[i] + "\",";
-                    paths += "\"filePath\":\"" + filePaths[i] + "\"";
-                    paths += "\"fileSizeInBytes\":\"" + fileSizes[i] + "\"";
+            for (int i = 0; i < filepaths.Length - 1; i++)//files
+            {
+                paths += "{\"fileName\":\"" + fileNames[i] + "\",";
+                paths += "\"fileExtension\":\"" + fileExtensions[i] + "\",";
+                paths += "\"filePath\":\"" + filePaths[i] + "\"";
+                paths += "\"fileSizeInBytes\":\"" + fileSizes[i] + "\"";
 
-                    paths += "},";
-                }
+                paths += "},";
+            }
 
 
-                int j = filePaths.Count - 1; //needs to look at the list in case the array was empty (if a folder has no files, the list is created and added to)
-                paths += "{\"fileName\":\"" + fileNames[j] + "\",";
-                paths += "\"fileExtension\":\"" + fileExtensions[j] + "\",";
-                paths += "\"filePath\":\"" + filePaths[j] + "\",";
-                paths += "\"fileSizeInBytes\":\"" + fileSizes[j] + "\"";
+            int j = filePaths.Count - 1; //needs to look at the list in case the array was empty (if a folder has no files, the list is created and added to)
+            paths += "{\"fileName\":\"" + fileNames[j] + "\",";
+            paths += "\"fileExtension\":\"" + fileExtensions[j] + "\",";
+            paths += "\"filePath\":\"" + filePaths[j] + "\",";
+            paths += "\"fileSizeInBytes\":\"" + fileSizes[j] + "\"";
 
-                paths += "}";
-            
+            paths += "}";
+
 
 
             //string JsonReturn = CreateJSON(files, directories);

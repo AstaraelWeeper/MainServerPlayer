@@ -9,6 +9,7 @@ namespace SocketTutorial.FormsServer
 {
     class HandleVideoPlayers
     {
+        string JsonReturn;
         private VideoDisplay videoDisplay = null;
         private VideoDisplay videoDisplay2 = null;
         int screens = 2;
@@ -21,8 +22,7 @@ namespace SocketTutorial.FormsServer
         Point videoPlayer1Location = new Point(vid1X,y);
         Point videoPlayer2Location = new Point(vid2X,y);
         
-
-        public void initialisePlayers(string path)
+        public string initialisePlayers(string path)
         {
             videoDisplay = new VideoDisplay(path);
                         videoDisplay2 = new VideoDisplay(path);
@@ -35,6 +35,9 @@ namespace SocketTutorial.FormsServer
                         videoDisplay2.Location = videoPlayer2Location;
                         videoDisplay.Show();
                         videoDisplay2.Show();
+
+                   JsonReturn = GetVideoLength();
+                   return JsonReturn;
 
         }
 
@@ -119,19 +122,19 @@ namespace SocketTutorial.FormsServer
 
             if (videoDisplay != null)
             {
-                if (message.Contains("stopping"))
+                if (message.Contains("stop"))
                 {
                     stringReturnMessage = videoDisplay.Stop();
                     videoDisplay2.Stop();
                     return stringReturnMessage;
                 }
-                else if (message.Contains("pausing"))
+                else if (message.Contains("pause"))
                 {
                     stringReturnMessage = videoDisplay.Pause();
                     videoDisplay2.Pause();
                     return stringReturnMessage;
                 }
-                else if (message.Contains("playing"))
+                else if (message.Contains("play"))
                 {
                     stringReturnMessage = videoDisplay.Play();
                     videoDisplay2.Play();
