@@ -1,4 +1,5 @@
 ﻿namespace SocketTutorial.FormsServer
+{
     partial class Powerpoint
     {
         /// <summary>

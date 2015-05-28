@@ -8,20 +8,15 @@ namespace SocketTutorial.FormsServer
 {
     public class AsynchronousSocketListener
     {
-        bool initialConnect;
-        bool directoryCall;
         public string JsonReturn;
         // Thread signal.
         public static ManualResetEvent allDone = new ManualResetEvent(false);
 
         public delegate void ScreenWriterDelegate(string input);
 
-        private Server.FormActionDelegate _openFormActionDelegate;
-
-        public AsynchronousSocketListener(ScreenWriterDelegate screenWriterCall, Server.FormActionDelegate openFormAction)
+        public AsynchronousSocketListener(ScreenWriterDelegate screenWriterCall)
         {
             _screenWriterCall = screenWriterCall;
-            _openFormActionDelegate = openFormAction;
         }
 
         private ScreenWriterDelegate _screenWriterCall;
@@ -130,17 +125,8 @@ namespace SocketTutorial.FormsServer
                 //callJSONParse    
                 ParseJson parseJson = new ParseJson();
                 JsonReturn = parseJson.InitialParsing(content); //parse message
-                
 
-                //if it wasn't a directory call, call open Form. 
-                directoryCall = JsonReturn.Contains("paths");
-                initialConnect = JsonReturn.Contains("CONNECTION_ACTIVE");
-                if (!directoryCall && !initialConnect)
-                {
-                     _openFormActionDelegate(JsonReturn);
-                }
-
-                    Send(handler, JsonReturn);//send initial message
+                Send(handler, JsonReturn);
              
 
                 //   }

@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="InTheHand.Net.Personal">
+      <HintPath>.\InTheHand.Net.Personal.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -75,6 +78,7 @@
     <Compile Include="MediaDisplay\VideoSettings.cs" />
     <Compile Include="Server\AsynchronousSocketListener.cs" />
     <Compile Include="ParseJson.cs" />
+    <Compile Include="Server\BluetoothServer.cs" />
     <Compile Include="Server\Server.cs">
       <SubType>Form</SubType>
     </Compile>
