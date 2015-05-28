@@ -65,10 +65,29 @@ namespace SocketTutorial.FormsServer
         void CheckWifi()
         {
             Ping myPing = new Ping();
-            myPing.PingCompleted += new PingCompletedEventHandler(myPingCompletedCallback);
+
             try
             {
-                myPing.SendAsync("google.com", 3000 /*3 secs timeout*/, new byte[32], new PingOptions(64, true));
+               PingReply replyok = myPing.Send("google.com", 10000 /*3 secs timeout*/, new byte[32], new PingOptions(64, true));
+
+
+                 if (replyok.Status == IPStatus.Success)
+                {
+                    // wifiOk = true;
+                    //need to callserver load somehow
+                    WriteToScreen("WiFi ok. Loading socket server");
+                      listener = new AsynchronousSocketListener(screenWriterDelegate);
+                ioThread = new Thread(new ThreadStart(listener.StartListening));
+                ioThread.SetApartmentState(ApartmentState.STA);
+                ioThread.Start();
+                }
+
+                else
+                {
+                    WriteToScreen("Wifi offline. Loading Bluetooth server");
+                    bluetoothListener = new BluetoothServer(screenWriterDelegateBT);
+                    bluetoothListener.ServerConnectThread();
+                }
  
             }
             catch(Exception e)
@@ -77,37 +96,15 @@ namespace SocketTutorial.FormsServer
             }
         }
 
-        //check wifi
-        public void myPingCompletedCallback(object sender, PingCompletedEventArgs e)
+
+
+  /*      private void Server_Load(object sender, EventArgs e)
         {
-
-            if (e.Error != null)
-            {
-                WriteToScreen(e.ToString());
-
-            }
-
-            else if (e.Reply.Status == IPStatus.Success)
-            {
-               // wifiOk = true;
-                //need to callserver load somehow
-            }
-
-            else
-            {
-                bluetoothListener.ServerConnectThread();
-            }
-            
-        }
-
-        private void Server_Load(object sender, EventArgs e)
-        {
-            
-            ioThread = new Thread(new ThreadStart(listener.StartListening));
+                listener = new AsynchronousSocketListener(screenWriterDelegate);
+                ioThread = new Thread(new ThreadStart(listener.StartListening));
                 ioThread.SetApartmentState(ApartmentState.STA);
                 ioThread.Start();
-        }
-
+        }*/
 
     }
 }
