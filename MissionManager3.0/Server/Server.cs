@@ -33,10 +33,10 @@ namespace SocketTutorial.FormsServer
 
             screenWriterDelegate = new AsynchronousSocketListener.ScreenWriterDelegate(WriteToScreen);
             screenWriterDelegateBT = new BluetoothServer.ScreenWriterDelegate(WriteToScreenBT);
-
-            CheckWifi();
-
+            CheckWifi();    
         }
+
+
 
         public void WriteToScreen(string message)
         {
@@ -84,15 +84,22 @@ namespace SocketTutorial.FormsServer
 
                 else
                 {
-                    WriteToScreen("Wifi offline. Loading Bluetooth server");
+                     WriteToScreen("Wifi offline. Loading Bluetooth server");
                     bluetoothListener = new BluetoothServer(screenWriterDelegateBT);
-                    bluetoothListener.ServerConnectThread();
+                    ioThread = new Thread(new ThreadStart(bluetoothListener.ServerConnectThread));
+                    ioThread.SetApartmentState(ApartmentState.STA);
+                    ioThread.Start();
                 }
  
             }
             catch(Exception e)
             {
                 WriteToScreen(e.ToString());
+                WriteToScreen("Wifi offline. Loading Bluetooth server");
+                bluetoothListener = new BluetoothServer(screenWriterDelegateBT);
+                ioThread = new Thread(new ThreadStart(bluetoothListener.ServerConnectThread));
+                ioThread.SetApartmentState(ApartmentState.STA);
+                ioThread.Start();
             }
         }
 

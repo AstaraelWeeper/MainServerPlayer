@@ -21,7 +21,6 @@ namespace SocketTutorial.FormsServer
             _screenWriterCallBT = screenWriterCallBT;
         }
 
-        private ScreenWriterDelegate _screenWriterCall;
         Guid mUUID = new Guid("ef0e079e-de01-4080-bfcc-c8a24ecf69de");
 
         public void ServerConnectThread()
