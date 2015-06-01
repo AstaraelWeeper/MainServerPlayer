@@ -20,6 +20,7 @@ namespace SocketTutorial.FormsServer
     {
         public bool wifiOK = false;
         private Thread ioThread;
+        private Thread btThread;
         private AsynchronousSocketListener listener;
         private BluetoothServer bluetoothListener;
         private AsynchronousSocketListener.ScreenWriterDelegate screenWriterDelegate;
@@ -33,7 +34,8 @@ namespace SocketTutorial.FormsServer
 
             screenWriterDelegate = new AsynchronousSocketListener.ScreenWriterDelegate(WriteToScreen);
             screenWriterDelegateBT = new BluetoothServer.ScreenWriterDelegate(WriteToScreenBT);
-            CheckWifi();    
+           // CheckWifi();
+            LoadWifiAndBTListeners();
         }
 
 
@@ -62,56 +64,60 @@ namespace SocketTutorial.FormsServer
             }
         }
 
-        void CheckWifi()
+        void LoadWifiAndBTListeners()
         {
-            Ping myPing = new Ping();
-
-            try
-            {
-               PingReply replyok = myPing.Send("google.com", 10000 /*3 secs timeout*/, new byte[32], new PingOptions(64, true));
-
-
-                 if (replyok.Status == IPStatus.Success)
-                {
-                    // wifiOk = true;
-                    //need to callserver load somehow
-                    WriteToScreen("WiFi ok. Loading socket server");
-                      listener = new AsynchronousSocketListener(screenWriterDelegate);
+            listener = new AsynchronousSocketListener(screenWriterDelegate);
                 ioThread = new Thread(new ThreadStart(listener.StartListening));
                 ioThread.SetApartmentState(ApartmentState.STA);
                 ioThread.Start();
-                }
+                WriteToScreen("Socket server listening");
 
-                else
-                {
-                     WriteToScreen("Wifi offline. Loading Bluetooth server");
-                    bluetoothListener = new BluetoothServer(screenWriterDelegateBT);
-                    ioThread = new Thread(new ThreadStart(bluetoothListener.ServerConnectThread));
-                    ioThread.SetApartmentState(ApartmentState.STA);
-                    ioThread.Start();
-                }
- 
-            }
-            catch(Exception e)
-            {
-                WriteToScreen(e.ToString());
-                WriteToScreen("Wifi offline. Loading Bluetooth server");
                 bluetoothListener = new BluetoothServer(screenWriterDelegateBT);
-                ioThread = new Thread(new ThreadStart(bluetoothListener.ServerConnectThread));
-                ioThread.SetApartmentState(ApartmentState.STA);
-                ioThread.Start();
-            }
+                btThread = new Thread(new ThreadStart(bluetoothListener.ServerConnectThread));
+                btThread.SetApartmentState(ApartmentState.STA);
+                btThread.Start();
+                WriteToScreen("Bluetooth server listening");
         }
+        //void CheckWifi()
+        //{
+        //    Ping myPing = new Ping();
+
+        //    try
+        //    {
+        //       PingReply replyok = myPing.Send("google.com", 10000 /*3 secs timeout*/, new byte[32], new PingOptions(64, true));
 
 
+        //         if (replyok.Status == IPStatus.Success)
+        //        {
+        //            // wifiOk = true;
+        //            //need to callserver load somehow
+        //            WriteToScreen("WiFi ok. Loading socket server");
+        //              listener = new AsynchronousSocketListener(screenWriterDelegate);
+        //        ioThread = new Thread(new ThreadStart(listener.StartListening));
+        //        ioThread.SetApartmentState(ApartmentState.STA);
+        //        ioThread.Start();
+        //        }
 
-  /*      private void Server_Load(object sender, EventArgs e)
-        {
-                listener = new AsynchronousSocketListener(screenWriterDelegate);
-                ioThread = new Thread(new ThreadStart(listener.StartListening));
-                ioThread.SetApartmentState(ApartmentState.STA);
-                ioThread.Start();
-        }*/
+        //        else
+        //        {
+        //             WriteToScreen("Wifi offline. Loading Bluetooth server");
+        //            bluetoothListener = new BluetoothServer(screenWriterDelegateBT);
+        //            ioThread = new Thread(new ThreadStart(bluetoothListener.ServerConnectThread));
+        //            ioThread.SetApartmentState(ApartmentState.STA);
+        //            ioThread.Start();
+        //        }
+ 
+        //    }
+        //    catch(Exception e)
+        //    {
+        //        WriteToScreen(e.ToString());
+        //        WriteToScreen("Wifi offline. Loading Bluetooth server");
+        //        bluetoothListener = new BluetoothServer(screenWriterDelegateBT);
+        //        ioThread = new Thread(new ThreadStart(bluetoothListener.ServerConnectThread));
+        //        ioThread.SetApartmentState(ApartmentState.STA);
+        //        ioThread.Start();
+        //    }
+        //}
 
     }
 }
