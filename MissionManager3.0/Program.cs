@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace SocketTutorial.FormsServer
 {
-    [STAThread]
+    
     static class Program
     {
         /// <summary>
