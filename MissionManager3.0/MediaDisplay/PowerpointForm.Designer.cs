@@ -1,6 +1,6 @@
 ﻿namespace SocketTutorial.FormsServer
 {
-    partial class Powerpoint
+    partial class PowerpointForm
     {
         /// <summary>
         /// Required designer variable.
