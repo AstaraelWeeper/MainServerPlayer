@@ -19,6 +19,7 @@ namespace SocketTutorial.FormsServer
         List<string> History = new List<string>();
         HandleVideoPlayers handleVideoPlayers = new HandleVideoPlayers();
         HandleImageViewers handleImageViewers = new HandleImageViewers();
+
         public string InitialParsing(string JsonIn) //return JSON
         {
             if (JsonIn == "CONNECTION_ACTIVE")
@@ -29,20 +30,26 @@ namespace SocketTutorial.FormsServer
             else
             {
                 List<string> initialList = new List<string>();
-
-                //  JsonIn = JsonIn.Replace('\\', '/');
-
-                var JSONMessage = JsonConvert.DeserializeObject<JSONMessage>(JsonIn);
-                PropertyInfo[] JsonProperties = JSONMessage.GetType().GetProperties();//get the properties of the class
-
-                foreach (var prop in JsonProperties)
+                JsonIn = JsonIn.TrimEnd('\0');
+                if (string.IsNullOrEmpty(JsonIn))
                 {
-                    string value = prop.GetValue(JSONMessage, null) as string; //get property value
-                    initialList.Add(value);
+                    return "";
                 }
+                else
+                {
+                    
+                    var JSONMessage = JsonConvert.DeserializeObject<JSONMessage>(JsonIn);
+                    PropertyInfo[] JsonProperties = JSONMessage.GetType().GetProperties();//get the properties of the class
 
-                string JsonReturn = ParseJsonMethod(initialList);
-                return JsonReturn;
+                    foreach (var prop in JsonProperties)
+                    {
+                        string value = prop.GetValue(JSONMessage, null) as string; //get property value
+                        initialList.Add(value);
+                    }
+
+                    string JsonReturn = ParseJsonMethod(initialList);
+                    return JsonReturn;
+                }
             }
         }
 
@@ -169,6 +176,7 @@ namespace SocketTutorial.FormsServer
                 fileNames.Add("none");
                 string defaultPath = "this folder has no files";
                 filePaths.Add(defaultPath);
+                fileSizes.Add("0");
 
             }
             else
@@ -195,25 +203,37 @@ namespace SocketTutorial.FormsServer
                 paths += "},";
             }
 
-
-            for (int i = 0; i < filepaths.Length - 1; i++)//files
+            if (filePaths.Count > 1)
             {
-                paths += "{\"fileName\":\"" + fileNames[i] + "\",";
-                paths += "\"fileExtension\":\"" + fileExtensions[i] + "\",";
-                paths += "\"filePath\":\"" + filePaths[i] + "\"";
-                paths += "\"fileSizeInBytes\":\"" + fileSizes[i] + "\"";
 
-                paths += "},";
+                for (int i = 0; i < filePaths.Count - 1; i++)//files
+                {
+                    paths += "{\"fileName\":\"" + fileNames[i] + "\",";
+                    paths += "\"fileExtension\":\"" + fileExtensions[i] + "\",";
+                    paths += "\"filePath\":\"" + filePaths[i] + "\",";
+                    paths += "\"fileSizeInBytes\":\"" + fileSizes[i] + "\"";
+
+                    paths += "},";
+                }
+
+
+                int j = filePaths.Count - 1; //needs to look at the list in case the array was empty (if a folder has no files, the list is created and added to)
+                paths += "{\"fileName\":\"" + fileNames[j] + "\",";
+                paths += "\"fileExtension\":\"" + fileExtensions[j] + "\",";
+                paths += "\"filePath\":\"" + filePaths[j] + "\",";
+                paths += "\"fileSizeInBytes\":\"" + fileSizes[j] + "\"";
+
+                paths += "}";
             }
+            else if (filePaths.Count == 1)
+            {
+                paths += "{\"fileName\":\"" + fileNames[0] + "\",";
+                paths += "\"fileExtension\":\"" + fileExtensions[0] + "\",";
+                paths += "\"filePath\":\"" + filePaths[0] + "\",";
+                paths += "\"fileSizeInBytes\":\"" + fileSizes[0] + "\"";
 
-
-            int j = filePaths.Count - 1; //needs to look at the list in case the array was empty (if a folder has no files, the list is created and added to)
-            paths += "{\"fileName\":\"" + fileNames[j] + "\",";
-            paths += "\"fileExtension\":\"" + fileExtensions[j] + "\",";
-            paths += "\"filePath\":\"" + filePaths[j] + "\",";
-            paths += "\"fileSizeInBytes\":\"" + fileSizes[j] + "\"";
-
-            paths += "}";
+                paths += "}";
+            }
 
 
 
