@@ -75,7 +75,7 @@ namespace SocketTutorial.FormsServer
                 bluetoothListener = new BluetoothServer(screenWriterDelegateBT);
                 btThread = new Thread(new ThreadStart(bluetoothListener.ServerConnectThread));
                 btThread.SetApartmentState(ApartmentState.STA);
-                //btThread.Start();
+                btThread.Start();
                 WriteToScreen("Bluetooth server listening");
         }
         //void CheckWifi()

@@ -21,7 +21,8 @@ namespace SocketTutorial.FormsServer
         static int y = 0;
         Point videoPlayer1Location = new Point(vid1X,y);
         Point videoPlayer2Location = new Point(vid2X,y);
-        
+
+        [STAThread]
         public string InitialisePlayers(string path)
         {
             videoDisplay = new VideoDisplay(path);

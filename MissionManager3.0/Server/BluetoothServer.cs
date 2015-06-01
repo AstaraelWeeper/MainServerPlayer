@@ -7,11 +7,13 @@ using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Ports;
 using InTheHand.Net.Sockets;
 using System.IO;
+using System.Threading;
 
 namespace SocketTutorial.FormsServer
 {
     class BluetoothServer
     {
+        public static ManualResetEvent allDone = new ManualResetEvent(false);
         string JsonReturn;
         public delegate void ScreenWriterDelegate(string input);
         private ScreenWriterDelegate _screenWriterCallBT;
@@ -26,32 +28,36 @@ namespace SocketTutorial.FormsServer
         public void ServerConnectThread()
         {
             //serverStarted = true;
-            _screenWriterCallBT("Server started, waiting for clients..");
+            _screenWriterCallBT("Bluetooth Server started, waiting for clients..");
             BluetoothListener blueListener = new BluetoothListener(mUUID);
             blueListener.Start();
             BluetoothClient conn = blueListener.AcceptBluetoothClient();
-            _screenWriterCallBT("Client has connected");
+            _screenWriterCallBT("Bluetooth Client has connected");
 
             Stream mStream = conn.GetStream();
             while (true)
             {
+              //  allDone.Reset();
                 try
                 {
                     byte[] recieved = new byte[1024];
                     mStream.Read(recieved, 0, recieved.Length);
                     string content = Encoding.ASCII.GetString(recieved);
-                    _screenWriterCallBT("Recieved: " + content);
+                    _screenWriterCallBT("Recieved: " + content + "via bluetooth");
 
                     ParseJson parseJson = new ParseJson();
                     JsonReturn = parseJson.InitialParsing(content); //parse message
 
                     byte[] sent = Encoding.ASCII.GetBytes(JsonReturn);
                     mStream.Write(sent, 0, sent.Length);
+                    string messageSent = Encoding.ASCII.GetString(sent);
+                    _screenWriterCallBT("sent via Bluetooth: " + messageSent);
                 }
                 catch (IOException exception)
                 {
-                    _screenWriterCallBT("Client has disconnected. Exception:" + exception + "\n");
+                    _screenWriterCallBT("Bluetooth Client has disconnected. Exception:" + exception + "\n");
                 }
+               // allDone.WaitOne();
             }
         }
 

@@ -59,7 +59,7 @@ namespace SocketTutorial.FormsServer
                         allDone.Reset();
 
                         // Start an asynchronous socket to listen for connections.
-                        _screenWriterCall("Waiting for a connection...");
+                        _screenWriterCall("WiFi server listening...");
                         listener.BeginAccept(
                             new AsyncCallback(AcceptCallback),
                             listener);
@@ -120,7 +120,7 @@ namespace SocketTutorial.FormsServer
                 //   {
                 // All the data has been read from the 
                 // client. Display it on the console.
-                string message = "Read " + content.Length + "bytes from socket. Data = " + content;
+                string message = "Read " + content.Length + "bytes from wifi socket. Data = " + content;
                 _screenWriterCall(message);
                 //callJSONParse    
                 ParseJson parseJson = new ParseJson();
