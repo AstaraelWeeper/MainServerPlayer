@@ -56,5 +56,16 @@ namespace SocketTutorial.FormsServer
             JsonReturn = "{\"messageType\":\"Powerpoint\",\"messageBody\":\"OnSelectedSlide\"}";
             return JsonReturn;
         }
+
+        public void RunAsSlideshow()
+        {
+            while (true)
+            {
+                slideIndex++;
+                file.SlideShowWindow.View.GotoSlide(slideIndex, MsoTriState.msoFalse);
+                System.Threading.Thread.Sleep(5000);
+            }
+
+        }
     }
 }

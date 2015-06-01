@@ -39,5 +39,12 @@ namespace SocketTutorial.FormsServer
             JsonReturn = powerpointForm.GotoSlide(slide);
             return JsonReturn;
         }
+
+        public string RunAsSlideshow()
+        {
+            powerpointForm.RunAsSlideshow();
+            JsonReturn = "{\"messageType\":\"Powerpoint\",\"messageBody\":\"RunningSlideshow\"}";
+            return JsonReturn;
+        }
     }
 }
