@@ -190,7 +190,9 @@ namespace SocketTutorial.FormsServer
                     filePaths[i] = filePaths[i].Replace(@"\", @"/");
                     fileExtensions.Add(extension);
                     fileNames.Add(name2);
-                    fileSizes.Add(filePaths[i].Length.ToString());
+                    FileInfo fileInfo = new FileInfo(filePaths[i]);
+                    long size = fileInfo.Length;
+                    fileSizes.Add(size.ToString());
                 }
             }
             string paths = "\"paths\":[";
