@@ -10,8 +10,7 @@ namespace SocketTutorial.FormsServer
     class HandleVideoPlayers
     {
         string JsonReturn;
-        private VideoDisplay videoDisplay = null;
-        private VideoDisplay videoDisplay2 = null;
+        
         int screens = 2;
        static  int resolutionWidth = 1920;
         static int resolutionHight = 1080;
@@ -21,6 +20,8 @@ namespace SocketTutorial.FormsServer
         static int y = 0;
         Point videoPlayer1Location = new Point(vid1X,y);
         Point videoPlayer2Location = new Point(vid2X,y);
+        VideoDisplay videoDisplay = null;
+        VideoDisplay videoDisplay2 = null;
 
         [STAThread]
         public string InitialisePlayers(string path)

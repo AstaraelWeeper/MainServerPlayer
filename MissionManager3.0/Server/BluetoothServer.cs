@@ -29,20 +29,33 @@ namespace SocketTutorial.FormsServer
         {
             //serverStarted = true;
             _screenWriterCallBT("Bluetooth Server started, waiting for clients..");
-            BluetoothListener blueListener = new BluetoothListener(mUUID);
+            BluetoothListener blueListener = new BluetoothListener(mUUID); 
             blueListener.Start();
             BluetoothClient conn = blueListener.AcceptBluetoothClient();
             _screenWriterCallBT("Bluetooth Client has connected");
-
-            Stream mStream = conn.GetStream();
+            bool disconnectedClient = false;
+            
             while (true)
             {
               //  allDone.Reset();
                 try
                 {
+                    if (disconnectedClient)
+                    {
+                        _screenWriterCallBT("Bluetooth server waiting for client");
+                        conn = blueListener.AcceptBluetoothClient();
+                        disconnectedClient = false;
+                    }
+
+                    Stream mStream = conn.GetStream();
                     byte[] recieved = new byte[1024];
                     mStream.Read(recieved, 0, recieved.Length);
-                    string content = Encoding.ASCII.GetString(recieved);
+                    string content = Encoding.ASCII.GetString(recieved).TrimEnd('\0');
+                    if (content.Length == 0)
+                    {
+                        disconnectedClient = true;
+                    }
+
                     _screenWriterCallBT("Recieved: " + content + "via bluetooth");
 
                     ParseJson parseJson = new ParseJson();

@@ -78,46 +78,6 @@ namespace SocketTutorial.FormsServer
                 btThread.Start();
                 WriteToScreen("Bluetooth server listening");
         }
-        //void CheckWifi()
-        //{
-        //    Ping myPing = new Ping();
-
-        //    try
-        //    {
-        //       PingReply replyok = myPing.Send("google.com", 10000 /*3 secs timeout*/, new byte[32], new PingOptions(64, true));
-
-
-        //         if (replyok.Status == IPStatus.Success)
-        //        {
-        //            // wifiOk = true;
-        //            //need to callserver load somehow
-        //            WriteToScreen("WiFi ok. Loading socket server");
-        //              listener = new AsynchronousSocketListener(screenWriterDelegate);
-        //        ioThread = new Thread(new ThreadStart(listener.StartListening));
-        //        ioThread.SetApartmentState(ApartmentState.STA);
-        //        ioThread.Start();
-        //        }
-
-        //        else
-        //        {
-        //             WriteToScreen("Wifi offline. Loading Bluetooth server");
-        //            bluetoothListener = new BluetoothServer(screenWriterDelegateBT);
-        //            ioThread = new Thread(new ThreadStart(bluetoothListener.ServerConnectThread));
-        //            ioThread.SetApartmentState(ApartmentState.STA);
-        //            ioThread.Start();
-        //        }
- 
-        //    }
-        //    catch(Exception e)
-        //    {
-        //        WriteToScreen(e.ToString());
-        //        WriteToScreen("Wifi offline. Loading Bluetooth server");
-        //        bluetoothListener = new BluetoothServer(screenWriterDelegateBT);
-        //        ioThread = new Thread(new ThreadStart(bluetoothListener.ServerConnectThread));
-        //        ioThread.SetApartmentState(ApartmentState.STA);
-        //        ioThread.Start();
-        //    }
-        //}
-
+  
     }
 }

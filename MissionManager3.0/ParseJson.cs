@@ -11,14 +11,16 @@ using System.Diagnostics;
 using System.Windows.Forms;
 
 
+
 namespace SocketTutorial.FormsServer
 {
     class ParseJson
     {
-        PowerpointHandler powerpointHandler = new PowerpointHandler();
+        //PowerpointHandler powerpointHandler = new PowerpointHandler();
         List<string> History = new List<string>();
         HandleVideoPlayers handleVideoPlayers = new HandleVideoPlayers();
         HandleImageViewers handleImageViewers = new HandleImageViewers();
+       
 
         public string InitialParsing(string JsonIn) //return JSON
         {
@@ -97,7 +99,7 @@ namespace SocketTutorial.FormsServer
 
             else if (JsonMessage[0] == "OpenPowerpoint")
             {
-                JsonReturn = powerpointHandler.initialisePowerpoint(JsonMessage[1]);
+                JsonReturn = "";//powerpointHandler.initialisePowerpoint(JsonMessage[1]);
                 return JsonReturn;
             }
 
