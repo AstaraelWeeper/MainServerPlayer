@@ -33,24 +33,22 @@
             // 
             // txtServer
             // 
-            this.txtServer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtServer.Location = new System.Drawing.Point(13, 13);
+            this.txtServer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtServer.Location = new System.Drawing.Point(0, 0);
             this.txtServer.Multiline = true;
             this.txtServer.Name = "txtServer";
-            this.txtServer.Size = new System.Drawing.Size(754, 340);
+            this.txtServer.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtServer.Size = new System.Drawing.Size(995, 558);
             this.txtServer.TabIndex = 0;
             // 
             // Server
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(779, 365);
+            this.ClientSize = new System.Drawing.Size(995, 558);
             this.Controls.Add(this.txtServer);
             this.Name = "Server";
             this.Text = "Server";
-           // this.Load += new System.EventHandler(this.Server_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -25,7 +25,7 @@ namespace SocketTutorial.FormsServer
         public string InitialParsing(string JsonIn) //return JSON
         {
             JsonIn = JsonIn.TrimEnd('\0');
-            if (JsonIn == "CONNECTION_ACTIVE_BLUETOOTH" || JsonIn == "CONNECTION_ACTIVE_WIFI")
+            if (JsonIn.Contains( "CONNECTION_ACTIVE_BLUETOOTH" )|| JsonIn.Contains( "CONNECTION_ACTIVE_WIFI"))
             {
                 string pies = JsonIn;
                 return pies;
