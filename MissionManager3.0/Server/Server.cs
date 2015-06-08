@@ -29,6 +29,8 @@ namespace SocketTutorial.FormsServer
         private VideoFormActionDelegate videoFormActionDelegate;
 
         HandleVideoPlayers handleVideoPlayers = new HandleVideoPlayers();
+        public VideoDisplay videoDisplay = new VideoDisplay();
+        public VideoDisplay videoDisplay2 = new VideoDisplay();
        
 
         public Server()
@@ -38,7 +40,6 @@ namespace SocketTutorial.FormsServer
             screenWriterDelegate = new AsynchronousSocketListener.ScreenWriterDelegate(WriteToScreen);
             screenWriterDelegateBT = new BluetoothServer.ScreenWriterDelegate(WriteToScreenBT);
             videoFormActionDelegate = new VideoFormActionDelegate(PerformVideoAction);
-           // CheckWifi();
             LoadWifiAndBTListeners();
         }
 
@@ -93,7 +94,7 @@ namespace SocketTutorial.FormsServer
             string JsonReturn;
             if (action == VideoAction.InitialisePlayers)
             {
-                JsonReturn = handleVideoPlayers.InitialisePlayers(message);
+                JsonReturn = handleVideoPlayers.InitialisePlayers(videoDisplay, videoDisplay2, message);
                 return JsonReturn;
             }
 

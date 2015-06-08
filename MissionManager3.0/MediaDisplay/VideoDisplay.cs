@@ -16,9 +16,14 @@ namespace SocketTutorial.FormsServer
     {
         string path;
         static string returnPlugin = "";
-        string returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}"; 
+        string returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
 
-        public VideoDisplay(string pathIn)
+        public VideoDisplay()
+        {
+            InitializeComponent();
+        }
+
+        public void VideoDisplayInitialise(string pathIn)
         {
             path = pathIn;
             InitializeComponent();

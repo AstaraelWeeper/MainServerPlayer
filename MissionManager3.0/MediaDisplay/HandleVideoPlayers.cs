@@ -10,37 +10,41 @@ namespace SocketTutorial.FormsServer
     class HandleVideoPlayers
     {
         string JsonReturn;
-        
+
         int screens = 2;
-       static  int resolutionWidth = 1920;
+        static int resolutionWidth = 1920;
         static int resolutionHight = 1080;
         static int currentFrontDirection = 0; //0 = front, 1 = right, 2 = back, 3 = left
         static int vid1X = (currentFrontDirection + 1) * resolutionWidth;
         static int vid2X = (currentFrontDirection) * resolutionWidth;
         static int y = 0;
-        Point videoPlayer1Location = new Point(vid1X,y);
-        Point videoPlayer2Location = new Point(vid2X,y);
-        VideoDisplay videoDisplay = null;
-        VideoDisplay videoDisplay2 = null;
+        Point videoPlayer1Location = new Point(vid1X, y);
+        Point videoPlayer2Location = new Point(vid2X, y);
+        VideoDisplay videoDisplay = new VideoDisplay();
+        VideoDisplay videoDisplay2 = new VideoDisplay();
 
         [STAThread]
-        public string InitialisePlayers(string path)
+        public string InitialisePlayers(VideoDisplay _videoDisplay1, VideoDisplay _videoDisplay2, string path)
         {
-            videoDisplay = new VideoDisplay(path);
-                        videoDisplay2 = new VideoDisplay(path);
-                        videoDisplay.Height = resolutionHight;
-                        videoDisplay2.Height = resolutionHight;
-                        videoDisplay.Width = screens * resolutionWidth;
-                        videoDisplay2.Width = 0;
+            videoDisplay = _videoDisplay1;
+            videoDisplay2 = _videoDisplay2;
 
-                        videoDisplay2.StartPosition = FormStartPosition.Manual;
-                        videoDisplay2.Location = videoPlayer2Location;
-                        videoDisplay.Show();
-                        videoDisplay2.Show();
+            videoDisplay.VideoDisplayInitialise(path);
+            videoDisplay2.VideoDisplayInitialise(path);
 
-                   JsonReturn = videoDisplay.getVideoLength(path);
-                   return JsonReturn;
-            
+            videoDisplay.Height = resolutionHight;
+            videoDisplay2.Height = resolutionHight;
+            videoDisplay.Width = screens * resolutionWidth;
+            videoDisplay2.Width = 0;
+
+            videoDisplay2.StartPosition = FormStartPosition.Manual;
+            videoDisplay2.Location = videoPlayer2Location;
+            videoDisplay.Show();
+            videoDisplay2.Show();
+
+            JsonReturn = videoDisplay.getVideoLength(path);
+            return JsonReturn;
+
         }
 
         private string rotateRight()
@@ -60,7 +64,7 @@ namespace SocketTutorial.FormsServer
 
             stringReturnMessage = getFacingDirectionJSON();
             return stringReturnMessage;
-            
+
         }
 
         private string rotateLeft()
@@ -140,8 +144,8 @@ namespace SocketTutorial.FormsServer
 
                 else if (message.Contains("rotate right"))
                 {
-                    stringReturnMessage =  rotateRight();
-                     
+                    stringReturnMessage = rotateRight();
+
                     return stringReturnMessage;
                 }
                 else if (message.Contains("rotate left"))
@@ -152,15 +156,15 @@ namespace SocketTutorial.FormsServer
 
                 else if (message.Contains("Raise Volume"))
                 {
-                        stringReturnMessage = videoDisplay.IncreaseVolume();
-                        videoDisplay2.IncreaseVolume();
-                        return stringReturnMessage;
+                    stringReturnMessage = videoDisplay.IncreaseVolume();
+                    videoDisplay2.IncreaseVolume();
+                    return stringReturnMessage;
                 }
                 else if (message.Contains("Lower Volume"))
                 {
-                        stringReturnMessage = videoDisplay.DecreaseVolume();
-                        videoDisplay2.DecreaseVolume();
-                        return stringReturnMessage;
+                    stringReturnMessage = videoDisplay.DecreaseVolume();
+                    videoDisplay2.DecreaseVolume();
+                    return stringReturnMessage;
                 }
 
                 else
