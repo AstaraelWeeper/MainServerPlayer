@@ -24,8 +24,11 @@ namespace SocketTutorial.FormsServer
         private AsynchronousSocketListener listener;
         private BluetoothServer bluetoothListener;
         private AsynchronousSocketListener.ScreenWriterDelegate screenWriterDelegate;
-        public delegate string FormActionDelegate(string message);
         private BluetoothServer.ScreenWriterDelegate screenWriterDelegateBT;
+        public delegate string VideoFormActionDelegate(VideoAction action, string message); 
+        private VideoFormActionDelegate videoFormActionDelegate;
+
+        HandleVideoPlayers handleVideoPlayers = new HandleVideoPlayers();
        
 
         public Server()
@@ -34,6 +37,7 @@ namespace SocketTutorial.FormsServer
 
             screenWriterDelegate = new AsynchronousSocketListener.ScreenWriterDelegate(WriteToScreen);
             screenWriterDelegateBT = new BluetoothServer.ScreenWriterDelegate(WriteToScreenBT);
+            videoFormActionDelegate = new VideoFormActionDelegate(PerformVideoAction);
            // CheckWifi();
             LoadWifiAndBTListeners();
         }
@@ -66,17 +70,43 @@ namespace SocketTutorial.FormsServer
 
         void LoadWifiAndBTListeners()
         {
-            listener = new AsynchronousSocketListener(screenWriterDelegate);
+            listener = new AsynchronousSocketListener(screenWriterDelegate,videoFormActionDelegate);
                 ioThread = new Thread(new ThreadStart(listener.StartListening));
                 ioThread.SetApartmentState(ApartmentState.STA);
                 ioThread.Start();
                 WriteToScreen("Socket server listening");
 
-                bluetoothListener = new BluetoothServer(screenWriterDelegateBT);
+                bluetoothListener = new BluetoothServer(screenWriterDelegateBT,videoFormActionDelegate);
                 btThread = new Thread(new ThreadStart(bluetoothListener.ServerConnectThread));
                 btThread.SetApartmentState(ApartmentState.STA);
                 btThread.Start();
                 WriteToScreen("Bluetooth server listening");
+        }
+
+        public enum VideoAction
+        {
+            InitialisePlayers,
+            VideoPlayerControls
+        }
+        public string PerformVideoAction(VideoAction action, string message)
+        {
+            string JsonReturn;
+            if (action == VideoAction.InitialisePlayers)
+            {
+                JsonReturn = handleVideoPlayers.InitialisePlayers(message);
+                return JsonReturn;
+            }
+
+            else if (action == VideoAction.VideoPlayerControls)
+            {
+                JsonReturn = handleVideoPlayers.VideoPlayerControls(message);
+                return JsonReturn;
+            }
+            else //error
+            {
+                JsonReturn = "video action failed";
+                return JsonReturn;
+            }
         }
   
     }

@@ -14,10 +14,10 @@ namespace SocketTutorial.FormsServer
         [STAThread]
         static void Main()
         {
-            Server server = new Server();
+           
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(server); //altered from new Server()
+            Application.Run(new Server()); //altered from new Server()
         }
     }
 }

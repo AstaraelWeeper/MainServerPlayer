@@ -18,8 +18,14 @@ namespace SocketTutorial.FormsServer
     {
         //PowerpointHandler powerpointHandler = new PowerpointHandler();
         List<string> History = new List<string>();
-        HandleVideoPlayers handleVideoPlayers = new HandleVideoPlayers();
+        
         HandleImageViewers handleImageViewers = new HandleImageViewers();
+        private Server.VideoFormActionDelegate _videoFormActionDelegate;
+
+        public ParseJson(Server.VideoFormActionDelegate videoFormActionDelegate)
+        {
+            _videoFormActionDelegate = videoFormActionDelegate;
+        }
        
 
         public string InitialParsing(string JsonIn) //return JSON
@@ -70,16 +76,21 @@ namespace SocketTutorial.FormsServer
 
             }
 
+            else if (JsonMessage[0] == "GetHistory")
+            {
+                JsonReturn = "{\"messageType\":\"GetHistory\",\"messageBody\":\"" + History.ToString() + "\"}";
+            }
+
             else if (JsonMessage[0] == "LaunchVideo")
             {
                 History.Add(JsonMessage[1]);
-                JsonReturn = handleVideoPlayers.InitialisePlayers(JsonMessage[1]); //get duration here.
+                JsonReturn = _videoFormActionDelegate(Server.VideoAction.InitialisePlayers, JsonMessage[1]);
                 return JsonReturn;
             }
 
             else if (JsonMessage[0] == "VideoPlayer")
             {
-                JsonReturn = handleVideoPlayers.VideoPlayerControls(JsonMessage[1]);
+                JsonReturn = _videoFormActionDelegate(Server.VideoAction.VideoPlayerControls, JsonMessage[1]);
                 return JsonReturn;
             }
 
