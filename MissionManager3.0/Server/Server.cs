@@ -25,13 +25,13 @@ namespace SocketTutorial.FormsServer
         private BluetoothServer bluetoothListener;
         private AsynchronousSocketListener.ScreenWriterDelegate screenWriterDelegate;
         private BluetoothServer.ScreenWriterDelegate screenWriterDelegateBT;
-        public delegate string VideoFormActionDelegate(VideoAction action, string message); 
+        public delegate string VideoFormActionDelegate(VideoAction action, string message);
         private VideoFormActionDelegate videoFormActionDelegate;
 
         HandleVideoPlayers handleVideoPlayers = new HandleVideoPlayers();
         public VideoDisplay videoDisplay = new VideoDisplay();
         public VideoDisplay videoDisplay2 = new VideoDisplay();
-       
+
 
         public Server()
         {
@@ -71,17 +71,17 @@ namespace SocketTutorial.FormsServer
 
         void LoadWifiAndBTListeners()
         {
-            listener = new AsynchronousSocketListener(screenWriterDelegate,videoFormActionDelegate);
-                ioThread = new Thread(new ThreadStart(listener.StartListening));
-                ioThread.SetApartmentState(ApartmentState.STA);
-                ioThread.Start();
-                WriteToScreen("Socket server listening");
+            listener = new AsynchronousSocketListener(screenWriterDelegate, videoFormActionDelegate);
+            ioThread = new Thread(new ThreadStart(listener.StartListening));
+            ioThread.SetApartmentState(ApartmentState.STA);
+            ioThread.Start();
+            WriteToScreen("Socket server listening");
 
-                bluetoothListener = new BluetoothServer(screenWriterDelegateBT,videoFormActionDelegate);
-                btThread = new Thread(new ThreadStart(bluetoothListener.ServerConnectThread));
-                btThread.SetApartmentState(ApartmentState.STA);
-                btThread.Start();
-                WriteToScreen("Bluetooth server listening");
+            bluetoothListener = new BluetoothServer(screenWriterDelegateBT, videoFormActionDelegate);
+            btThread = new Thread(new ThreadStart(bluetoothListener.ServerConnectThread));
+            btThread.SetApartmentState(ApartmentState.STA);
+            btThread.Start();
+            WriteToScreen("Bluetooth server listening");
         }
 
         public enum VideoAction
@@ -91,24 +91,36 @@ namespace SocketTutorial.FormsServer
         }
         public string PerformVideoAction(VideoAction action, string message)
         {
-            string JsonReturn;
-            if (action == VideoAction.InitialisePlayers)
+            string JsonReturn= "";
+
+            if(txtServer.InvokeRequired)
             {
-                JsonReturn = handleVideoPlayers.InitialisePlayers(videoDisplay, videoDisplay2, message);
+                Invoke(videoFormActionDelegate, action, message);
                 return JsonReturn;
             }
 
-            else if (action == VideoAction.VideoPlayerControls)
+            else
             {
-                JsonReturn = handleVideoPlayers.VideoPlayerControls(message);
-                return JsonReturn;
-            }
-            else //error
-            {
-                JsonReturn = "video action failed";
-                return JsonReturn;
+                if (action == VideoAction.InitialisePlayers)
+                {
+                    JsonReturn = handleVideoPlayers.InitialisePlayers(videoDisplay, videoDisplay2, message );
+                    return JsonReturn;
+
+                }
+                else if (action == VideoAction.VideoPlayerControls)
+                {
+                    JsonReturn = handleVideoPlayers.VideoPlayerControls(message);
+                    return JsonReturn;
+
+                }
+                else
+                {
+                    JsonReturn = "video action failed";
+                    return JsonReturn;
+                }
+
             }
         }
-  
+
     }
 }

@@ -20,8 +20,8 @@ namespace SocketTutorial.FormsServer
         static int y = 0;
         Point videoPlayer1Location = new Point(vid1X, y);
         Point videoPlayer2Location = new Point(vid2X, y);
-        VideoDisplay videoDisplay = new VideoDisplay();
-        VideoDisplay videoDisplay2 = new VideoDisplay();
+        public VideoDisplay videoDisplay = new VideoDisplay();
+        public VideoDisplay videoDisplay2 = new VideoDisplay();
 
         [STAThread]
         public string InitialisePlayers(VideoDisplay _videoDisplay1, VideoDisplay _videoDisplay2, string path)
