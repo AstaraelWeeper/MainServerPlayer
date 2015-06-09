@@ -11,8 +11,6 @@ namespace SocketTutorial.FormsServer
     {
 
         string JsonReturn;
-        private ImageDisplay imageDisplay = null;
-        private ImageDisplay imageDisplay2 = null;
         int screens = 2;
         static int resolutionWidth = 1920;
         static int resolutionHight = 1080;
@@ -22,11 +20,14 @@ namespace SocketTutorial.FormsServer
         static int y = 0;
         Point imageViewer1Location = new Point(pic1X, y);
         Point imageViewer2Location = new Point(pic2X, y);
+       public ImageDisplay imageDisplay = new ImageDisplay();
+       public ImageDisplay imageDisplay2 = new ImageDisplay();
 
-        public string InitialiseViewers(string path)
+        public string InitialiseViewers(ImageDisplay _imageDisplay, ImageDisplay _imageDisplay2, string path)
         {
-            imageDisplay = new ImageDisplay(path);
-            imageDisplay2 = new ImageDisplay(path);
+            imageDisplay = _imageDisplay;
+            imageDisplay2 = _imageDisplay2;
+
             imageDisplay.Height = resolutionHight;
             imageDisplay2.Height = resolutionHight;
             imageDisplay.Width = screens * resolutionWidth;
@@ -34,12 +35,15 @@ namespace SocketTutorial.FormsServer
 
             imageDisplay2.StartPosition = FormStartPosition.Manual;
             imageDisplay2.Location = imageViewer2Location;
-            imageDisplay.Show();
+
+            imageDisplay.InitialiseImage(path);
+            imageDisplay2.InitialiseImage(path);
             imageDisplay2.Show();
+            imageDisplay.Show();
+            
 
             JsonReturn = "{\"messageType\":\"ImageViewer\",\"messageBody\":\"Image Initialised\"}";
             return JsonReturn;
-
         }
 
         private string rotateRight()

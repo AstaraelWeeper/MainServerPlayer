@@ -23,10 +23,10 @@ namespace SocketTutorial.FormsServer
             InitializeComponent();
         }
 
+
         public void VideoDisplayInitialise(string pathIn)
         {
             path = pathIn;
-            InitializeComponent();
            
             axVLCPlugin21.playlist.add("File:///"+path,null, null);
             axVLCPlugin21.playlist.playItem(0);

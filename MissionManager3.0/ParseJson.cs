@@ -21,10 +21,12 @@ namespace SocketTutorial.FormsServer
         
         HandleImageViewers handleImageViewers = new HandleImageViewers();
         private Server.VideoFormActionDelegate _videoFormActionDelegate;
+        private Server.ImageFormActionDelegate _imageFormActionDelegate;
 
-        public ParseJson(Server.VideoFormActionDelegate videoFormActionDelegate)
+        public ParseJson(Server.VideoFormActionDelegate videoFormActionDelegate, Server.ImageFormActionDelegate imageFormActionDelegate)
         {
             _videoFormActionDelegate = videoFormActionDelegate;
+            _imageFormActionDelegate = imageFormActionDelegate;
         }
        
 
@@ -78,7 +80,8 @@ namespace SocketTutorial.FormsServer
 
             else if (JsonMessage[0] == "GetHistory")
             {
-                JsonReturn = "{\"messageType\":\"GetHistory\",\"messageBody\":\"" + History.ToString() + "\"}";
+                JsonReturn = "{\"messageType\":\"GetHistory\",\"messageBody\":\"" + History.ToString() + "\"}"; //amend/check to ensure correct syntax of string
+                
             }
 
             else if (JsonMessage[0] == "LaunchVideo")
@@ -94,17 +97,17 @@ namespace SocketTutorial.FormsServer
                 return JsonReturn;
             }
 
-            else if (JsonMessage[0] == "LaunchImage") //get path .jpg?
+            else if (JsonMessage[0] == "LaunchImage")
             {
                 History.Add(JsonMessage[1]);
 
-                JsonReturn = handleImageViewers.InitialiseViewers(JsonMessage[1]); //get duration here.
+                JsonReturn = _imageFormActionDelegate(Server.ImageAction.InitialiseImages, JsonMessage[1]); //get duration here.
                 return JsonReturn;
             }
 
             else if (JsonMessage[0] == "ImageViewer")
             {
-                JsonReturn = handleImageViewers.ImageViewerControls(JsonMessage[1]);
+                JsonReturn = _imageFormActionDelegate(Server.ImageAction.ImagePlayerControls, JsonMessage[1]);
                 return JsonReturn;
             }
 

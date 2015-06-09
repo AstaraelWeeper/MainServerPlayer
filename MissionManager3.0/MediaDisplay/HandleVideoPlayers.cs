@@ -29,9 +29,6 @@ namespace SocketTutorial.FormsServer
             videoDisplay = _videoDisplay1;
             videoDisplay2 = _videoDisplay2;
 
-            videoDisplay.VideoDisplayInitialise(path);
-            videoDisplay2.VideoDisplayInitialise(path);
-
             videoDisplay.Height = resolutionHight;
             videoDisplay2.Height = resolutionHight;
             videoDisplay.Width = screens * resolutionWidth;
@@ -39,8 +36,12 @@ namespace SocketTutorial.FormsServer
 
             videoDisplay2.StartPosition = FormStartPosition.Manual;
             videoDisplay2.Location = videoPlayer2Location;
-            videoDisplay.Show();
+
+            videoDisplay.VideoDisplayInitialise(path);
+            videoDisplay2.VideoDisplayInitialise(path);
             videoDisplay2.Show();
+            videoDisplay.Show();
+            
 
             JsonReturn = videoDisplay.getVideoLength(path);
             return JsonReturn;

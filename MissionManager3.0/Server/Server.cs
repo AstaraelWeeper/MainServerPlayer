@@ -28,9 +28,15 @@ namespace SocketTutorial.FormsServer
         public delegate string VideoFormActionDelegate(VideoAction action, string message);
         private VideoFormActionDelegate videoFormActionDelegate;
 
+        public delegate string ImageFormActionDelegate(ImageAction action, string message);
+        private ImageFormActionDelegate imageFormActionDelegate;
+
         HandleVideoPlayers handleVideoPlayers = new HandleVideoPlayers();
         public VideoDisplay videoDisplay = new VideoDisplay();
         public VideoDisplay videoDisplay2 = new VideoDisplay();
+        public ImageDisplay imageDisplay = new ImageDisplay();
+        public ImageDisplay imageDisplay2 = new ImageDisplay();
+        HandleImageViewers handleImageViewers = new HandleImageViewers();
 
 
         public Server()
@@ -40,6 +46,7 @@ namespace SocketTutorial.FormsServer
             screenWriterDelegate = new AsynchronousSocketListener.ScreenWriterDelegate(WriteToScreen);
             screenWriterDelegateBT = new BluetoothServer.ScreenWriterDelegate(WriteToScreenBT);
             videoFormActionDelegate = new VideoFormActionDelegate(PerformVideoAction);
+            imageFormActionDelegate = new ImageFormActionDelegate(PerformImageAction);
             LoadWifiAndBTListeners();
         }
 
@@ -89,6 +96,12 @@ namespace SocketTutorial.FormsServer
             InitialisePlayers,
             VideoPlayerControls
         }
+
+        public enum ImageAction
+        {
+            InitialiseImages,
+            ImagePlayerControls
+        }
         public string PerformVideoAction(VideoAction action, string message)
         {
             string JsonReturn= "";
@@ -116,6 +129,39 @@ namespace SocketTutorial.FormsServer
                 else
                 {
                     JsonReturn = "video action failed";
+                    return JsonReturn;
+                }
+
+            }
+        }
+
+        public string PerformImageAction(ImageAction action, string message)
+        {
+            string JsonReturn = "";
+
+            if (txtServer.InvokeRequired)
+            {
+                Invoke(imageFormActionDelegate, action, message);
+                return JsonReturn;
+            }
+
+            else
+            {
+                if (action == ImageAction.InitialiseImages)
+                {
+                    JsonReturn = handleImageViewers.InitialiseViewers(imageDisplay, imageDisplay2, message);
+                    return JsonReturn;
+
+                }
+                else if (action == ImageAction.ImagePlayerControls)
+                {
+                    JsonReturn = handleImageViewers.ImageViewerControls(message);
+                    return JsonReturn;
+
+                }
+                else
+                {
+                    JsonReturn = "image action failed";
                     return JsonReturn;
                 }
 
