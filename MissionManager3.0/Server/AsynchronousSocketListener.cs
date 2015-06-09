@@ -12,12 +12,14 @@ namespace SocketTutorial.FormsServer
         // Thread signal.
         public static ManualResetEvent allDone = new ManualResetEvent(false);
         private Server.VideoFormActionDelegate _videoFormActionDelegate;
+        private Server.ImageFormActionDelegate _imageFormActionDelegate;
         public delegate void ScreenWriterDelegate(string input);
 
-        public AsynchronousSocketListener(ScreenWriterDelegate screenWriterCall, Server.VideoFormActionDelegate videoFormActionDelegate)
+        public AsynchronousSocketListener(ScreenWriterDelegate screenWriterCall, Server.VideoFormActionDelegate videoFormActionDelegate, Server.ImageFormActionDelegate imageFormActionDelegate)
         {
             _screenWriterCall = screenWriterCall;
             _videoFormActionDelegate = videoFormActionDelegate;
+            _imageFormActionDelegate = imageFormActionDelegate;
         }
 
         private ScreenWriterDelegate _screenWriterCall;
@@ -123,7 +125,7 @@ namespace SocketTutorial.FormsServer
                 string message = "Read " + content.Length + "bytes from wifi socket. Data = " + content;
                 _screenWriterCall(message);
                 //callJSONParse    
-                ParseJson parseJson = new ParseJson(_videoFormActionDelegate);
+                ParseJson parseJson = new ParseJson(_videoFormActionDelegate, _imageFormActionDelegate);
                 JsonReturn = parseJson.InitialParsing(content); //parse message
 
 

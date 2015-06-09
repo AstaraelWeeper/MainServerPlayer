@@ -116,6 +116,15 @@ namespace SocketTutorial.FormsServer
             }
         }
 
+        public void MinimiseForm()//to hook up
+        {
+            this.MinimiseForm();
+        }
+
+        public void MaximiseForm()
+        {
+            this.MaximiseForm();
+        }
     }
   
 }

@@ -78,13 +78,13 @@ namespace SocketTutorial.FormsServer
 
         void LoadWifiAndBTListeners()
         {
-            listener = new AsynchronousSocketListener(screenWriterDelegate, videoFormActionDelegate);
+            listener = new AsynchronousSocketListener(screenWriterDelegate, videoFormActionDelegate,imageFormActionDelegate);
             ioThread = new Thread(new ThreadStart(listener.StartListening));
             ioThread.SetApartmentState(ApartmentState.STA);
             ioThread.Start();
             WriteToScreen("Socket server listening");
 
-            bluetoothListener = new BluetoothServer(screenWriterDelegateBT, videoFormActionDelegate);
+            bluetoothListener = new BluetoothServer(screenWriterDelegateBT, videoFormActionDelegate, imageFormActionDelegate);
             btThread = new Thread(new ThreadStart(bluetoothListener.ServerConnectThread));
             btThread.SetApartmentState(ApartmentState.STA);
             btThread.Start();

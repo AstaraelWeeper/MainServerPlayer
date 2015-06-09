@@ -18,11 +18,13 @@ namespace SocketTutorial.FormsServer
         public delegate void ScreenWriterDelegate(string input);
         private ScreenWriterDelegate _screenWriterCallBT;
         private Server.VideoFormActionDelegate _videoFormActionDelegate;
+        private Server.ImageFormActionDelegate _imageFormActionDelegate;
 
-        public BluetoothServer (ScreenWriterDelegate screenWriterCallBT, Server.VideoFormActionDelegate videoFormActionDelegate)
+        public BluetoothServer (ScreenWriterDelegate screenWriterCallBT, Server.VideoFormActionDelegate videoFormActionDelegate, Server.ImageFormActionDelegate imageFormActionDelegate)
         {
             _screenWriterCallBT = screenWriterCallBT;
             _videoFormActionDelegate = videoFormActionDelegate;
+            _imageFormActionDelegate = imageFormActionDelegate;
         }
 
         Guid mUUID = new Guid("ef0e079e-de01-4080-bfcc-c8a24ecf69de");
@@ -60,7 +62,7 @@ namespace SocketTutorial.FormsServer
 
                     _screenWriterCallBT("Recieved: " + content + "via bluetooth");
 
-                    ParseJson parseJson = new ParseJson(_videoFormActionDelegate);
+                    ParseJson parseJson = new ParseJson(_videoFormActionDelegate, _imageFormActionDelegate);
                     JsonReturn = parseJson.InitialParsing(content); //parse message
 
                     byte[] sent = Encoding.ASCII.GetBytes(JsonReturn);
