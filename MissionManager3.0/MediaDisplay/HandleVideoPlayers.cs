@@ -168,6 +168,12 @@ namespace SocketTutorial.FormsServer
                     return stringReturnMessage;
                 }
 
+                else if (message.Contains("GetDirection"))
+                {
+                    stringReturnMessage = getFacingDirectionJSON();
+                    return stringReturnMessage;
+                }
+
                 else
                 {
                     stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"RequestFailed\"}";
