@@ -104,12 +104,12 @@ namespace SocketTutorial.FormsServer
         }
         public string PerformVideoAction(VideoAction action, string message)
         {
-            string JsonReturn= "";
+            string JsonReturn= "failed at PVA";
 
             if(txtServer.InvokeRequired)
             {
-                Invoke(videoFormActionDelegate, action, message);
-                return JsonReturn;
+                return Invoke(videoFormActionDelegate, action, message).ToString();
+              
             }
 
             else
@@ -117,20 +117,22 @@ namespace SocketTutorial.FormsServer
                 if (action == VideoAction.InitialisePlayers)
                 {
                     JsonReturn = handleVideoPlayers.InitialisePlayers(videoDisplay, videoDisplay2, message );
-                    return JsonReturn;
+                    
 
                 }
                 else if (action == VideoAction.VideoPlayerControls)
                 {
                     JsonReturn = handleVideoPlayers.VideoPlayerControls(message);
-                    return JsonReturn;
+                    
 
                 }
                 else
                 {
                     JsonReturn = "video action failed";
-                    return JsonReturn;
+                    
                 }
+
+                return JsonReturn;
 
             }
         }

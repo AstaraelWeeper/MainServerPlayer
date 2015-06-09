@@ -68,7 +68,7 @@ namespace SocketTutorial.FormsServer
 
         public string ParseJsonMethod(List<string> JsonMessage) //will need to return JSON
         {
-            string JsonReturn = "";
+            string JsonReturn = "failed at ParseJson";
             List<string> list = new List<string>();
             if (JsonMessage[0] == "GetDirectories")
             {
