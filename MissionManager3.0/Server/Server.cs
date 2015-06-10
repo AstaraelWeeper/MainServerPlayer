@@ -31,12 +31,11 @@ namespace SocketTutorial.FormsServer
         public delegate string ImageFormActionDelegate(ImageAction action, string message);
         private ImageFormActionDelegate imageFormActionDelegate;
 
-        HandleVideoPlayers handleVideoPlayers = new HandleVideoPlayers();
-        public VideoDisplay videoDisplay = new VideoDisplay();
-        public VideoDisplay videoDisplay2 = new VideoDisplay();
+        public VideoDisplay videoDisplay;
+        public VideoDisplay videoDisplay2;
         public ImageDisplay imageDisplay;
         public ImageDisplay imageDisplay2;
-        HandleImageViewers handleImageViewers = new HandleImageViewers();
+
         int screens = 2;
         static int resolutionWidth = 1920;
         static int resolutionHight = 1080;
@@ -119,11 +118,28 @@ namespace SocketTutorial.FormsServer
             {
                 if (action == VideoAction.InitialisePlayers)
                 {
-                    JsonReturn = handleVideoPlayers.InitialisePlayers(videoDisplay, videoDisplay2, message );
+                    videoDisplay = new VideoDisplay(1, message, resolutionWidth); //expecting direction to reset to 0 if new one opened
+                    videoDisplay2 = new VideoDisplay(2, message, resolutionWidth);
+
+                    videoDisplay.Width = screens * resolutionWidth;
+                    videoDisplay2.Width = 0;
+                    videoDisplay.Height = resolutionHight;
+                    videoDisplay2.Height = resolutionHight;
+                    videoDisplay.Location = imageDisplay.imageViewerLocation;
+                    videoDisplay2.Location = imageDisplay2.imageViewerLocation;
+                    videoDisplay.WindowState = FormWindowState.Maximized;
+                    videoDisplay2.WindowState = FormWindowState.Maximized;
+                    imageDisplay.WindowState = FormWindowState.Minimized;
+                    imageDisplay2.WindowState = FormWindowState.Minimized;
+                    videoDisplay.Show();
+                    videoDisplay2.Show();
+
+                    JsonReturn = "{\"messageType\":\"videoDisplay\",\"messageBody\":\"Video Initialised\"}";
+                    return JsonReturn;
                 }
                 else if (action == VideoAction.VideoPlayerControls)
                 {
-                    JsonReturn = handleVideoPlayers.VideoPlayerControls(message);
+                    JsonReturn = VideoPlayerControls(message);
                 }
                 else
                 {
@@ -158,12 +174,15 @@ namespace SocketTutorial.FormsServer
                     imageDisplay2.Height = resolutionHight;
                     imageDisplay.Location = imageDisplay.imageViewerLocation;
                     imageDisplay2.Location = imageDisplay2.imageViewerLocation;
+                    imageDisplay.WindowState = FormWindowState.Maximized;
+                    imageDisplay2.WindowState = FormWindowState.Maximized;
+                    videoDisplay.WindowState = FormWindowState.Minimized;
+                    videoDisplay2.WindowState = FormWindowState.Minimized;
                     imageDisplay.Show();
                     imageDisplay2.Show();
 
                     JsonReturn = "{\"messageType\":\"ImageViewer\",\"messageBody\":\"Image Initialised\"}";
-                    handleVideoPlayers.videoDisplay.MinimiseForm();
-                    handleVideoPlayers.videoDisplay2.MinimiseForm();
+                    
                     return JsonReturn;
 
                 }
@@ -176,6 +195,70 @@ namespace SocketTutorial.FormsServer
 
             }
         }
+        public string VideoPlayerControls(string message)
+        {
+            string stringReturnMessage = "";
 
+            if (videoDisplay != null)
+            {
+                if (message.Contains("stop"))
+                {
+                    stringReturnMessage = videoDisplay.Stop();
+                    videoDisplay2.Stop();
+                    return stringReturnMessage;
+                }
+                else if (message.Contains("pause"))
+                {
+                    stringReturnMessage = videoDisplay.Pause();
+                    videoDisplay2.Pause();
+                    return stringReturnMessage;
+                }
+                else if (message.Contains("play"))
+                {
+                    stringReturnMessage = videoDisplay.Play();
+                    videoDisplay2.Play();
+                    return stringReturnMessage;
+                }
+
+                else if (message.Contains("rotate right"))
+                {
+                    videoDisplay2.rotateRight();
+                    stringReturnMessage = videoDisplay.rotateRight();
+
+                    return stringReturnMessage;
+                }
+                else if (message.Contains("rotate left"))
+                {
+                    videoDisplay2.rotateLeft();
+                    stringReturnMessage = videoDisplay.rotateLeft();
+                    return stringReturnMessage;
+                }
+
+                else if (message.Contains("Raise Volume"))
+                {
+                    stringReturnMessage = videoDisplay.IncreaseVolume();
+                    videoDisplay2.IncreaseVolume();
+                    return stringReturnMessage;
+                }
+                else if (message.Contains("Lower Volume"))
+                {
+                    stringReturnMessage = videoDisplay.DecreaseVolume();
+                    videoDisplay2.DecreaseVolume();
+                    return stringReturnMessage;
+                }
+
+                else
+                {
+                    stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"RequestFailed\"}";
+                    return stringReturnMessage;
+                }
+            }
+            else
+            {
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"No Video Player\"}";
+                return stringReturnMessage;
+            }
+
+        } 
     }
 }

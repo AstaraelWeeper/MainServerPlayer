@@ -36,11 +36,8 @@ namespace SocketTutorial.FormsServer
             picImageDisplay.SizeMode = PictureBoxSizeMode.StretchImage; //don't know if this will be right with the stitched image  
 
         }
-
-        private string rotateRight()
+        public void rotateRight()
         {
-            string stringReturnMessage;
-
             if (currentFrontDirection < 3)
             {
                 currentFrontDirection++;
@@ -51,10 +48,8 @@ namespace SocketTutorial.FormsServer
             }
 
         }
-
-        private string rotateLeft()
+        public void rotateLeft()
         {
-            string stringReturnMessage;
 
             if (currentFrontDirection > 0)
             {

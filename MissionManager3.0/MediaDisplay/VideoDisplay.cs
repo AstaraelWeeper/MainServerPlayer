@@ -14,24 +14,36 @@ namespace SocketTutorial.FormsServer
 {
     public partial class VideoDisplay : Form
     {
-        string path;
+        string JsonReturn;
+        static int resolutionWidth;
+        public int currentFrontDirection = 0; //0 = front, 1 = right, 2 = back, 3 = left
+        static int picX;
+        static int y = 0;
+        public Point videoDisplayLocation;
+
         static string returnPlugin = "";
         string returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
 
-        public VideoDisplay()
+        public VideoDisplay(int display, string path, int resWidth)
         {
             InitializeComponent();
-        }
+            if (display == 1)
+            {
+                picX = (currentFrontDirection + 1) * resolutionWidth;
+                videoDisplayLocation = new Point(picX, y);
+            }
+            else if (display == 2)
+            {
+                picX = (currentFrontDirection) * resolutionWidth;
+                videoDisplayLocation = new Point(picX, y);
+            }
+            resolutionWidth = resWidth;
 
-
-        public void VideoDisplayInitialise(string pathIn)
-        {
-            path = pathIn;
-           
-            axVLCPlugin21.playlist.add("File:///"+path,null, null);
+            axVLCPlugin21.playlist.add("File:///" + path, null, null);
             axVLCPlugin21.playlist.playItem(0);
-            
         }
+
+
         public string Pause()
         {
                 axVLCPlugin21.playlist.pause();
@@ -115,15 +127,72 @@ namespace SocketTutorial.FormsServer
                 return false;
             }
         }
-
-        public void MinimiseForm()//to hook up
+        public string rotateRight()
         {
-            this.MinimiseForm();
+            string stringReturnMessage;
+
+            if (currentFrontDirection < 3)
+            {
+                currentFrontDirection++;
+            }
+            else if (currentFrontDirection == 3)
+            {
+                currentFrontDirection = 0;
+            }
+            this.Location = videoDisplayLocation;
+
+            stringReturnMessage = getFacingDirectionJSON();
+            return stringReturnMessage;
+
         }
 
-        public void MaximiseForm()
+        public string rotateLeft()
         {
-            this.MaximiseForm();
+            string stringReturnMessage;
+
+            if (currentFrontDirection > 0)
+            {
+                currentFrontDirection--;
+            }
+            else if (currentFrontDirection == 0)
+            {
+                currentFrontDirection = 3;
+            }
+           this.Location = videoDisplayLocation;
+
+            stringReturnMessage = getFacingDirectionJSON();
+            return stringReturnMessage;
+        }
+
+        private string getFacingDirectionJSON()
+        {
+            string stringReturnMessage;
+            if (currentFrontDirection == 0)
+            {
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Facing Front\"}";
+                return stringReturnMessage;
+            }
+            else if (currentFrontDirection == 1)
+            {
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Facing Right\"}";
+                return stringReturnMessage;
+            }
+            else if (currentFrontDirection == 2)
+            {
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Facing Back\"}";
+                return stringReturnMessage;
+            }
+            else if (currentFrontDirection == 3)
+            {
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Facing Left\"}";
+                return stringReturnMessage;
+            }
+
+            else
+            {
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Facing Calculation Failure\"}";
+                return stringReturnMessage;
+            }
         }
     }
   
