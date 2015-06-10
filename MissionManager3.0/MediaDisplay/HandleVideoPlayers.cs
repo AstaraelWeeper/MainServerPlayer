@@ -61,7 +61,7 @@ namespace SocketTutorial.FormsServer
 
             if (currentFrontDirection < 3)
             {
-                currentFrontDirection++;
+                currentFrontDirection++; 
             }
             else if (currentFrontDirection == 3)
             {

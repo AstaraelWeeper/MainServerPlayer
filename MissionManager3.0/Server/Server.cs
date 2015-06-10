@@ -34,9 +34,12 @@ namespace SocketTutorial.FormsServer
         HandleVideoPlayers handleVideoPlayers = new HandleVideoPlayers();
         public VideoDisplay videoDisplay = new VideoDisplay();
         public VideoDisplay videoDisplay2 = new VideoDisplay();
-        public ImageDisplay imageDisplay = new ImageDisplay();
-        public ImageDisplay imageDisplay2 = new ImageDisplay();
+        public ImageDisplay imageDisplay;
+        public ImageDisplay imageDisplay2;
         HandleImageViewers handleImageViewers = new HandleImageViewers();
+        int screens = 2;
+        static int resolutionWidth = 1920;
+        static int resolutionHight = 1080;
 
 
         public Server()
@@ -146,18 +149,25 @@ namespace SocketTutorial.FormsServer
             {
                 if (action == ImageAction.InitialiseImages)
                 {
-                    JsonReturn = handleImageViewers.InitialiseViewers(imageDisplay, imageDisplay2, message);
+                    imageDisplay = new ImageDisplay(1, message,resolutionWidth); //expecting direction to reset to 0 if new one opened
+                    imageDisplay2 = new ImageDisplay(2, message, resolutionWidth);
+
+                    imageDisplay.Width = screens * resolutionWidth;
+                    imageDisplay2.Width = 0;
+                    imageDisplay.Height = resolutionHight;
+                    imageDisplay2.Height = resolutionHight;
+                    imageDisplay.Location = imageDisplay.imageViewerLocation;
+                    imageDisplay2.Location = imageDisplay2.imageViewerLocation;
+                    imageDisplay.Show();
+                    imageDisplay2.Show();
+
+                    JsonReturn = "{\"messageType\":\"ImageViewer\",\"messageBody\":\"Image Initialised\"}";
                     handleVideoPlayers.videoDisplay.MinimiseForm();
                     handleVideoPlayers.videoDisplay2.MinimiseForm();
                     return JsonReturn;
 
                 }
-                else if (action == ImageAction.ImagePlayerControls)
-                {
-                    JsonReturn = handleImageViewers.ImageViewerControls(message);
-                    return JsonReturn;
 
-                }
                 else
                 {
                     JsonReturn = "image action failed";
