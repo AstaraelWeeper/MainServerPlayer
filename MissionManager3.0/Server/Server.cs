@@ -117,19 +117,14 @@ namespace SocketTutorial.FormsServer
                 if (action == VideoAction.InitialisePlayers)
                 {
                     JsonReturn = handleVideoPlayers.InitialisePlayers(videoDisplay, videoDisplay2, message );
-                    
-
                 }
                 else if (action == VideoAction.VideoPlayerControls)
                 {
                     JsonReturn = handleVideoPlayers.VideoPlayerControls(message);
-                    
-
                 }
                 else
                 {
                     JsonReturn = "video action failed";
-                    
                 }
 
                 return JsonReturn;
@@ -152,6 +147,8 @@ namespace SocketTutorial.FormsServer
                 if (action == ImageAction.InitialiseImages)
                 {
                     JsonReturn = handleImageViewers.InitialiseViewers(imageDisplay, imageDisplay2, message);
+                    handleVideoPlayers.videoDisplay.MinimiseForm();
+                    handleVideoPlayers.videoDisplay2.MinimiseForm();
                     return JsonReturn;
 
                 }

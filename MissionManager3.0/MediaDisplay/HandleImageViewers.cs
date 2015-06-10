@@ -38,6 +38,7 @@ namespace SocketTutorial.FormsServer
 
             imageDisplay.InitialiseImage(path);
             imageDisplay2.InitialiseImage(path);
+
             imageDisplay2.Show();
             imageDisplay.Show();
             

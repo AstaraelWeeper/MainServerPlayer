@@ -39,6 +39,13 @@ namespace SocketTutorial.FormsServer
 
             videoDisplay.VideoDisplayInitialise(path);
             videoDisplay2.VideoDisplayInitialise(path);
+
+            videoDisplay.MaximiseForm();
+            videoDisplay2.MaximiseForm();
+
+            videoDisplay.BringToFront();
+            videoDisplay2.BringToFront();
+
             videoDisplay2.Show();
             videoDisplay.Show();
             

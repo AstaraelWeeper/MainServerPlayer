@@ -130,7 +130,7 @@ namespace SocketTutorial.FormsServer
                 else if (JsonMessage[1] == "volumedown")
                 {
                     //implement
-                    JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"System Volume Lowerer\"}";
+                    JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"System Volume Lowered\"}";
                     return JsonReturn;
                 }
 
@@ -145,7 +145,7 @@ namespace SocketTutorial.FormsServer
                 else if (JsonMessage[1] == "restartmissionmanager")
                 {
                     System.Diagnostics.Process.Start(Application.ExecutablePath); // to start new instance of application
-                    //  this.Close(); //to turn off current app. needs updating
+                     this.Close(); //to turn off current app. needs updating
                     JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Application Restarted\"}";
                     return JsonReturn;
                 }
