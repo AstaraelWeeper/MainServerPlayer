@@ -81,7 +81,6 @@ namespace SocketTutorial.FormsServer
             {
                 string drives = GetDrives();
                 JsonReturn = "{\"messageType\":\"Drives\",\"messageBody\":\"" + drives + "\"}"; //update ben on incoming message
-
             }
 
             else if (JsonMessage[0] == "GetHistory")
@@ -170,12 +169,31 @@ namespace SocketTutorial.FormsServer
         string GetDrives()
         {
             var driveInfo = DriveInfo.GetDrives();
-            string drivepaths = "";
-            for (int i = 0; i < driveInfo.Count(); i++)
+            string drivePaths = "{";
+
+            if (drivePaths.Count() > 1)
             {
-                drivepaths += driveInfo[i] + ",";
+
+                for (int i = 0; i < driveInfo.Count() - 1; i++)//files
+                {
+                    drivePaths += "{\"driveName\":\"" + driveInfo[i] + "\",";
+                    drivePaths += "\"driveType\":\"" + driveInfo[i].GetType() + "\",";
+                    drivePaths += "},";
+                }
+
+                int j = driveInfo.Count() - 1; //needs to look at the list in case the array was empty (if a folder has no files, the list is created and added to)
+                drivePaths += "{\"driveName\":\"" + driveInfo[j] + "\",";
+                drivePaths += "\"driveType\":\"" + driveInfo[j].GetType() + "\",";
+                drivePaths += "}]}";
             }
-            return drivepaths;
+            else if (driveInfo.Count() == 1)
+            {
+                drivePaths += "{\"driveName\":\"" + driveInfo[0] + "\",";
+                drivePaths += "\"driveType\":\"" + driveInfo[0].GetType() + "\",";
+
+                drivePaths += "}]}";
+            }
+            return drivePaths;
         }
         string GetDirectories(string path)
         {
