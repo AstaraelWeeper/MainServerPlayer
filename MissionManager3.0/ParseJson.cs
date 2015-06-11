@@ -19,7 +19,6 @@ namespace SocketTutorial.FormsServer
         //PowerpointHandler powerpointHandler = new PowerpointHandler();
         List<string> History = new List<string>();
         
-        HandleImageViewers handleImageViewers = new HandleImageViewers();
         private Server.VideoFormActionDelegate _videoFormActionDelegate;
         private Server.ImageFormActionDelegate _imageFormActionDelegate;
 
@@ -75,6 +74,13 @@ namespace SocketTutorial.FormsServer
                 //will only receive file path to call a get directories method on to send back
                 JsonReturn = GetDirectories(JsonMessage[1]);
                 return JsonReturn;
+
+            }
+
+                else if(JsonMessage[0] == "GetDrives")
+            {
+                string drives = GetDrives();
+                JsonReturn = "{\"messageType\":\"Drives\",\"messageBody\":\"" + drives + "\"}"; //update ben on incoming message
 
             }
 
@@ -161,7 +167,16 @@ namespace SocketTutorial.FormsServer
             return JsonReturn;
 
         }
-
+        string GetDrives()
+        {
+            var driveInfo = DriveInfo.GetDrives();
+            string drivepaths = "";
+            for (int i = 0; i < driveInfo.Count(); i++)
+            {
+                drivepaths += driveInfo[i] + ",";
+            }
+            return drivepaths;
+        }
         string GetDirectories(string path)
         {
             var directoryPaths = Directory.GetDirectories(path);
