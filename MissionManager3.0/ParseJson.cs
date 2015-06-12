@@ -168,7 +168,7 @@ namespace SocketTutorial.FormsServer
 
         string GetHistory()
         {
-            string historyString = "{";
+            string historyString = "\"historyPaths\":[";
             if (History.Count() > 1)
             {
                 int existsCount = 0;
@@ -247,7 +247,7 @@ namespace SocketTutorial.FormsServer
         string GetDrives()
         {
             var driveInfo = DriveInfo.GetDrives();
-            string drivePaths = "{";
+            string drivePaths = "\"drives\":[";
 
             if (drivePaths.Count() > 1)
             {
@@ -309,7 +309,7 @@ namespace SocketTutorial.FormsServer
             {
                 fileExtensions.Add("none");
                 fileNames.Add("none");
-                string defaultPath = "this folder has no files";
+                string defaultPath = path;
                 filePaths.Add(defaultPath);
                 fileSizes.Add("0");
 
