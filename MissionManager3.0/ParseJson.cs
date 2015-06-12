@@ -85,8 +85,7 @@ namespace SocketTutorial.FormsServer
 
             else if (JsonMessage[0] == "GetHistory")
             {
-                JsonReturn = "{\"messageType\":\"GetHistory\",\"messageBody\":\"" + History.ToString() + "\"}"; //amend/check to ensure correct syntax of string
-                
+                JsonReturn = GetHistory();    
             }
 
             else if (JsonMessage[0] == "LaunchVideo")
@@ -166,6 +165,67 @@ namespace SocketTutorial.FormsServer
             return JsonReturn;
 
         }
+
+        string GetHistory()
+        {
+            string historyString = "{";
+            if (History.Count() > 1)
+            {
+
+                for (int i = 0; i < History.Count() - 1; i++)
+                {
+                    if (File.Exists(History[i]))
+                    {
+                        FileInfo fileInfo = new FileInfo(History[i]);
+                        long size = fileInfo.Length;
+                        historyString += "{\"fileName\":\"" + Path.GetFileNameWithoutExtension(History[i]) + "\",";
+                        historyString += "\"fileExtension\":\"" + Path.GetExtension(History[i]) + "\",";
+                        historyString += "\"filePath\":\"" + History[i] + "\",";
+                        historyString += "\"fileSizeInBytes\":\"" + size.ToString() + "\"";
+
+                        historyString += "},";
+                    }
+                }
+                int j = History.Count - 1;
+                if (File.Exists(History[j]))
+                {
+
+                    FileInfo fileInfoJ = new FileInfo(History[j]);
+                    long sizeJ = fileInfoJ.Length;
+                    historyString += "{\"fileName\":\"" + History[j] + "\",";
+                    historyString += "\"fileExtension\":\"" + History[j] + "\",";
+                    historyString += "\"filePath\":\"" + History[j] + "\",";
+                    historyString += "\"fileSizeInBytes\":\"" + sizeJ.ToString() + "\"";
+
+                    historyString += "}}]";
+                }
+            }
+            else if (History.Count == 1)
+            {
+                if (File.Exists(History[0]))
+                {
+                    FileInfo fileInfo = new FileInfo(History[0]);
+                    long size = fileInfo.Length;
+                    historyString += "{\"fileName\":\"" + History[0] + "\",";
+                    historyString += "\"fileExtension\":\"" + History[0] + "\",";
+                    historyString += "\"filePath\":\"" + History[0] + "\",";
+                    historyString += "\"fileSizeInBytes\":\"" + size.ToString() + "\"";
+
+                    historyString += "}]}";
+                }
+            }
+            else
+            {                
+                    historyString += "{\"fileName\":\" none \",";
+                    historyString += "\"fileExtension\":\" none \",";
+                    historyString += "\"filePath\":\" none \",";
+                    historyString += "\"fileSizeInBytes\":\" none \"";
+
+                    historyString += "}]}";
+            }
+
+            return historyString;
+        }
         string GetDrives()
         {
             var driveInfo = DriveInfo.GetDrives();
@@ -174,14 +234,14 @@ namespace SocketTutorial.FormsServer
             if (drivePaths.Count() > 1)
             {
 
-                for (int i = 0; i < driveInfo.Count() - 1; i++)//files
+                for (int i = 0; i < driveInfo.Count() - 1; i++)
                 {
                     drivePaths += "{\"driveName\":\"" + driveInfo[i] + "\",";
                     drivePaths += "\"driveType\":\"" + driveInfo[i].GetType() + "\",";
                     drivePaths += "},";
                 }
 
-                int j = driveInfo.Count() - 1; //needs to look at the list in case the array was empty (if a folder has no files, the list is created and added to)
+                int j = driveInfo.Count() - 1; 
                 drivePaths += "{\"driveName\":\"" + driveInfo[j] + "\",";
                 drivePaths += "\"driveType\":\"" + driveInfo[j].GetType() + "\",";
                 drivePaths += "}]}";
@@ -190,6 +250,13 @@ namespace SocketTutorial.FormsServer
             {
                 drivePaths += "{\"driveName\":\"" + driveInfo[0] + "\",";
                 drivePaths += "\"driveType\":\"" + driveInfo[0].GetType() + "\",";
+
+                drivePaths += "}]}";
+            }
+            else
+            {
+                drivePaths += "{\"driveName\":\" none \",";
+                drivePaths += "\"driveType\":\" none \",";
 
                 drivePaths += "}]}";
             }
