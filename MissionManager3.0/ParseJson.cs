@@ -171,25 +171,26 @@ namespace SocketTutorial.FormsServer
             string historyString = "{";
             if (History.Count() > 1)
             {
+                int existsCount = 0;
 
                 for (int i = 0; i < History.Count() - 1; i++)
                 {
                     if (File.Exists(History[i]))
                     {
+                        existsCount++;
                         FileInfo fileInfo = new FileInfo(History[i]);
                         long size = fileInfo.Length;
                         historyString += "{\"fileName\":\"" + Path.GetFileNameWithoutExtension(History[i]) + "\",";
                         historyString += "\"fileExtension\":\"" + Path.GetExtension(History[i]) + "\",";
                         historyString += "\"filePath\":\"" + History[i] + "\",";
                         historyString += "\"fileSizeInBytes\":\"" + size.ToString() + "\"";
-
                         historyString += "},";
                     }
                 }
                 int j = History.Count - 1;
                 if (File.Exists(History[j]))
                 {
-
+                    existsCount++;
                     FileInfo fileInfoJ = new FileInfo(History[j]);
                     long sizeJ = fileInfoJ.Length;
                     historyString += "{\"fileName\":\"" + History[j] + "\",";
@@ -198,6 +199,14 @@ namespace SocketTutorial.FormsServer
                     historyString += "\"fileSizeInBytes\":\"" + sizeJ.ToString() + "\"";
 
                     historyString += "}}]";
+                }
+                if(existsCount == 0)
+                {
+                    historyString += "{\"fileName\":\" none \",";
+                    historyString += "\"fileExtension\":\" none \",";
+                    historyString += "\"filePath\":\" none \",";
+                    historyString += "\"fileSizeInBytes\":\" none \"";
+                    historyString += "}]}";
                 }
             }
             else if (History.Count == 1)
@@ -210,6 +219,15 @@ namespace SocketTutorial.FormsServer
                     historyString += "\"fileExtension\":\"" + History[0] + "\",";
                     historyString += "\"filePath\":\"" + History[0] + "\",";
                     historyString += "\"fileSizeInBytes\":\"" + size.ToString() + "\"";
+
+                    historyString += "}]}";
+                }
+                else
+                {
+                    historyString += "{\"fileName\":\" none \",";
+                    historyString += "\"fileExtension\":\" none \",";
+                    historyString += "\"filePath\":\" none \",";
+                    historyString += "\"fileSizeInBytes\":\" none \"";
 
                     historyString += "}]}";
                 }
