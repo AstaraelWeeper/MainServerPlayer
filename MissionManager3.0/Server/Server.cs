@@ -125,12 +125,12 @@ namespace SocketTutorial.FormsServer
                     videoDisplay2.Width = 0;
                     videoDisplay.Height = resolutionHight;
                     videoDisplay2.Height = resolutionHight;
-                    videoDisplay.Location = imageDisplay.imageViewerLocation;
-                    videoDisplay2.Location = imageDisplay2.imageViewerLocation;
-                    videoDisplay.WindowState = FormWindowState.Maximized;
-                    videoDisplay2.WindowState = FormWindowState.Maximized;
-                    imageDisplay.WindowState = FormWindowState.Minimized;
-                    imageDisplay2.WindowState = FormWindowState.Minimized;
+                    videoDisplay.Location = videoDisplay.videoDisplayLocation;
+                    videoDisplay2.Location = videoDisplay2.videoDisplayLocation;
+                    //videoDisplay.WindowState = FormWindowState.Maximized;
+                    //videoDisplay2.WindowState = FormWindowState.Maximized;
+                    //imageDisplay.WindowState = FormWindowState.Minimized;
+                    //imageDisplay2.WindowState = FormWindowState.Minimized;
                     videoDisplay.Show();
                     videoDisplay2.Show();
 
@@ -174,10 +174,10 @@ namespace SocketTutorial.FormsServer
                     imageDisplay2.Height = resolutionHight;
                     imageDisplay.Location = imageDisplay.imageViewerLocation;
                     imageDisplay2.Location = imageDisplay2.imageViewerLocation;
-                    imageDisplay.WindowState = FormWindowState.Maximized;
-                    imageDisplay2.WindowState = FormWindowState.Maximized;
-                    videoDisplay.WindowState = FormWindowState.Minimized;
-                    videoDisplay2.WindowState = FormWindowState.Minimized;
+                    //imageDisplay.WindowState = FormWindowState.Maximized;
+                    //imageDisplay2.WindowState = FormWindowState.Maximized;
+                    //videoDisplay.WindowState = FormWindowState.Minimized;
+                    //videoDisplay2.WindowState = FormWindowState.Minimized;
                     imageDisplay.Show();
                     imageDisplay2.Show();
 
@@ -237,13 +237,11 @@ namespace SocketTutorial.FormsServer
                 else if (message.Contains("Raise Volume"))
                 {
                     stringReturnMessage = videoDisplay.IncreaseVolume();
-                    videoDisplay2.IncreaseVolume();
                     return stringReturnMessage;
                 }
                 else if (message.Contains("Lower Volume"))
                 {
                     stringReturnMessage = videoDisplay.DecreaseVolume();
-                    videoDisplay2.DecreaseVolume();
                     return stringReturnMessage;
                 }
 

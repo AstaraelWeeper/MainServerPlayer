@@ -11,7 +11,6 @@ namespace SocketTutorial.FormsServer
 {
     public partial class ImageDisplay : Form
     {
-        string JsonReturn;
         static int resolutionWidth; 
         public int currentFrontDirection = 0; //0 = front, 1 = right, 2 = back, 3 = left
         static int picX;

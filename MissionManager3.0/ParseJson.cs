@@ -78,8 +78,7 @@ namespace SocketTutorial.FormsServer
 
                 else if(JsonMessage[0] == "GetDrives")
             {
-                string drives = GetDrives();
-                JsonReturn = "{\"messageType\":\"Drives\",\"messageBody\":\"" + drives + "\"}"; 
+                JsonReturn = GetDrives();              
             }
 
             else if (JsonMessage[0] == "GetHistory")
@@ -167,7 +166,7 @@ namespace SocketTutorial.FormsServer
 
         string GetHistory()
         {
-            string historyString = "\"historyPaths\":[";
+            string historyString = "{\"historyPaths\":[";
             if (History.Count() > 1)
             {
                 int existsCount = 0;
@@ -197,14 +196,14 @@ namespace SocketTutorial.FormsServer
                     historyString += "\"filePath\":\"" + History[j] + "\",";
                     historyString += "\"fileSizeInBytes\":\"" + sizeJ.ToString() + "\"";
 
-                    historyString += "}}]";
+                    historyString += "}]}";
                 }
                 if(existsCount == 0)
                 {
                     historyString += "{\"fileName\":\" none \",";
                     historyString += "\"fileExtension\":\" none \",";
                     historyString += "\"filePath\":\" none \",";
-                    historyString += "\"fileSizeInBytes\":\" none \"";
+                    historyString += "\"fileSizeInBytes\":\" 0 \"";
                     historyString += "}]}";
                 }
             }
@@ -223,22 +222,12 @@ namespace SocketTutorial.FormsServer
                 }
                 else
                 {
-                    historyString += "{\"fileName\":\" none \",";
-                    historyString += "\"fileExtension\":\" none \",";
-                    historyString += "\"filePath\":\" none \",";
-                    historyString += "\"fileSizeInBytes\":\" none \"";
-
                     historyString += "}]}";
                 }
             }
             else
             {                
-                    historyString += "{\"fileName\":\" none \",";
-                    historyString += "\"fileExtension\":\" none \",";
-                    historyString += "\"filePath\":\" none \",";
-                    historyString += "\"fileSizeInBytes\":\" none \"";
-
-                    historyString += "}]}";
+                    historyString += "]}";
             }
 
             return historyString;
@@ -246,24 +235,26 @@ namespace SocketTutorial.FormsServer
         string GetDrives()
         {
             var driveInfo = DriveInfo.GetDrives();
-            string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string drivePaths = "\"drives\":[";
+            List<string> driveInfoStr = new List<string>();
+            string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory).Replace("\\", "/");
+            string drivePaths = "{\"drives\":[";
 
             if (drivePaths.Count() > 0)
             {
 
                 for (int i = 0; i < driveInfo.Count(); i++)
-                {
-                    drivePaths += "{\"driveName\":\"" + driveInfo[i] + "\",";
-                    drivePaths += "\"driveType\":\"" + driveInfo[i].GetType() + "\",";
-                    drivePaths += "{\"drivePath\":\"" + driveInfo[i] + "\",";
+                {                    
+                    driveInfoStr.Add(driveInfo[i].ToString().Replace("\\", "/"));
+                    drivePaths += "{\"driveName\":\"" + driveInfoStr[i] + "\",";
+                    drivePaths += "\"driveType\":\"" + driveInfo[i].GetType().ToString() + "\",";
+                    drivePaths += "\"drivePath\":\"" + driveInfoStr[i] + "\"";
                     drivePaths += "},";
                 }
 
                  
                 drivePaths += "{\"driveName\":\"Desktop\",";
                 drivePaths += "\"driveType\":\"N/A\",";
-                drivePaths += "{\"drivePath\":\"" + desktop + "\",";
+                drivePaths += "\"drivePath\":\"" + desktop + "\"";
                 drivePaths += "}]}";
             }
 
@@ -271,7 +262,7 @@ namespace SocketTutorial.FormsServer
             {
                 drivePaths += "{\"driveName\":\" none \",";
                 drivePaths += "\"driveType\":\" none \",";
-                drivePaths += "{\"drivePath\":\" none \",";
+                drivePaths += "\"drivePath\":\" none \"";
                 drivePaths += "}]}";
             }
             return drivePaths;
@@ -286,9 +277,6 @@ namespace SocketTutorial.FormsServer
             List<string> fileNames = new List<string>();
             List<string> fileExtensions = new List<string>();
             List<string> fileSizes = new List<string>();
-
-
-
 
 
             for (int i = 0; i < directoryPaths.Length; i++) //if no dirs that doesn't matter
@@ -329,11 +317,17 @@ namespace SocketTutorial.FormsServer
 
             for (int i = 0; i < directoryPaths.Length; i++) //directories builder
             {
+                if (directoryNames[i] == "$RECYCLE.BIN" || directoryNames[i] == "Documents and Settings")
+                {
+                }
+                else
+                {
                 paths += "{\"fileName\":\"" + directoryNames[i] + "\",";
 
                 paths += "\"filePath\":\"" + directoryPaths[i] + "\"";
 
                 paths += "},";
+                }
             }
 
             if (filePaths.Count > 1)

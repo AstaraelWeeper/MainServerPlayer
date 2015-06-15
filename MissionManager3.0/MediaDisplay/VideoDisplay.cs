@@ -36,6 +36,7 @@ namespace SocketTutorial.FormsServer
             {
                 picX = (currentFrontDirection) * resolutionWidth;
                 videoDisplayLocation = new Point(picX, y);
+                axVLCPlugin21.Volume = 0;
             }
             resolutionWidth = resWidth;
 
