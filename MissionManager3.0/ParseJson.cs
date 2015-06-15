@@ -71,7 +71,6 @@ namespace SocketTutorial.FormsServer
             List<string> list = new List<string>();
             if (JsonMessage[0] == "GetDirectories")
             {
-                //will only receive file path to call a get directories method on to send back
                 JsonReturn = GetDirectories(JsonMessage[1]);
                 return JsonReturn;
 
@@ -80,7 +79,7 @@ namespace SocketTutorial.FormsServer
                 else if(JsonMessage[0] == "GetDrives")
             {
                 string drives = GetDrives();
-                JsonReturn = "{\"messageType\":\"Drives\",\"messageBody\":\"" + drives + "\"}"; //update ben on incoming message
+                JsonReturn = "{\"messageType\":\"Drives\",\"messageBody\":\"" + drives + "\"}"; 
             }
 
             else if (JsonMessage[0] == "GetHistory")
@@ -247,35 +246,32 @@ namespace SocketTutorial.FormsServer
         string GetDrives()
         {
             var driveInfo = DriveInfo.GetDrives();
+            string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             string drivePaths = "\"drives\":[";
 
-            if (drivePaths.Count() > 1)
+            if (drivePaths.Count() > 0)
             {
 
-                for (int i = 0; i < driveInfo.Count() - 1; i++)
+                for (int i = 0; i < driveInfo.Count(); i++)
                 {
                     drivePaths += "{\"driveName\":\"" + driveInfo[i] + "\",";
                     drivePaths += "\"driveType\":\"" + driveInfo[i].GetType() + "\",";
+                    drivePaths += "{\"drivePath\":\"" + driveInfo[i] + "\",";
                     drivePaths += "},";
                 }
 
-                int j = driveInfo.Count() - 1; 
-                drivePaths += "{\"driveName\":\"" + driveInfo[j] + "\",";
-                drivePaths += "\"driveType\":\"" + driveInfo[j].GetType() + "\",";
+                 
+                drivePaths += "{\"driveName\":\"Desktop\",";
+                drivePaths += "\"driveType\":\"N/A\",";
+                drivePaths += "{\"drivePath\":\"" + desktop + "\",";
                 drivePaths += "}]}";
             }
-            else if (driveInfo.Count() == 1)
-            {
-                drivePaths += "{\"driveName\":\"" + driveInfo[0] + "\",";
-                drivePaths += "\"driveType\":\"" + driveInfo[0].GetType() + "\",";
 
-                drivePaths += "}]}";
-            }
             else
             {
                 drivePaths += "{\"driveName\":\" none \",";
                 drivePaths += "\"driveType\":\" none \",";
-
+                drivePaths += "{\"drivePath\":\" none \",";
                 drivePaths += "}]}";
             }
             return drivePaths;
