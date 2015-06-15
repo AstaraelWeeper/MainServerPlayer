@@ -107,6 +107,8 @@ namespace SocketTutorial.FormsServer
         public void updateVideoTime()
         {
            //need to send like this regularly { "messageType": "VideoPlayer", "messageBody" : "move-00:04:48" }
+            var currentPlayDuration = TimeSpan.FromMilliseconds(axVLCPlugin21.input.Time);
+            string jsonReturn = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"move-" + currentPlayDuration.Hours.ToString() + currentPlayDuration.Minutes.ToString() + currentPlayDuration.Seconds.ToString() + "\"}";
         }
 
         public static bool GetDuration(string filename, out TimeSpan duration)
