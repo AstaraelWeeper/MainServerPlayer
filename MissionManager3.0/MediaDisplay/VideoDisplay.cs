@@ -20,6 +20,7 @@ namespace SocketTutorial.FormsServer
         static int y = 0;
         public Point videoDisplayLocation;
         int displayNumber;
+        TimeSpan duration;
 
         static string returnPlugin = "";
         string returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
@@ -90,7 +91,6 @@ namespace SocketTutorial.FormsServer
         public string getVideoLength(string path)
         {
             
-            TimeSpan duration;
 
             if (GetDuration(path, out duration))
             {
@@ -107,11 +107,19 @@ namespace SocketTutorial.FormsServer
             }
         }
 
-        public string updateVideoTime()
+        public string SyncVideoTime()
         {
            //need to send like this regularly { "messageType": "VideoPlayerSync", "messageBody" : "00:04:48" }
             var currentPlayDuration = TimeSpan.FromMilliseconds(axVLCPlugin21.input.Time);
             string jsonReturn = "{\"messageType\":\"VideoPlayerSync\",\"messageBody\":" + currentPlayDuration.Hours.ToString() + currentPlayDuration.Minutes.ToString() + currentPlayDuration.Seconds.ToString() + "\"}";
+            return jsonReturn;
+        }
+
+        public string UpdateVideoTime(TimeSpan newTime) //take in timespan
+        {
+            double changeSeconds = newTime.TotalSeconds;
+            axVLCPlugin21.input.Time = changeSeconds;
+            string jsonReturn = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"video updated\"}";
             return jsonReturn;
         }
 

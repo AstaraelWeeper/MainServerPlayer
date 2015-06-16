@@ -247,7 +247,17 @@ namespace SocketTutorial.FormsServer
 
                 else if (message.Contains("sync")) 
                 {
-                    stringReturnMessage = videoDisplay.updateVideoTime();
+                    stringReturnMessage = videoDisplay.SyncVideoTime();
+                    return stringReturnMessage;
+                }
+                else if (message.Contains("move"))
+                {
+                    TimeSpan newTime;
+
+                    message = message.Substring(message.IndexOf("-") + 1);
+                    newTime = TimeSpan.Parse(message);
+                    stringReturnMessage = videoDisplay.UpdateVideoTime(newTime);
+                    videoDisplay2.UpdateVideoTime(newTime);
                     return stringReturnMessage;
                 }
 
