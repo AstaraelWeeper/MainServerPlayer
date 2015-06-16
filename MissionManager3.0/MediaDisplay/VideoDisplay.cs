@@ -21,12 +21,14 @@ namespace SocketTutorial.FormsServer
         public Point videoDisplayLocation;
         int displayNumber;
         TimeSpan duration;
+        private int screens;
 
         static string returnPlugin = "";
         string returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
 
-        public VideoDisplay(int display, string path, int resWidth)
+        public VideoDisplay(int display, string path, int resWidth, int screensIn)
         {
+            screens = screensIn;
             resolutionWidth = resWidth;
             displayNumber = display;
             InitializeComponent();
@@ -111,7 +113,22 @@ namespace SocketTutorial.FormsServer
         {
            //need to send like this regularly { "messageType": "VideoPlayerSync", "messageBody" : "00:04:48" }
             var currentPlayDuration = TimeSpan.FromMilliseconds(axVLCPlugin21.input.Time);
-            string jsonReturn = "{\"messageType\":\"VideoPlayerSync\",\"messageBody\":" + currentPlayDuration.Hours.ToString() + currentPlayDuration.Minutes.ToString() + currentPlayDuration.Seconds.ToString() + "\"}";
+            string hours = currentPlayDuration.Hours.ToString();
+            string minutes = currentPlayDuration.Minutes.ToString();
+            string seconds = currentPlayDuration.Seconds.ToString();
+            if (hours.Length == 1)
+            {
+                hours = hours.PadLeft(2,'0');
+            }
+            if (minutes.Length == 1)
+            {
+                minutes = minutes.PadLeft(2,'0');
+            }
+            if (seconds.Length == 1)
+            {
+                seconds = seconds.PadLeft(2,'0');
+            }
+            string jsonReturn = "{\"messageType\":\"VideoPlayerSync\",\"messageBody\":" + hours + ":" + minutes +":" + seconds + "\"}";
             return jsonReturn;
         }
 
@@ -119,7 +136,7 @@ namespace SocketTutorial.FormsServer
         {
             double changeSeconds = newTime.TotalSeconds;
             axVLCPlugin21.input.Time = changeSeconds;
-            string jsonReturn = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"video updated\"}";
+            string jsonReturn = SyncVideoTime();
             return jsonReturn;
         }
 
@@ -147,7 +164,7 @@ namespace SocketTutorial.FormsServer
             string stringReturnMessage;
             if (displayNumber == 1)
             {
-                if (currentFrontDirection < 3) //0 - 3 range
+                if (currentFrontDirection < 3) //0 - 3 range for 4 screens
                 {
                     currentFrontDirection++;
                 }

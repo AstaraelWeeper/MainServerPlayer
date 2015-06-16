@@ -118,8 +118,8 @@ namespace SocketTutorial.FormsServer
             {
                 if (action == VideoAction.InitialisePlayers)
                 {
-                    videoDisplay = new VideoDisplay(1, message, resolutionWidth); //expecting direction to reset to 0 if new one opened
-                    videoDisplay2 = new VideoDisplay(2, message, resolutionWidth);
+                    videoDisplay = new VideoDisplay(1, message, resolutionWidth,screens); //expecting direction to reset to 0 if new one opened
+                    videoDisplay2 = new VideoDisplay(2, message, resolutionWidth,screens);
 
                     videoDisplay.Width = screens * resolutionWidth;
                     videoDisplay2.Width = 0;
