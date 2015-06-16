@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using SocketTutorial.FormsServer.JSON;
 using System.Reflection;
 using System.IO;
+using System.IO.File;
 using System.Diagnostics;
 using System.Windows.Forms;
 
@@ -17,7 +18,8 @@ namespace SocketTutorial.FormsServer
     class ParseJson
     {
         //PowerpointHandler powerpointHandler = new PowerpointHandler();
-        List<string> History = new List<string>();
+        List<string> history = new List<string>();
+        string storedHistoryFilePath = @"C:\Users\Public\TestFolder\MissionManagerHistory.txt";
         
         private Server.VideoFormActionDelegate _videoFormActionDelegate;
         private Server.ImageFormActionDelegate _imageFormActionDelegate;
@@ -88,7 +90,7 @@ namespace SocketTutorial.FormsServer
 
             else if (JsonMessage[0] == "LaunchVideo")
             {
-                History.Add(JsonMessage[1]);
+                AdjustHistory(JsonMessage[1]);            
                 JsonReturn = _videoFormActionDelegate(Server.VideoAction.InitialisePlayers, JsonMessage[1]);
                 return JsonReturn;
             }
@@ -101,8 +103,7 @@ namespace SocketTutorial.FormsServer
 
             else if (JsonMessage[0] == "LaunchImage")
             {
-                History.Add(JsonMessage[1]);
-
+                AdjustHistory(JsonMessage[1]);
                 JsonReturn = _imageFormActionDelegate(Server.ImageAction.InitialiseImages, JsonMessage[1]); //get duration here.
                 return JsonReturn;
             }
@@ -164,36 +165,57 @@ namespace SocketTutorial.FormsServer
 
         }
 
+        void AdjustHistory(string filePath)
+        {
+            history.Add(filePath);
+            if (history.Count() <= 10)
+            {
+                System.IO.File.WriteAllLines(storedHistoryFilePath, history); //save over file if up to 10 paths
+            }
+            else //when history.Count = 11
+            {
+                for (int i = 0; i < history.Count(); i++) //i go up to 10
+                {
+                    history[i] = history[i + 1]; //move them all up one
+                }
+                history.RemoveAt(history.Count()); //remove the last one
+                System.IO.File.WriteAllLines(storedHistoryFilePath, history); //save over file if up to 10 paths
+            }
+        }
         string GetHistory()
         {
             string historyString = "{\"historyPaths\":[";
-            if (History.Count() > 1)
+            if(!File.Exists(storedHistoryFilePath))
+            {
+                history = System.IO.File.ReadAllLines(storedHistoryFilePath).ToList();
+            }
+            if (history.Count() > 1)
             {
                 int existsCount = 0;
 
-                for (int i = 0; i < History.Count() - 1; i++)
+                for (int i = 0; i < history.Count() - 1; i++)
                 {
-                    if (File.Exists(History[i]))
+                    if (File.Exists(history[i]))
                     {
                         existsCount++;
-                        FileInfo fileInfo = new FileInfo(History[i]);
+                        FileInfo fileInfo = new FileInfo(history[i]);
                         long size = fileInfo.Length;
-                        historyString += "{\"fileName\":\"" + Path.GetFileNameWithoutExtension(History[i]) + "\",";
-                        historyString += "\"fileExtension\":\"" + Path.GetExtension(History[i]) + "\",";
-                        historyString += "\"filePath\":\"" + History[i] + "\",";
+                        historyString += "{\"fileName\":\"" + Path.GetFileNameWithoutExtension(history[i]) + "\",";
+                        historyString += "\"fileExtension\":\"" + Path.GetExtension(history[i]) + "\",";
+                        historyString += "\"filePath\":\"" + history[i] + "\",";
                         historyString += "\"fileSizeInBytes\":\"" + size.ToString() + "\"";
                         historyString += "},";
                     }
                 }
-                int j = History.Count - 1;
-                if (File.Exists(History[j]))
+                int j = history.Count - 1;
+                if (File.Exists(history[j]))
                 {
                     existsCount++;
-                    FileInfo fileInfoJ = new FileInfo(History[j]);
+                    FileInfo fileInfoJ = new FileInfo(history[j]);
                     long sizeJ = fileInfoJ.Length;
-                    historyString += "{\"fileName\":\"" + History[j] + "\",";
-                    historyString += "\"fileExtension\":\"" + History[j] + "\",";
-                    historyString += "\"filePath\":\"" + History[j] + "\",";
+                    historyString += "{\"fileName\":\"" + history[j] + "\",";
+                    historyString += "\"fileExtension\":\"" + history[j] + "\",";
+                    historyString += "\"filePath\":\"" + history[j] + "\",";
                     historyString += "\"fileSizeInBytes\":\"" + sizeJ.ToString() + "\"";
 
                     historyString += "}]}";
@@ -207,15 +229,15 @@ namespace SocketTutorial.FormsServer
                     historyString += "}]}";
                 }
             }
-            else if (History.Count == 1)
+            else if (history.Count == 1)
             {
-                if (File.Exists(History[0]))
+                if (File.Exists(history[0]))
                 {
-                    FileInfo fileInfo = new FileInfo(History[0]);
+                    FileInfo fileInfo = new FileInfo(history[0]);
                     long size = fileInfo.Length;
-                    historyString += "{\"fileName\":\"" + History[0] + "\",";
-                    historyString += "\"fileExtension\":\"" + History[0] + "\",";
-                    historyString += "\"filePath\":\"" + History[0] + "\",";
+                    historyString += "{\"fileName\":\"" + history[0] + "\",";
+                    historyString += "\"fileExtension\":\"" + history[0] + "\",";
+                    historyString += "\"filePath\":\"" + history[0] + "\",";
                     historyString += "\"fileSizeInBytes\":\"" + size.ToString() + "\"";
 
                     historyString += "}]}";
