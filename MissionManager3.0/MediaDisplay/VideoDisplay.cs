@@ -40,7 +40,7 @@ namespace SocketTutorial.FormsServer
             }
             else if (display == 2)
             {
-                picX = (currentFrontDirection-3) * resolutionWidth; //start at -3,0
+                picX = (currentFrontDirection-4) * resolutionWidth; //start at -4,0
                 videoDisplayLocation = new Point(picX, y);
                 axVLCPlugin21.Volume = 0;
             }
@@ -162,62 +162,48 @@ namespace SocketTutorial.FormsServer
         public string rotateRight()
         {
             string stringReturnMessage;
+            if (currentFrontDirection < 3) //0 - 3 range for 4 screens
+            {
+                currentFrontDirection++;
+            }
+            else if (currentFrontDirection == 3)
+            {
+                currentFrontDirection = 0;
+            }
             if (displayNumber == 1)
             {
-                if (currentFrontDirection < 3) //0 - 3 range for 4 screens
-                {
-                    currentFrontDirection++;
-                }
-                else if (currentFrontDirection == 3)
-                {
-                    currentFrontDirection = 0;
-                }
+                picX = currentFrontDirection * resolutionWidth;
             }
             else if (displayNumber == 2)
             {
-                if (currentFrontDirection < -1) //-4 to -1 range
-                {
-                    currentFrontDirection++;
-                }
-                else if (currentFrontDirection == -1)
-                {
-                    currentFrontDirection = -4;
-                }
+                picX = (currentFrontDirection - 4) * resolutionWidth;
             }
-            this.Location = videoDisplayLocation;
-
+            videoDisplayLocation.X = picX;
             stringReturnMessage = getFacingDirectionJSON();
             return stringReturnMessage;
-
         }
 
         public string rotateLeft()
         {
             string stringReturnMessage;
+            if (currentFrontDirection > 0)
+            {
+                currentFrontDirection--;
+            }
+            else if (currentFrontDirection == 0)
+            {
+                currentFrontDirection = 3;
+            }
             if (displayNumber == 1)
             {
-                if (currentFrontDirection > 0)
-                {
-                    currentFrontDirection--;
-                }
-                else if (currentFrontDirection == 0)
-                {
-                    currentFrontDirection = 3;
-                }
+                picX = currentFrontDirection * resolutionWidth;
             }
             else if (displayNumber == 2)
             {
-                if (currentFrontDirection > -4)
-                {
-                    currentFrontDirection--;
-                }
-                else if (currentFrontDirection == -4)
-                {
-                    currentFrontDirection = -1;
-                }
+                picX = (currentFrontDirection - 4) * resolutionWidth;
             }
-           this.Location = videoDisplayLocation;
 
+            videoDisplayLocation.X = picX;
             stringReturnMessage = getFacingDirectionJSON();
             return stringReturnMessage;
         }

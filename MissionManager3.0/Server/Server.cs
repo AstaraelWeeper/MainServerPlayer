@@ -36,7 +36,7 @@ namespace SocketTutorial.FormsServer
         public ImageDisplay imageDisplay;
         public ImageDisplay imageDisplay2;
 
-        int screens = 2;
+        int screens = 2; //should be 4 in live no matter how many screens
         static int resolutionWidth = 1920;
         static int resolutionHight = 1080;
 
@@ -224,13 +224,16 @@ namespace SocketTutorial.FormsServer
                 {
                     videoDisplay2.rotateRight();
                     stringReturnMessage = videoDisplay.rotateRight();
-
+                    videoDisplay.Location = videoDisplay.videoDisplayLocation;
+                    videoDisplay2.Location = videoDisplay2.Location;
                     return stringReturnMessage;
                 }
                 else if (message.Contains("rotate left"))
                 {
                     videoDisplay2.rotateLeft();
                     stringReturnMessage = videoDisplay.rotateLeft();
+                    videoDisplay.Location = videoDisplay.videoDisplayLocation;
+                    videoDisplay2.Location = videoDisplay2.Location;
                     return stringReturnMessage;
                 }
 
