@@ -14,31 +14,34 @@ namespace SocketTutorial.FormsServer
 {
     public partial class VideoDisplay : Form
     {
-        string JsonReturn;
         static int resolutionWidth;
         public int currentFrontDirection = 0; //0 = front, 1 = right, 2 = back, 3 = left
         static int picX;
         static int y = 0;
         public Point videoDisplayLocation;
+        int displayNumber;
 
         static string returnPlugin = "";
         string returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
 
         public VideoDisplay(int display, string path, int resWidth)
         {
+            resolutionWidth = resWidth;
+            displayNumber = display;
             InitializeComponent();
             if (display == 1)
             {
-                picX = (currentFrontDirection + 1) * resolutionWidth;
+                
+                picX = currentFrontDirection * resolutionWidth; //start at 0,0
                 videoDisplayLocation = new Point(picX, y);
             }
             else if (display == 2)
             {
-                picX = (currentFrontDirection) * resolutionWidth;
+                picX = (currentFrontDirection-3) * resolutionWidth; //start at -3,0
                 videoDisplayLocation = new Point(picX, y);
                 axVLCPlugin21.Volume = 0;
             }
-            resolutionWidth = resWidth;
+            
 
             axVLCPlugin21.playlist.add("File:///" + path, null, null);
             axVLCPlugin21.playlist.playItem(0);
@@ -104,11 +107,12 @@ namespace SocketTutorial.FormsServer
             }
         }
 
-        public void updateVideoTime()
+        public string updateVideoTime()
         {
            //need to send like this regularly { "messageType": "VideoPlayer", "messageBody" : "move-00:04:48" }
             var currentPlayDuration = TimeSpan.FromMilliseconds(axVLCPlugin21.input.Time);
             string jsonReturn = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"move-" + currentPlayDuration.Hours.ToString() + currentPlayDuration.Minutes.ToString() + currentPlayDuration.Seconds.ToString() + "\"}";
+            return jsonReturn;
         }
 
         public static bool GetDuration(string filename, out TimeSpan duration)
@@ -133,14 +137,27 @@ namespace SocketTutorial.FormsServer
         public string rotateRight()
         {
             string stringReturnMessage;
-
-            if (currentFrontDirection < 3)
+            if (displayNumber == 1)
             {
-                currentFrontDirection++;
+                if (currentFrontDirection < 3) //0 - 3 range
+                {
+                    currentFrontDirection++;
+                }
+                else if (currentFrontDirection == 3)
+                {
+                    currentFrontDirection = 0;
+                }
             }
-            else if (currentFrontDirection == 3)
+            else if (displayNumber == 2)
             {
-                currentFrontDirection = 0;
+                if (currentFrontDirection < -1) //-4 to -1 range
+                {
+                    currentFrontDirection++;
+                }
+                else if (currentFrontDirection == -1)
+                {
+                    currentFrontDirection = -4;
+                }
             }
             this.Location = videoDisplayLocation;
 
@@ -152,14 +169,27 @@ namespace SocketTutorial.FormsServer
         public string rotateLeft()
         {
             string stringReturnMessage;
-
-            if (currentFrontDirection > 0)
+            if (displayNumber == 1)
             {
-                currentFrontDirection--;
+                if (currentFrontDirection > 0)
+                {
+                    currentFrontDirection--;
+                }
+                else if (currentFrontDirection == 0)
+                {
+                    currentFrontDirection = 3;
+                }
             }
-            else if (currentFrontDirection == 0)
+            else if (displayNumber == 2)
             {
-                currentFrontDirection = 3;
+                if (currentFrontDirection > -4)
+                {
+                    currentFrontDirection--;
+                }
+                else if (currentFrontDirection == -4)
+                {
+                    currentFrontDirection = -1;
+                }
             }
            this.Location = videoDisplayLocation;
 

@@ -131,8 +131,8 @@ namespace SocketTutorial.FormsServer
                     //videoDisplay2.WindowState = FormWindowState.Maximized;
                     //imageDisplay.WindowState = FormWindowState.Minimized;
                     //imageDisplay2.WindowState = FormWindowState.Minimized;
-                    videoDisplay.Show();
                     videoDisplay2.Show();
+                    videoDisplay.Show();
 
                     JsonReturn = "{\"messageType\":\"videoDisplay\",\"messageBody\":\"Video Initialised\"}";
                     return JsonReturn;
@@ -242,6 +242,12 @@ namespace SocketTutorial.FormsServer
                 else if (message.Contains("Lower Volume"))
                 {
                     stringReturnMessage = videoDisplay.DecreaseVolume();
+                    return stringReturnMessage;
+                }
+
+                else if (message.Contains("Get Video Time")) //to be confirmed
+                {
+                    stringReturnMessage = videoDisplay.updateVideoTime();
                     return stringReturnMessage;
                 }
 
