@@ -28,6 +28,7 @@ namespace SocketTutorial.FormsServer
         {
             _videoFormActionDelegate = videoFormActionDelegate;
             _imageFormActionDelegate = imageFormActionDelegate;
+            File.Create(storedHistoryFilePath).Dispose();
         }
        
 
