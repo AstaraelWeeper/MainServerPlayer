@@ -134,7 +134,7 @@ namespace SocketTutorial.FormsServer
                     videoDisplay2.Show();
                     videoDisplay.Show();
 
-                    JsonReturn = "{\"messageType\":\"videoDisplay\",\"messageBody\":\"Video Initialised\"}";
+                    JsonReturn = videoDisplay.getVideoLength(message);
                     return JsonReturn;
                 }
                 else if (action == VideoAction.VideoPlayerControls)
@@ -245,7 +245,7 @@ namespace SocketTutorial.FormsServer
                     return stringReturnMessage;
                 }
 
-                else if (message.Contains("Get Video Time")) //to be confirmed
+                else if (message.Contains("sync")) 
                 {
                     stringReturnMessage = videoDisplay.updateVideoTime();
                     return stringReturnMessage;
