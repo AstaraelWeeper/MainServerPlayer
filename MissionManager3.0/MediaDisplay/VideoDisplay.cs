@@ -40,7 +40,7 @@ namespace SocketTutorial.FormsServer
             }
             else if (display == 2)
             {
-                picX = (currentFrontDirection-4) * resolutionWidth; //start at -4,0
+                picX = (currentFrontDirection-1) * resolutionWidth; //start at -4,0 debugging
                 videoDisplayLocation = new Point(picX, y);
                 axVLCPlugin21.Volume = 0;
                 Text = "Video Display 2";

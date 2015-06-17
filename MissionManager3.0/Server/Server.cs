@@ -18,7 +18,6 @@ namespace SocketTutorial.FormsServer
 {
     public partial class Server : Form
     {
-        public bool wifiOK = false;
         private Thread ioThread;
         private Thread btThread;
         private AsynchronousSocketListener listener;
@@ -36,7 +35,7 @@ namespace SocketTutorial.FormsServer
         public ImageDisplay imageDisplay = null;
         public ImageDisplay imageDisplay2 = null;
 
-        int screens = 4; //should be 4 in live no matter how many screens
+        int screens = 2; //should be 4 in live no matter how many screens
         static int resolutionWidth = 1920;
         static int resolutionHight = 1080;
 
@@ -138,11 +137,9 @@ namespace SocketTutorial.FormsServer
                     videoDisplay2.Height = resolutionHight;
                     videoDisplay.Location = videoDisplay.videoDisplayLocation;
                     videoDisplay2.Location = videoDisplay2.videoDisplayLocation;
-                    
-                    //videoDisplay.WindowState = FormWindowState.Maximized;
-                    //videoDisplay2.WindowState = FormWindowState.Maximized;
-                    //imageDisplay.WindowState = FormWindowState.Minimized;
-                    //imageDisplay2.WindowState = FormWindowState.Minimized;
+
+                    videoDisplay.WindowState = FormWindowState.Maximized;
+                    videoDisplay2.WindowState = FormWindowState.Maximized;
                     videoDisplay2.Show();
                     videoDisplay.Show();
 
@@ -238,8 +235,8 @@ namespace SocketTutorial.FormsServer
                     stringReturnMessage = videoDisplay.rotateRight();
                     videoDisplay.Location = videoDisplay.videoDisplayLocation;
                     videoDisplay2.Location = videoDisplay2.Location;
-                    videoDisplay.Focus();
-                    videoDisplay2.Focus();
+                    videoDisplay2.WindowState = FormWindowState.Maximized;
+                    videoDisplay.WindowState = FormWindowState.Maximized;
                     return stringReturnMessage;
                 }
                 else if (message.Contains("rotate left"))
@@ -248,6 +245,8 @@ namespace SocketTutorial.FormsServer
                     stringReturnMessage = videoDisplay.rotateLeft();
                     videoDisplay.Location = videoDisplay.videoDisplayLocation;
                     videoDisplay2.Location = videoDisplay2.Location;
+                    videoDisplay2.WindowState = FormWindowState.Maximized;
+                    videoDisplay.WindowState = FormWindowState.Maximized;
                     return stringReturnMessage;
                 }
 
