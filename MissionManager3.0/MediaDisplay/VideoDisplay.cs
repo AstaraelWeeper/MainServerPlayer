@@ -44,13 +44,17 @@ namespace SocketTutorial.FormsServer
                 videoDisplayLocation = new Point(picX, y);
                 axVLCPlugin21.Volume = 0;
             }
-            
 
+            newVideo(path);
+
+        }
+
+        public void newVideo(string path)
+        {
+            axVLCPlugin21.playlist.items.clear();
             axVLCPlugin21.playlist.add("File:///" + path, null, null);
             axVLCPlugin21.playlist.playItem(0);
         }
-
-
         public string Pause()
         {
                 axVLCPlugin21.playlist.pause();
@@ -128,7 +132,7 @@ namespace SocketTutorial.FormsServer
             {
                 seconds = seconds.PadLeft(2,'0');
             }
-            string jsonReturn = "{\"messageType\":\"VideoPlayerSync\",\"messageBody\":" + hours + ":" + minutes +":" + seconds + "\"}";
+            string jsonReturn = "{\"messageType\":\"VideoPlayerSync\",\"messageBody\":\"" + hours + ":" + minutes +":" + seconds + "\"}";
             return jsonReturn;
         }
 
@@ -205,6 +209,24 @@ namespace SocketTutorial.FormsServer
 
             videoDisplayLocation.X = picX;
             stringReturnMessage = getFacingDirectionJSON();
+            return stringReturnMessage;
+        }
+
+        public string Loop(string willLoop)
+        {
+            string stringReturnMessage = "";
+
+            if(willLoop.Contains("off"))
+            {
+                axVLCPlugin21.AutoLoop = false;
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Loop off\"}";
+            }
+            else if (willLoop.Contains("on"))
+            {
+                axVLCPlugin21.AutoLoop = true;
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Loop on\"}";
+            }
+
             return stringReturnMessage;
         }
 

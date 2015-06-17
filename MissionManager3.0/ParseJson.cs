@@ -7,7 +7,6 @@ using Newtonsoft.Json.Linq;
 using SocketTutorial.FormsServer.JSON;
 using System.Reflection;
 using System.IO;
-using System.IO.File;
 using System.Diagnostics;
 using System.Windows.Forms;
 
@@ -19,7 +18,7 @@ namespace SocketTutorial.FormsServer
     {
         //PowerpointHandler powerpointHandler = new PowerpointHandler();
         List<string> history = new List<string>();
-        string storedHistoryFilePath = @"C:\Users\Public\TestFolder\MissionManagerHistory.txt";
+        string storedHistoryFilePath = @"C:\Users\Public\MissionManagerHistory.txt";
         
         private Server.VideoFormActionDelegate _videoFormActionDelegate;
         private Server.ImageFormActionDelegate _imageFormActionDelegate;
@@ -28,7 +27,10 @@ namespace SocketTutorial.FormsServer
         {
             _videoFormActionDelegate = videoFormActionDelegate;
             _imageFormActionDelegate = imageFormActionDelegate;
-            File.Create(storedHistoryFilePath).Dispose();
+            if (!File.Exists(storedHistoryFilePath))
+            {
+                File.Create(storedHistoryFilePath).Dispose();
+            }
         }
        
 

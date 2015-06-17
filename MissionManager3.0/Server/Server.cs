@@ -31,10 +31,10 @@ namespace SocketTutorial.FormsServer
         public delegate string ImageFormActionDelegate(ImageAction action, string message);
         private ImageFormActionDelegate imageFormActionDelegate;
 
-        public VideoDisplay videoDisplay;
-        public VideoDisplay videoDisplay2;
-        public ImageDisplay imageDisplay;
-        public ImageDisplay imageDisplay2;
+        public VideoDisplay videoDisplay = null;
+        public VideoDisplay videoDisplay2 = null;
+        public ImageDisplay imageDisplay = null;
+        public ImageDisplay imageDisplay2 = null;
 
         int screens = 2; //should be 4 in live no matter how many screens
         static int resolutionWidth = 1920;
@@ -118,15 +118,25 @@ namespace SocketTutorial.FormsServer
             {
                 if (action == VideoAction.InitialisePlayers)
                 {
-                    videoDisplay = new VideoDisplay(1, message, resolutionWidth,screens); //expecting direction to reset to 0 if new one opened
-                    videoDisplay2 = new VideoDisplay(2, message, resolutionWidth,screens);
+                    if(videoDisplay !=null)
+                    {                       
+                        videoDisplay.newVideo(message);
+                        videoDisplay2.newVideo(message);
+                    }
+                    else
+                    {
+                        videoDisplay = new VideoDisplay(1, message, resolutionWidth, screens); //expecting direction to reset to 0 if new one opened
+                        videoDisplay2 = new VideoDisplay(2, message, resolutionWidth, screens);
+
+                    }
 
                     videoDisplay.Width = screens * resolutionWidth;
-                    videoDisplay2.Width = 0;
+                    videoDisplay2.Width = screens * resolutionWidth;
                     videoDisplay.Height = resolutionHight;
                     videoDisplay2.Height = resolutionHight;
                     videoDisplay.Location = videoDisplay.videoDisplayLocation;
                     videoDisplay2.Location = videoDisplay2.videoDisplayLocation;
+                    
                     //videoDisplay.WindowState = FormWindowState.Maximized;
                     //videoDisplay2.WindowState = FormWindowState.Maximized;
                     //imageDisplay.WindowState = FormWindowState.Minimized;
@@ -169,7 +179,7 @@ namespace SocketTutorial.FormsServer
                     imageDisplay2 = new ImageDisplay(2, message, resolutionWidth);
 
                     imageDisplay.Width = screens * resolutionWidth;
-                    imageDisplay2.Width = 0;
+                    imageDisplay2.Width = screens * resolutionWidth;
                     imageDisplay.Height = resolutionHight;
                     imageDisplay2.Height = resolutionHight;
                     imageDisplay.Location = imageDisplay.imageViewerLocation;
@@ -245,6 +255,12 @@ namespace SocketTutorial.FormsServer
                 else if (message.Contains("Lower Volume"))
                 {
                     stringReturnMessage = videoDisplay.DecreaseVolume();
+                    return stringReturnMessage;
+                }
+                else if (message.Contains("loop"))
+                {
+                    stringReturnMessage = videoDisplay.Loop(message);
+                    videoDisplay2.Loop(message);
                     return stringReturnMessage;
                 }
 
