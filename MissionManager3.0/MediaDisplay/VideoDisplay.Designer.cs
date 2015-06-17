@@ -62,7 +62,9 @@
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "VideoDisplay";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "VideoDisplay";
+            this.Load += new System.EventHandler(this.VideoDisplay_Load);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.axVLCPlugin21)).EndInit();
             this.ResumeLayout(false);

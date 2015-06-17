@@ -268,12 +268,22 @@ namespace SocketTutorial.FormsServer
             {
 
                 for (int i = 0; i < driveInfo.Count(); i++)
-                {                    
-                    driveInfoStr.Add(driveInfo[i].ToString().Replace("\\", "/"));
-                    drivePaths += "{\"driveName\":\"" + driveInfoStr[i] + "\",";
-                    drivePaths += "\"driveType\":\"" + driveInfo[i].GetType().ToString() + "\",";
-                    drivePaths += "\"drivePath\":\"" + driveInfoStr[i] + "\"";
-                    drivePaths += "},";
+                {
+                        driveInfoStr.Add(driveInfo[i].ToString().Replace("\\", "/"));
+                        drivePaths += "{\"driveName\":\"" + driveInfoStr[i] + "\",";
+                        drivePaths += "\"driveType\":\"" + driveInfo[i].DriveType.ToString() + "\",";
+                        drivePaths += "\"drivePath\":\"" + driveInfoStr[i] + "\"";
+                        if (driveInfo[i].IsReady)
+                        {
+                            drivePaths += "\"driveReady\":\"" + "yes" + "\"";
+                        }
+                        else
+                        {
+                            drivePaths += "\"driveReady\":\"" + "no" + "\"";
+                        }
+                        drivePaths += "},";
+
+                    
                 }
 
                  
@@ -288,109 +298,116 @@ namespace SocketTutorial.FormsServer
                 drivePaths += "{\"driveName\":\" none \",";
                 drivePaths += "\"driveType\":\" none \",";
                 drivePaths += "\"drivePath\":\" none \"";
+                drivePaths += "\"driveReady\":\"N/A\"";
                 drivePaths += "}]}";
             }
             return drivePaths;
         }
         string GetDirectories(string path)
         {
-            var directoryPaths = Directory.GetDirectories(path);
-            List<string> directoryNames = new List<string>();
-
-            var filepaths = Directory.GetFiles(path);
-            List<string> filePaths = filepaths.ToList();
-            List<string> fileNames = new List<string>();
-            List<string> fileExtensions = new List<string>();
-            List<string> fileSizes = new List<string>();
-
-
-            for (int i = 0; i < directoryPaths.Length; i++) //if no dirs that doesn't matter
+            string JsonReturn;
+            if (Directory.Exists(path))
             {
+                var directoryPaths = Directory.GetDirectories(path);
+                List<string> directoryNames = new List<string>();
 
-                string extension = System.IO.Path.GetExtension(directoryPaths[i]);
-                string name = Path.GetFileName(directoryPaths[i]);
-                string name2 = name.Substring(0, name.Length - extension.Length);
-                name2 = name.Replace(@"\", @"/");
-                directoryPaths[i] = directoryPaths[i].Replace(@"\", @"/");
-                directoryNames.Add(name2);
-            }
-            if (filepaths.Length == 0) //if no files, need to create the list filePaths and put data in there to send back
-            {
-                fileExtensions.Add("none");
-                fileNames.Add("none");
-                string defaultPath = path;
-                filePaths.Add(defaultPath);
-                fileSizes.Add("0");
+                var filepaths = Directory.GetFiles(path);
+                List<string> filePaths = filepaths.ToList();
+                List<string> fileNames = new List<string>();
+                List<string> fileExtensions = new List<string>();
+                List<string> fileSizes = new List<string>();
 
-            }
-            else
-            {
-                for (int i = 0; i < filepaths.Length; i++)
+
+                for (int i = 0; i < directoryPaths.Length; i++) //if no dirs that doesn't matter
                 {
-                    string extension = System.IO.Path.GetExtension(filePaths[i]);
-                    string name = Path.GetFileName(filePaths[i]);
+
+                    string extension = System.IO.Path.GetExtension(directoryPaths[i]);
+                    string name = Path.GetFileName(directoryPaths[i]);
                     string name2 = name.Substring(0, name.Length - extension.Length);
-                    filePaths[i] = filePaths[i].Replace(@"\", @"/");
-                    fileExtensions.Add(extension);
-                    fileNames.Add(name2);
-                    FileInfo fileInfo = new FileInfo(filePaths[i]);
-                    long size = fileInfo.Length;
-                    fileSizes.Add(size.ToString());
+                    name2 = name.Replace(@"\", @"/");
+                    directoryPaths[i] = directoryPaths[i].Replace(@"\", @"/");
+                    directoryNames.Add(name2);
                 }
-            }
-            string paths = "\"paths\":[";
-
-            for (int i = 0; i < directoryPaths.Length; i++) //directories builder
-            {
-                if (directoryNames[i] == "$RECYCLE.BIN" || directoryNames[i] == "Documents and Settings")
+                if (filepaths.Length == 0) //if no files, need to create the list filePaths and put data in there to send back
                 {
+                    fileExtensions.Add("none");
+                    fileNames.Add("none");
+                    string defaultPath = path;
+                    filePaths.Add(defaultPath);
+                    fileSizes.Add("0");
+
                 }
                 else
                 {
-                paths += "{\"fileName\":\"" + directoryNames[i] + "\",";
-
-                paths += "\"filePath\":\"" + directoryPaths[i] + "\"";
-
-                paths += "},";
+                    for (int i = 0; i < filepaths.Length; i++)
+                    {
+                        string extension = System.IO.Path.GetExtension(filePaths[i]);
+                        string name = Path.GetFileName(filePaths[i]);
+                        string name2 = name.Substring(0, name.Length - extension.Length);
+                        filePaths[i] = filePaths[i].Replace(@"\", @"/");
+                        fileExtensions.Add(extension);
+                        fileNames.Add(name2);
+                        FileInfo fileInfo = new FileInfo(filePaths[i]);
+                        long size = fileInfo.Length;
+                        fileSizes.Add(size.ToString());
+                    }
                 }
-            }
+                string paths = "\"paths\":[";
 
-            if (filePaths.Count > 1)
-            {
-
-                for (int i = 0; i < filePaths.Count - 1; i++)//files
+                for (int i = 0; i < directoryPaths.Length; i++) //directories builder
                 {
-                    paths += "{\"fileName\":\"" + fileNames[i] + "\",";
-                    paths += "\"fileExtension\":\"" + fileExtensions[i] + "\",";
-                    paths += "\"filePath\":\"" + filePaths[i] + "\",";
-                    paths += "\"fileSizeInBytes\":\"" + fileSizes[i] + "\"";
+                    if (directoryNames[i] == "$RECYCLE.BIN" || directoryNames[i] == "Documents and Settings")
+                    {
+                    }
+                    else
+                    {
+                        paths += "{\"fileName\":\"" + directoryNames[i] + "\",";
 
-                    paths += "},";
+                        paths += "\"filePath\":\"" + directoryPaths[i] + "\"";
+
+                        paths += "},";
+                    }
                 }
 
+                if (filePaths.Count > 1)
+                {
 
-                int j = filePaths.Count - 1; //needs to look at the list in case the array was empty (if a folder has no files, the list is created and added to)
-                paths += "{\"fileName\":\"" + fileNames[j] + "\",";
-                paths += "\"fileExtension\":\"" + fileExtensions[j] + "\",";
-                paths += "\"filePath\":\"" + filePaths[j] + "\",";
-                paths += "\"fileSizeInBytes\":\"" + fileSizes[j] + "\"";
+                    for (int i = 0; i < filePaths.Count - 1; i++)//files
+                    {
+                        paths += "{\"fileName\":\"" + fileNames[i] + "\",";
+                        paths += "\"fileExtension\":\"" + fileExtensions[i] + "\",";
+                        paths += "\"filePath\":\"" + filePaths[i] + "\",";
+                        paths += "\"fileSizeInBytes\":\"" + fileSizes[i] + "\"";
 
-                paths += "}";
+                        paths += "},";
+                    }
+
+
+                    int j = filePaths.Count - 1; //needs to look at the list in case the array was empty (if a folder has no files, the list is created and added to)
+                    paths += "{\"fileName\":\"" + fileNames[j] + "\",";
+                    paths += "\"fileExtension\":\"" + fileExtensions[j] + "\",";
+                    paths += "\"filePath\":\"" + filePaths[j] + "\",";
+                    paths += "\"fileSizeInBytes\":\"" + fileSizes[j] + "\"";
+
+                    paths += "}";
+                }
+                else if (filePaths.Count == 1)
+                {
+                    paths += "{\"fileName\":\"" + fileNames[0] + "\",";
+                    paths += "\"fileExtension\":\"" + fileExtensions[0] + "\",";
+                    paths += "\"filePath\":\"" + filePaths[0] + "\",";
+                    paths += "\"fileSizeInBytes\":\"" + fileSizes[0] + "\"";
+
+                    paths += "}";
+                }
+
+                //string JsonReturn = CreateJSON(files, directories);
+              JsonReturn = "{" + paths + "]}";
             }
-            else if (filePaths.Count == 1)
+            else //if dir doesn't exist
             {
-                paths += "{\"fileName\":\"" + fileNames[0] + "\",";
-                paths += "\"fileExtension\":\"" + fileExtensions[0] + "\",";
-                paths += "\"filePath\":\"" + filePaths[0] + "\",";
-                paths += "\"fileSizeInBytes\":\"" + fileSizes[0] + "\"";
-
-                paths += "}";
+                JsonReturn = "{\"directory not found\"}";
             }
-
-
-
-            //string JsonReturn = CreateJSON(files, directories);
-            string JsonReturn = "{" + paths + "]}";
             return JsonReturn;
         }
 

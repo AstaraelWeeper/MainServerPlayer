@@ -43,6 +43,7 @@ namespace SocketTutorial.FormsServer
                 picX = (currentFrontDirection-4) * resolutionWidth; //start at -4,0
                 videoDisplayLocation = new Point(picX, y);
                 axVLCPlugin21.Volume = 0;
+                Text = "Video Display 2";
             }
 
             newVideo(path);
@@ -183,6 +184,7 @@ namespace SocketTutorial.FormsServer
                 picX = (currentFrontDirection - 4) * resolutionWidth;
             }
             videoDisplayLocation.X = picX;
+            videoDisplayLocation.Y = 0;
             stringReturnMessage = getFacingDirectionJSON();
             return stringReturnMessage;
         }
@@ -259,6 +261,11 @@ namespace SocketTutorial.FormsServer
                 stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Facing Calculation Failure\"}";
                 return stringReturnMessage;
             }
+        }
+
+        private void VideoDisplay_Load(object sender, EventArgs e)
+        {
+
         }
     }
   
