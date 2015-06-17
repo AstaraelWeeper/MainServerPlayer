@@ -139,8 +139,8 @@ namespace SocketTutorial.FormsServer
 
         public string UpdateVideoTime(TimeSpan newTime) //take in timespan
         {
-            double changeSeconds = newTime.TotalSeconds;
-            axVLCPlugin21.input.Time = changeSeconds;
+            double changeMilliSeconds = newTime.TotalMilliseconds;
+            axVLCPlugin21.input.Time = changeMilliSeconds;
             string jsonReturn = SyncVideoTime();
             return jsonReturn;
         }

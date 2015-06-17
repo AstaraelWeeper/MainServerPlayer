@@ -122,6 +122,8 @@ namespace SocketTutorial.FormsServer
                     {                       
                         videoDisplay.newVideo(message);
                         videoDisplay2.newVideo(message);
+                        videoDisplay.Loop("off");
+                        videoDisplay2.Loop("off");
                     }
                     else
                     {

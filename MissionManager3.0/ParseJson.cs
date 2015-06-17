@@ -272,7 +272,7 @@ namespace SocketTutorial.FormsServer
                         driveInfoStr.Add(driveInfo[i].ToString().Replace("\\", "/"));
                         drivePaths += "{\"driveName\":\"" + driveInfoStr[i] + "\",";
                         drivePaths += "\"driveType\":\"" + driveInfo[i].DriveType.ToString() + "\",";
-                        drivePaths += "\"drivePath\":\"" + driveInfoStr[i] + "\"";
+                        drivePaths += "\"drivePath\":\"" + driveInfoStr[i] + "\",";
                         if (driveInfo[i].IsReady)
                         {
                             drivePaths += "\"driveReady\":\"" + "yes" + "\"";
@@ -406,7 +406,7 @@ namespace SocketTutorial.FormsServer
             }
             else //if dir doesn't exist
             {
-                JsonReturn = "{\"directory not found\"}";
+                JsonReturn = "{\"directory not found\"}";//this ok?
             }
             return JsonReturn;
         }
