@@ -58,8 +58,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(3824, 1024);
             this.Controls.Add(this.panel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "ImageDisplay";
             this.Text = "ImageDisplay";
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ImageDisplay_MouseClick);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picImageDisplay)).EndInit();
             this.ResumeLayout(false);

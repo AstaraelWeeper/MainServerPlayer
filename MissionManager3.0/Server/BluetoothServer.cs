@@ -20,7 +20,7 @@ namespace SocketTutorial.FormsServer
         private Server.VideoFormActionDelegate _videoFormActionDelegate;
         private Server.ImageFormActionDelegate _imageFormActionDelegate;
 
-        public BluetoothServer (ScreenWriterDelegate screenWriterCallBT, Server.VideoFormActionDelegate videoFormActionDelegate, Server.ImageFormActionDelegate imageFormActionDelegate)
+        public BluetoothServer(ScreenWriterDelegate screenWriterCallBT, Server.VideoFormActionDelegate videoFormActionDelegate, Server.ImageFormActionDelegate imageFormActionDelegate)
         {
             _screenWriterCallBT = screenWriterCallBT;
             _videoFormActionDelegate = videoFormActionDelegate;
@@ -31,17 +31,16 @@ namespace SocketTutorial.FormsServer
 
         public void ServerConnectThread()
         {
-            //serverStarted = true;
             _screenWriterCallBT("Bluetooth Server started, waiting for clients..");
-            BluetoothListener blueListener = new BluetoothListener(mUUID); 
+            BluetoothListener blueListener = new BluetoothListener(mUUID);
             blueListener.Start();
             BluetoothClient conn = blueListener.AcceptBluetoothClient();
             _screenWriterCallBT("Bluetooth Client has connected");
             bool disconnectedClient = false;
-            
+
             while (true)
             {
-              //  allDone.Reset();
+                allDone.Reset();
                 try
                 {
                     if (disconnectedClient)
@@ -74,7 +73,7 @@ namespace SocketTutorial.FormsServer
                 {
                     _screenWriterCallBT("Bluetooth Client has disconnected. Exception:" + exception + "\n");
                 }
-               // allDone.WaitOne();
+                allDone.WaitOne();
             }
         }
 

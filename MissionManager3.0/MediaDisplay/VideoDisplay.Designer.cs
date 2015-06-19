@@ -37,12 +37,14 @@
             // 
             // panel1
             // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.axVLCPlugin21);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(3838, 1055);
             this.panel1.TabIndex = 0;
+            this.panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseClick);
             // 
             // axVLCPlugin21
             // 
@@ -51,7 +53,7 @@
             this.axVLCPlugin21.Location = new System.Drawing.Point(0, 0);
             this.axVLCPlugin21.Name = "axVLCPlugin21";
             this.axVLCPlugin21.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axVLCPlugin21.OcxState")));
-            this.axVLCPlugin21.Size = new System.Drawing.Size(3838, 1055);
+            this.axVLCPlugin21.Size = new System.Drawing.Size(3836, 1053);
             this.axVLCPlugin21.TabIndex = 0;
             // 
             // VideoDisplay

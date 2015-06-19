@@ -238,6 +238,11 @@ namespace SocketTutorial.FormsServer
         {
 
         }
+
+        private void panel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.Close();
+        }
     }
   
 }

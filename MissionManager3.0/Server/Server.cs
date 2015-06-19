@@ -39,14 +39,16 @@ namespace SocketTutorial.FormsServer
         static int resolutionWidth = 1920/2;
         static int resolutionHight = 1080;
 
-        int testVid1X = 0;
-        int testVid2X = 0;
+        int vid1X = 0;
+        int vid2X = 0;
+        int pic1X = 0;
+        int pic2X = 0;
 
 
         public Server()
         {
             InitializeComponent();
-
+           // getScreenSize();
             screenWriterDelegate = new AsynchronousSocketListener.ScreenWriterDelegate(WriteToScreen);
             screenWriterDelegateBT = new BluetoothServer.ScreenWriterDelegate(WriteToScreenBT);
             videoFormActionDelegate = new VideoFormActionDelegate(PerformVideoAction);
@@ -55,7 +57,12 @@ namespace SocketTutorial.FormsServer
         }
 
 
-
+        private void getScreenSize()
+        {
+            Screen thisScreen = Screen.PrimaryScreen;
+            resolutionHight = thisScreen.WorkingArea.Height;
+            resolutionWidth = thisScreen.WorkingArea.Width;
+        }
         public void WriteToScreen(string message)
         {
             if (txtServer.InvokeRequired)
@@ -107,7 +114,7 @@ namespace SocketTutorial.FormsServer
             ImagePlayerControls
         }
 
-        public void RotateRight()
+        public void RotateVideosRight()
         {
 
                 if (videoDisplay.currentFrontDirection < 3) //0 to 3 range 
@@ -119,7 +126,7 @@ namespace SocketTutorial.FormsServer
                     videoDisplay.currentFrontDirection = 0;
                 }
                 int leftDirection = videoDisplay.currentFrontDirection;
-                testVid1X = leftDirection * resolutionWidth;
+                vid1X = leftDirection * resolutionWidth;
             
 
                 if (videoDisplay2.currentFrontDirection < 0) //0 to -3  range 
@@ -131,7 +138,34 @@ namespace SocketTutorial.FormsServer
                     videoDisplay2.currentFrontDirection = -3;
                 }
                 int rightDirection = videoDisplay2.currentFrontDirection;
-                testVid2X = rightDirection * resolutionWidth;
+                vid2X = rightDirection * resolutionWidth;
+        }
+
+        public void RotateImagesRight()
+        {
+
+            if (imageDisplay.currentFrontDirection < 3) //0 to 3 range 
+            {
+                imageDisplay.currentFrontDirection++;
+            }
+            else if (imageDisplay.currentFrontDirection == 3)
+            {
+                imageDisplay.currentFrontDirection = 0;
+            }
+            int leftDirection = imageDisplay.currentFrontDirection;
+            pic1X = leftDirection * resolutionWidth;
+
+
+            if (videoDisplay2.currentFrontDirection < 0) //0 to -3  range 
+            {
+                videoDisplay2.currentFrontDirection++;
+            }
+            else if (videoDisplay2.currentFrontDirection == 0)
+            {
+                videoDisplay2.currentFrontDirection = -3;
+            }
+            int rightDirection = videoDisplay2.currentFrontDirection;
+            pic2X = rightDirection * resolutionWidth;
         }
 
         public string PerformVideoAction(VideoAction action, string message)
@@ -141,7 +175,6 @@ namespace SocketTutorial.FormsServer
             if(txtServer.InvokeRequired)
             {
                 return Invoke(videoFormActionDelegate, action, message).ToString();
-              
             }
 
             else
@@ -204,22 +237,29 @@ namespace SocketTutorial.FormsServer
             {
                 if (action == ImageAction.InitialiseImages)
                 {
-                    imageDisplay = new ImageDisplay(1, message,resolutionWidth); //expecting direction to reset to 0 if new one opened
-                    imageDisplay2 = new ImageDisplay(2, message, resolutionWidth);
+                    if (imageDisplay != null)
+                    {
+                        imageDisplay.newImage(message);
+                        imageDisplay2.newImage(message);
+
+                    }
+                    else
+                    {
+                        imageDisplay = new ImageDisplay(1, message); //expecting direction to reset to 0 if new one opened
+                        imageDisplay2 = new ImageDisplay(2, message);
+
+                    }
 
                     imageDisplay.Width = screens * resolutionWidth;
                     imageDisplay2.Width = screens * resolutionWidth;
                     imageDisplay.Height = resolutionHight;
                     imageDisplay2.Height = resolutionHight;
-                    imageDisplay.Location = imageDisplay.imageViewerLocation;
-                    imageDisplay2.Location = imageDisplay2.imageViewerLocation;
-                    //imageDisplay.WindowState = FormWindowState.Maximized;
-                    //imageDisplay2.WindowState = FormWindowState.Maximized;
-                    //videoDisplay.WindowState = FormWindowState.Minimized;
-                    //videoDisplay2.WindowState = FormWindowState.Minimized;
+                    imageDisplay.StartPosition = FormStartPosition.Manual;
+                    imageDisplay.Location = new Point(0, 0);
+                    imageDisplay2.StartPosition = FormStartPosition.Manual;
+                    imageDisplay2.Location = new Point(0, 0);
                     imageDisplay.Show();
                     imageDisplay2.Show();
-
                     JsonReturn = "{\"messageType\":\"ImageViewer\",\"messageBody\":\"Image Initialised\"}";
                     
                     return JsonReturn;
@@ -261,15 +301,22 @@ namespace SocketTutorial.FormsServer
 
                 else if (message.Contains("rotate right"))
                 {
-                    RotateRight();
+                    RotateVideosRight();
                     stringReturnMessage = videoDisplay.getFacingDirectionJSON();
                     videoDisplay.StartPosition = FormStartPosition.Manual;
-                    videoDisplay.Location = new Point(testVid1X, 0);
+                    videoDisplay.Location = new Point(vid1X, 0);
                     videoDisplay2.StartPosition = FormStartPosition.Manual;
-                    videoDisplay2.Location = new Point(testVid2X, 0);
+                    videoDisplay2.Location = new Point(vid2X, 0);
+                    imageDisplay.StartPosition = FormStartPosition.Manual;
+                    imageDisplay.Location = new Point(pic1X, 0);
+                    imageDisplay2.StartPosition = FormStartPosition.Manual;
+                    imageDisplay2.Location = new Point(pic2X, 0);
                     videoDisplay2.Show();
                     videoDisplay.Show();
                     videoDisplay2.Show();
+                    imageDisplay2.Show();
+                    imageDisplay.Show();
+                    imageDisplay2.Show();
                     return stringReturnMessage;
 
                 }
