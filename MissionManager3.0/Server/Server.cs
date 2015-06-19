@@ -35,9 +35,12 @@ namespace SocketTutorial.FormsServer
         public ImageDisplay imageDisplay = null;
         public ImageDisplay imageDisplay2 = null;
 
-        int screens = 2; //should be 4 in live no matter how many screens
-        static int resolutionWidth = 1920;
+        int screens = 4; //should be 4 in live no matter how many screens
+        static int resolutionWidth = 1920/2;
         static int resolutionHight = 1080;
+
+        int testVid1X = 0;
+        int testVid2X = 0;
 
 
         public Server()
@@ -103,6 +106,34 @@ namespace SocketTutorial.FormsServer
             InitialiseImages,
             ImagePlayerControls
         }
+
+        public void RotateRight()
+        {
+
+                if (videoDisplay.currentFrontDirection < 3) //0 to 3 range 
+                {
+                    videoDisplay.currentFrontDirection++;
+                }
+                else if (videoDisplay.currentFrontDirection == 3)
+                {
+                    videoDisplay.currentFrontDirection = 0;
+                }
+                int leftDirection = videoDisplay.currentFrontDirection;
+                testVid1X = leftDirection * resolutionWidth;
+            
+
+                if (videoDisplay2.currentFrontDirection < 0) //0 to -3  range 
+                {
+                    videoDisplay2.currentFrontDirection++;
+                }
+                else if (videoDisplay2.currentFrontDirection == 0)
+                {
+                    videoDisplay2.currentFrontDirection = -3;
+                }
+                int rightDirection = videoDisplay2.currentFrontDirection;
+                testVid2X = rightDirection * resolutionWidth;
+        }
+
         public string PerformVideoAction(VideoAction action, string message)
         {
             string JsonReturn= "failed at PVA";
@@ -126,8 +157,8 @@ namespace SocketTutorial.FormsServer
                     }
                     else
                     {
-                        videoDisplay = new VideoDisplay(1, message, resolutionWidth, screens); //expecting direction to reset to 0 if new one opened
-                        videoDisplay2 = new VideoDisplay(2, message, resolutionWidth, screens);
+                        videoDisplay = new VideoDisplay(1, message); //expecting direction to reset to 0 if new one opened
+                        videoDisplay2 = new VideoDisplay(2, message);
 
                     }
 
@@ -135,11 +166,10 @@ namespace SocketTutorial.FormsServer
                     videoDisplay2.Width = screens * resolutionWidth;
                     videoDisplay.Height = resolutionHight;
                     videoDisplay2.Height = resolutionHight;
-                    videoDisplay.Location = videoDisplay.videoDisplayLocation;
-                    videoDisplay2.Location = videoDisplay2.videoDisplayLocation;
-
-                    videoDisplay.WindowState = FormWindowState.Maximized;
-                    videoDisplay2.WindowState = FormWindowState.Maximized;
+                    videoDisplay.StartPosition = FormStartPosition.Manual;
+                    videoDisplay.Location = new Point(0, 0);
+                    videoDisplay2.StartPosition = FormStartPosition.Manual;
+                    videoDisplay2.Location = new Point(0, 0);
                     videoDisplay2.Show();
                     videoDisplay.Show();
 
@@ -231,22 +261,26 @@ namespace SocketTutorial.FormsServer
 
                 else if (message.Contains("rotate right"))
                 {
-                    videoDisplay2.rotateRight();
-                    stringReturnMessage = videoDisplay.rotateRight();
-                    videoDisplay.Location = videoDisplay.videoDisplayLocation;
-                    videoDisplay2.Location = videoDisplay2.Location;
-                    videoDisplay2.WindowState = FormWindowState.Maximized;
-                    videoDisplay.WindowState = FormWindowState.Maximized;
+                    RotateRight();
+                    stringReturnMessage = videoDisplay.getFacingDirectionJSON();
+                    videoDisplay.StartPosition = FormStartPosition.Manual;
+                    videoDisplay.Location = new Point(testVid1X, 0);
+                    videoDisplay2.StartPosition = FormStartPosition.Manual;
+                    videoDisplay2.Location = new Point(testVid2X, 0);
+                    videoDisplay2.Show();
+                    videoDisplay.Show();
+                    videoDisplay2.Show();
                     return stringReturnMessage;
+
                 }
                 else if (message.Contains("rotate left"))
                 {
                     videoDisplay2.rotateLeft();
                     stringReturnMessage = videoDisplay.rotateLeft();
-                    videoDisplay.Location = videoDisplay.videoDisplayLocation;
-                    videoDisplay2.Location = videoDisplay2.Location;
-                    videoDisplay2.WindowState = FormWindowState.Maximized;
-                    videoDisplay.WindowState = FormWindowState.Maximized;
+                    videoDisplay.SetDesktopLocation(videoDisplay.xCoord, 0);
+                    videoDisplay2.SetDesktopLocation(videoDisplay2.xCoord, 0);
+                    videoDisplay2.Show();
+                    videoDisplay.Show();
                     return stringReturnMessage;
                 }
 

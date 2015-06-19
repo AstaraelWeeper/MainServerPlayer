@@ -14,36 +14,26 @@ namespace SocketTutorial.FormsServer
 {
     public partial class VideoDisplay : Form
     {
-        static int resolutionWidth;
         public int currentFrontDirection = 0; //0 = front, 1 = right, 2 = back, 3 = left
-        static int picX;
-        static int y = 0;
-        public Point videoDisplayLocation;
-        int displayNumber;
+        public int xCoord = 0;
+        public int displayNumber;
         TimeSpan duration;
-        private int screens;
 
         static string returnPlugin = "";
         string returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
 
-        public VideoDisplay(int display, string path, int resWidth, int screensIn)
+        public VideoDisplay(int display, string path)
         {
-            screens = screensIn;
-            resolutionWidth = resWidth;
             displayNumber = display;
             InitializeComponent();
             if (display == 1)
             {
-                
-                picX = currentFrontDirection * resolutionWidth; //start at 0,0
-                videoDisplayLocation = new Point(picX, y);
+                Text = "Video Display 1:Right";
             }
             else if (display == 2)
             {
-                picX = (currentFrontDirection-1) * resolutionWidth; //start at -4,0 debugging
-                videoDisplayLocation = new Point(picX, y);
                 axVLCPlugin21.Volume = 0;
-                Text = "Video Display 2";
+                Text = "Video Display 2:Left";
             }
 
             newVideo(path);
@@ -164,52 +154,33 @@ namespace SocketTutorial.FormsServer
                 return false;
             }
         }
-        public string rotateRight()
-        {
-            string stringReturnMessage;
-            if (currentFrontDirection < 3) //0 - 3 range for 4 screens
-            {
-                currentFrontDirection++;
-            }
-            else if (currentFrontDirection == 3)
-            {
-                currentFrontDirection = 0;
-            }
-            if (displayNumber == 1)
-            {
-                picX = currentFrontDirection * resolutionWidth;
-            }
-            else if (displayNumber == 2)
-            {
-                picX = (currentFrontDirection - 4) * resolutionWidth;
-            }
-            videoDisplayLocation.X = picX;
-            videoDisplayLocation.Y = 0;
-            stringReturnMessage = getFacingDirectionJSON();
-            return stringReturnMessage;
-        }
 
         public string rotateLeft()
         {
             string stringReturnMessage;
-            if (currentFrontDirection > 0)
-            {
-                currentFrontDirection--;
-            }
-            else if (currentFrontDirection == 0)
-            {
-                currentFrontDirection = 3;
-            }
             if (displayNumber == 1)
             {
-                picX = currentFrontDirection * resolutionWidth;
+                if (currentFrontDirection > 0) //0 to 3 range 
+                {
+                    currentFrontDirection--;
+                }
+                else if (currentFrontDirection == 0)
+                {
+                    currentFrontDirection = 3;
+                }
             }
             else if (displayNumber == 2)
             {
-                picX = (currentFrontDirection - 4) * resolutionWidth;
+                if (currentFrontDirection > -3) //0 to -3  range 
+                {
+                    currentFrontDirection--;
+                }
+                else if (currentFrontDirection == -3)
+                {
+                    currentFrontDirection = 0;
+                }
             }
-
-            videoDisplayLocation.X = picX;
+           // xCoord = currentFrontDirection * resolutionWidth;
             stringReturnMessage = getFacingDirectionJSON();
             return stringReturnMessage;
         }
@@ -232,7 +203,7 @@ namespace SocketTutorial.FormsServer
             return stringReturnMessage;
         }
 
-        private string getFacingDirectionJSON()
+        public string getFacingDirectionJSON()
         {
             string stringReturnMessage;
             if (currentFrontDirection == 0)
