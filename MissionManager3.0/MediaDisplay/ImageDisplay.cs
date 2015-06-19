@@ -42,6 +42,36 @@ namespace SocketTutorial.FormsServer
             this.Close();
         }
 
+        public string getFacingDirectionJSON()
+        {
+            string stringReturnMessage;
+            if (currentFrontDirection == 0)
+            {
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Facing Front\"}";
+                return stringReturnMessage;
+            }
+            else if (currentFrontDirection == 1)
+            {
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Facing Right\"}";
+                return stringReturnMessage;
+            }
+            else if (currentFrontDirection == 2)
+            {
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Facing Back\"}";
+                return stringReturnMessage;
+            }
+            else if (currentFrontDirection == 3)
+            {
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Facing Left\"}";
+                return stringReturnMessage;
+            }
+
+            else
+            {
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Facing Calculation Failure\"}";
+                return stringReturnMessage;
+            }
+        }
 
     }
 }
