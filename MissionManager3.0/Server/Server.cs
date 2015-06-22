@@ -342,16 +342,16 @@ namespace SocketTutorial.FormsServer
                     return stringReturnMessage;
 
                 }
-                else if (message.Contains("rotate left"))
-                {
-                    videoDisplay2.rotateLeft();
-                    stringReturnMessage = videoDisplay.rotateLeft();
-                    videoDisplay.SetDesktopLocation(videoDisplay.xCoord, 0);
-                    videoDisplay2.SetDesktopLocation(videoDisplay2.xCoord, 0);
-                    videoDisplay2.Show();
-                    videoDisplay.Show();
-                    return stringReturnMessage;
-                }
+                //else if (message.Contains("rotate left"))
+                //{
+                //    videoDisplay2.rotateLeft();
+                //    stringReturnMessage = videoDisplay.rotateLeft();
+                //    videoDisplay.SetDesktopLocation(videoDisplay.xCoord, 0);
+                //    videoDisplay2.SetDesktopLocation(videoDisplay2.xCoord, 0);
+                //    videoDisplay2.Show();
+                //    videoDisplay.Show();
+                //    return stringReturnMessage;
+                //}
 
                 else if (message.Contains("Raise Volume"))
                 {
@@ -383,6 +383,36 @@ namespace SocketTutorial.FormsServer
                     newTime = TimeSpan.Parse(message);
                     stringReturnMessage = videoDisplay.UpdateVideoTime(newTime);
                     videoDisplay2.UpdateVideoTime(newTime);
+                    return stringReturnMessage;
+                }
+                else if (message.Contains("minimise"))
+                {
+                    if (videoDisplay != null)
+                    {
+                        videoDisplay.WindowState = FormWindowState.Minimized;
+                        videoDisplay2.WindowState = FormWindowState.Minimized;
+                    }
+                    if (imageDisplay != null)
+                    {
+                        imageDisplay.WindowState = FormWindowState.Minimized;
+                        imageDisplay2.WindowState = FormWindowState.Minimized;
+                    }
+                    stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Minimised\"}";
+                    return stringReturnMessage;
+                }
+                else if (message.Contains("maximise"))
+                {
+                    if (videoDisplay != null)
+                    {
+                        videoDisplay.WindowState = FormWindowState.Maximized;
+                        videoDisplay2.WindowState = FormWindowState.Maximized;
+                    }
+                    if (imageDisplay != null)
+                    {
+                        imageDisplay.WindowState = FormWindowState.Maximized;
+                        imageDisplay2.WindowState = FormWindowState.Maximized;
+                    }
+                    stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Maximised\"}";
                     return stringReturnMessage;
                 }
 
