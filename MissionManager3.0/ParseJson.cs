@@ -36,11 +36,29 @@ namespace SocketTutorial.FormsServer
 
         public string InitialParsing(string JsonIn) //return JSON
         {
+            string bluetoothConn = "CONNECTION_ACTIVE_BLUETOOTH";
+            string wifiConn = "CONNECTION_ACTIVE_WIFI";
             JsonIn = JsonIn.TrimEnd('\0');
-            if (JsonIn.Contains( "CONNECTION_ACTIVE_BLUETOOTH" )|| JsonIn.Contains( "CONNECTION_ACTIVE_WIFI"))
+            if (JsonIn.Contains(bluetoothConn))
+            {   
+                if(JsonIn.Length > bluetoothConn.Length)
+                {
+                    JsonIn.Replace(bluetoothConn, "");
+                    string jsonReturn = InitialParsing(JsonIn);
+                    return jsonReturn;
+                }
+           
+                else return JsonIn; //send back the incoming message
+            }
+            else if(JsonIn.Contains(wifiConn))
             {
-                string pies = JsonIn;
-                return pies;
+                if (JsonIn.Length > wifiConn.Length)
+                {
+                    JsonIn.Replace(wifiConn, "");
+                    string jsonReturn = InitialParsing(JsonIn);
+                    return jsonReturn;
+                }
+                else return JsonIn; //send back the incoming message
             }
             else
             {

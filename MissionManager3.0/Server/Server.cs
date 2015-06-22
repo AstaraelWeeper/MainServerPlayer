@@ -398,6 +398,11 @@ namespace SocketTutorial.FormsServer
                 return stringReturnMessage;
             }
 
+        }
+
+        private void btn_Clear_Click(object sender, EventArgs e)
+        {
+            txtServer.Text = "";
         } 
     }
 }

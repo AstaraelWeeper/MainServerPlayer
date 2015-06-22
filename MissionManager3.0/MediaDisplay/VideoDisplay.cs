@@ -243,6 +243,7 @@ namespace SocketTutorial.FormsServer
         {
             this.Close();
         }
+
     }
   
 }
