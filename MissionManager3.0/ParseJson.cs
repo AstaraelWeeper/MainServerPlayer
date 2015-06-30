@@ -193,18 +193,28 @@ namespace SocketTutorial.FormsServer
                 history = System.IO.File.ReadAllLines(storedHistoryFilePath).ToList();
             }
             history.Add(filePath);
-            if (history.Count() <= 10)
+            for (int i = 0; i < history.Count(); i++) //to test. should remove duplicates.
             {
-                System.IO.File.WriteAllLines(storedHistoryFilePath, history); //save over file if up to 10 paths
+                for (int j = i; j < history.Count(); j++)
+                {
+                    if (history[i] == history[j])
+                    {
+                        history.RemoveAt(j);
+                    }
+                }
             }
-            else //when history.Count = 11
+            if (history.Count() <= 5)
             {
-                for (int i = 0; i < history.Count(); i++) //i go up to 10
+                System.IO.File.WriteAllLines(storedHistoryFilePath, history); //save over file if up to 5 paths
+            }
+            else //when history.Count = 6
+            {
+                for (int i = 0; i < history.Count(); i++) //i go up to 5
                 {
                     history[i] = history[i + 1]; //move them all up one
                 }
                 history.RemoveAt(history.Count()); //remove the last one
-                System.IO.File.WriteAllLines(storedHistoryFilePath, history); //save over file if up to 10 paths
+                System.IO.File.WriteAllLines(storedHistoryFilePath, history); //save over file if up to 5 paths
             }
         }
         string GetHistory()
@@ -238,8 +248,8 @@ namespace SocketTutorial.FormsServer
                     existsCount++;
                     FileInfo fileInfoJ = new FileInfo(history[j]);
                     long sizeJ = fileInfoJ.Length;
-                    historyString += "{\"fileName\":\"" + history[j] + "\",";
-                    historyString += "\"fileExtension\":\"" + history[j] + "\",";
+                    historyString += "{\"fileName\":\"" + Path.GetFileNameWithoutExtension(history[j]) + "\",";
+                    historyString += "\"fileExtension\":\"" + Path.GetExtension(history[j]) + "\",";
                     historyString += "\"filePath\":\"" + history[j] + "\",";
                     historyString += "\"fileSizeInBytes\":\"" + sizeJ.ToString() + "\"";
 
