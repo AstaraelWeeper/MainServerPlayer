@@ -274,7 +274,6 @@ namespace SocketTutorial.FormsServer
                     historyString += "\"fileExtension\":\"" + Path.GetExtension(history[0]) + "\",";
                     historyString += "\"filePath\":\"" + history[0] + "\",";
                     historyString += "\"fileSizeInBytes\":\"" + size.ToString() + "\"";
-
                     historyString += "}]}";
                 }
                 else

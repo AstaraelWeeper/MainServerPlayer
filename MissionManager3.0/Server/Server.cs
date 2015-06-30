@@ -239,7 +239,7 @@ namespace SocketTutorial.FormsServer
             {
                 if (action == ImageAction.InitialiseImages)
                 {
-                    if (imageDisplay != null)
+                    if (!imageDisplay.IsDisposed)
                     {
                         imageDisplay.Dispose();
                         imageDisplay2.Dispose();
@@ -247,7 +247,7 @@ namespace SocketTutorial.FormsServer
 
                         imageDisplay = new ImageDisplay(1, message); //expecting direction to reset to 0 if new one opened
                         imageDisplay2 = new ImageDisplay(2, message);
-                        if (videoDisplay != null)
+                        if (!videoDisplay.IsDisposed)
                         {
                             videoDisplay.Dispose();
                             videoDisplay2.Dispose();
@@ -282,7 +282,7 @@ namespace SocketTutorial.FormsServer
         {
             string stringReturnMessage = "";
 
-            if (videoDisplay != null)
+            if (!videoDisplay.IsDisposed)
             {
                 if (message.Contains("stop"))
                 {
@@ -305,7 +305,7 @@ namespace SocketTutorial.FormsServer
 
                 else if (message.Contains("rotate right"))
                 {
-                    if (videoDisplay != null)
+                    if (!videoDisplay.IsDisposed)
                     {
                         RotateVideosRight();
                         stringReturnMessage = videoDisplay.getFacingDirectionJSON();
@@ -317,7 +317,7 @@ namespace SocketTutorial.FormsServer
                         videoDisplay.Show();
                         videoDisplay2.Show();
                     }
-                    if (imageDisplay != null)
+                    if (!imageDisplay.IsDisposed)
                     {
                         stringReturnMessage = imageDisplay.getFacingDirectionJSON();
                         RotateImagesRight();
@@ -366,32 +366,32 @@ namespace SocketTutorial.FormsServer
                     videoDisplay2.UpdateVideoTime(newTime);
                     return stringReturnMessage;
                 }
-                else if (message.Contains("minimise"))
+                else if (message.Contains("minimize"))
                 {
-                    if (videoDisplay != null)
+                    if (!videoDisplay.IsDisposed)
                     {
-                        videoDisplay.WindowState = FormWindowState.Minimized;
-                        videoDisplay2.WindowState = FormWindowState.Minimized;
+                        videoDisplay.Hide();
+                        videoDisplay2.Hide();
                     }
-                    if (imageDisplay != null)
+                    if (!imageDisplay.IsDisposed)
                     {
-                        imageDisplay.WindowState = FormWindowState.Minimized;
-                        imageDisplay2.WindowState = FormWindowState.Minimized;
+                        imageDisplay.Hide();
+                        imageDisplay2.Hide();
                     }
                     stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Minimised\"}";
                     return stringReturnMessage;
                 }
-                else if (message.Contains("maximise"))
+                else if (message.Contains("maximize"))
                 {
-                    if (videoDisplay != null)
+                    if (!videoDisplay.IsDisposed)
                     {
-                        videoDisplay.WindowState = FormWindowState.Maximized;
-                        videoDisplay2.WindowState = FormWindowState.Maximized;
+                        videoDisplay.Show();
+                        videoDisplay2.Show();
                     }
-                    if (imageDisplay != null)
+                    if (!imageDisplay.IsDisposed)
                     {
-                        imageDisplay.WindowState = FormWindowState.Maximized;
-                        imageDisplay2.WindowState = FormWindowState.Maximized;
+                        imageDisplay.Show();
+                        imageDisplay2.Show();
                     }
                     stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Maximised\"}";
                     return stringReturnMessage;
