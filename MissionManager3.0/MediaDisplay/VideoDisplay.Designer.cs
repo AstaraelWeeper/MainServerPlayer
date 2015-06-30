@@ -66,7 +66,7 @@
             this.Name = "VideoDisplay";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "VideoDisplay";
-            this.Load += new System.EventHandler(this.VideoDisplay_Load);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.VideoDisplay_FormClosed);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.axVLCPlugin21)).EndInit();
             this.ResumeLayout(false);

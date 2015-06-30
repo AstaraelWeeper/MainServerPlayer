@@ -188,6 +188,10 @@ namespace SocketTutorial.FormsServer
 
         void AdjustHistory(string filePath)
         {
+            if (File.Exists(storedHistoryFilePath))
+            {
+                history = System.IO.File.ReadAllLines(storedHistoryFilePath).ToList();
+            }
             history.Add(filePath);
             if (history.Count() <= 10)
             {
@@ -206,7 +210,7 @@ namespace SocketTutorial.FormsServer
         string GetHistory()
         {
             string historyString = "{\"historyPaths\":[";
-            if(!File.Exists(storedHistoryFilePath))
+            if(File.Exists(storedHistoryFilePath))
             {
                 history = System.IO.File.ReadAllLines(storedHistoryFilePath).ToList();
             }
@@ -256,8 +260,8 @@ namespace SocketTutorial.FormsServer
                 {
                     FileInfo fileInfo = new FileInfo(history[0]);
                     long size = fileInfo.Length;
-                    historyString += "{\"fileName\":\"" + history[0] + "\",";
-                    historyString += "\"fileExtension\":\"" + history[0] + "\",";
+                    historyString += "{\"fileName\":\"" + Path.GetFileNameWithoutExtension(history[0]) + "\",";
+                    historyString += "\"fileExtension\":\"" + Path.GetExtension(history[0]) + "\",";
                     historyString += "\"filePath\":\"" + history[0] + "\",";
                     historyString += "\"fileSizeInBytes\":\"" + size.ToString() + "\"";
 
@@ -374,7 +378,7 @@ namespace SocketTutorial.FormsServer
 
                 for (int i = 0; i < directoryPaths.Length; i++) //directories builder
                 {
-                    if (directoryNames[i] == "$RECYCLE.BIN" || directoryNames[i] == "Documents and Settings")
+                    if (directoryNames[i] == "$RECYCLE.BIN" || directoryNames[i] == "Documents and Settings") //skip these
                     {
                     }
                     else

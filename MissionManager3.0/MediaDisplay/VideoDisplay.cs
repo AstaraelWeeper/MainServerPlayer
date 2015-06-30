@@ -72,14 +72,14 @@ namespace SocketTutorial.FormsServer
 
         public string IncreaseVolume()
         {
-            axVLCPlugin21.Volume++; //check if it needs a larger increment
+            axVLCPlugin21.Volume += 10; //check if it needs a larger increment
             returnPlugin = "Volume Increased";
             returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
             return returnMessage;
         }
         public string DecreaseVolume()
         {
-            axVLCPlugin21.Volume--;
+            axVLCPlugin21.Volume -= 10;
             returnPlugin = "Volume Decreased";
             returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
             return returnMessage;
@@ -234,14 +234,15 @@ namespace SocketTutorial.FormsServer
             }
         }
 
-        private void VideoDisplay_Load(object sender, EventArgs e)
-        {
-
-        }
 
         private void panel1_MouseClick(object sender, MouseEventArgs e)
         {
             this.Close();
+        }
+
+        private void VideoDisplay_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.Dispose();
         }
 
     }

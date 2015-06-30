@@ -181,26 +181,21 @@ namespace SocketTutorial.FormsServer
             {
                 if (action == VideoAction.InitialisePlayers)
                 {
-                    if(videoDisplay !=null)
-                    {                       
-                        videoDisplay.newVideo(message);
-                        videoDisplay2.newVideo(message);
-                        videoDisplay.Loop("off");
-                        videoDisplay2.Loop("off");
-                    }
-                    else
-                    {
+
+                        if(videoDisplay!=null)
+                        {
+                        videoDisplay.Dispose();
+                        videoDisplay2.Dispose();
+                        }
                         videoDisplay = new VideoDisplay(1, message); //expecting direction to reset to 0 if new one opened
                         videoDisplay2 = new VideoDisplay(2, message);
                         if (imageDisplay != null)
                         {
-                            imageDisplay.currentFrontDirection = 0;
-                            imageDisplay2.currentFrontDirection = 0;
-                            imageDisplay.WindowState = FormWindowState.Minimized;
-                            imageDisplay2.WindowState = FormWindowState.Minimized;
+                            imageDisplay.Dispose();
+                            imageDisplay2.Dispose();
                         }
 
-                    }
+                    
 
                     videoDisplay.Width = screens * resolutionWidth;
                     videoDisplay2.Width = screens * resolutionWidth;
@@ -246,22 +241,18 @@ namespace SocketTutorial.FormsServer
                 {
                     if (imageDisplay != null)
                     {
-                        imageDisplay.newImage(message);
-                        imageDisplay2.newImage(message);
-
+                        imageDisplay.Dispose();
+                        imageDisplay2.Dispose();
                     }
-                    else
-                    {
+
                         imageDisplay = new ImageDisplay(1, message); //expecting direction to reset to 0 if new one opened
                         imageDisplay2 = new ImageDisplay(2, message);
                         if (videoDisplay != null)
                         {
-                            videoDisplay.currentFrontDirection = 0;
-                            videoDisplay2.currentFrontDirection = 0;
-                            videoDisplay.WindowState = FormWindowState.Minimized;
-                            videoDisplay2.WindowState = FormWindowState.Minimized;
+                            videoDisplay.Dispose();
+                            videoDisplay2.Dispose();
                         }
-                    }
+                   
 
                     imageDisplay.Width = screens * resolutionWidth;
                     imageDisplay2.Width = screens * resolutionWidth;
@@ -342,23 +333,13 @@ namespace SocketTutorial.FormsServer
                     return stringReturnMessage;
 
                 }
-                //else if (message.Contains("rotate left"))
-                //{
-                //    videoDisplay2.rotateLeft();
-                //    stringReturnMessage = videoDisplay.rotateLeft();
-                //    videoDisplay.SetDesktopLocation(videoDisplay.xCoord, 0);
-                //    videoDisplay2.SetDesktopLocation(videoDisplay2.xCoord, 0);
-                //    videoDisplay2.Show();
-                //    videoDisplay.Show();
-                //    return stringReturnMessage;
-                //}
 
-                else if (message.Contains("Raise Volume"))
+                else if (message.Contains("volumeup"))
                 {
                     stringReturnMessage = videoDisplay.IncreaseVolume();
                     return stringReturnMessage;
                 }
-                else if (message.Contains("Lower Volume"))
+                else if (message.Contains("volumedown"))
                 {
                     stringReturnMessage = videoDisplay.DecreaseVolume();
                     return stringReturnMessage;
