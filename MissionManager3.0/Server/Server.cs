@@ -36,7 +36,7 @@ namespace SocketTutorial.FormsServer
         public ImageDisplay imageDisplay2 = null;
 
         int screens = 4; //should be 4 in live no matter how many screens
-        static int resolutionWidth = 1920/2;
+        static int resolutionWidth = 1920 / 2;
         static int resolutionHight = 1080;
 
         int vid1X = 0;
@@ -48,7 +48,7 @@ namespace SocketTutorial.FormsServer
         public Server()
         {
             InitializeComponent();
-           // getScreenSize();
+            // getScreenSize();
             screenWriterDelegate = new AsynchronousSocketListener.ScreenWriterDelegate(WriteToScreen);
             screenWriterDelegateBT = new BluetoothServer.ScreenWriterDelegate(WriteToScreenBT);
             videoFormActionDelegate = new VideoFormActionDelegate(PerformVideoAction);
@@ -89,7 +89,7 @@ namespace SocketTutorial.FormsServer
 
         void LoadWifiAndBTListeners()
         {
-            listener = new AsynchronousSocketListener(screenWriterDelegate, videoFormActionDelegate,imageFormActionDelegate);
+            listener = new AsynchronousSocketListener(screenWriterDelegate, videoFormActionDelegate, imageFormActionDelegate);
             ioThread = new Thread(new ThreadStart(listener.StartListening));
             ioThread.SetApartmentState(ApartmentState.STA);
             ioThread.Start();
@@ -117,28 +117,28 @@ namespace SocketTutorial.FormsServer
         public void RotateVideosRight()
         {
 
-                if (videoDisplay.currentFrontDirection < 3) //0 to 3 range 
-                {
-                    videoDisplay.currentFrontDirection++;
-                }
-                else if (videoDisplay.currentFrontDirection == 3)
-                {
-                    videoDisplay.currentFrontDirection = 0;
-                }
-                int leftDirection = videoDisplay.currentFrontDirection;
-                vid1X = leftDirection * resolutionWidth;
-            
+            if (videoDisplay.currentFrontDirection < 3) //0 to 3 range 
+            {
+                videoDisplay.currentFrontDirection++;
+            }
+            else if (videoDisplay.currentFrontDirection == 3)
+            {
+                videoDisplay.currentFrontDirection = 0;
+            }
+            int leftDirection = videoDisplay.currentFrontDirection;
+            vid1X = leftDirection * resolutionWidth;
 
-                if (videoDisplay2.currentFrontDirection < 0) //0 to -3  range 
-                {
-                    videoDisplay2.currentFrontDirection++;
-                }
-                else if (videoDisplay2.currentFrontDirection == 0)
-                {
-                    videoDisplay2.currentFrontDirection = -3;
-                }
-                int rightDirection = videoDisplay2.currentFrontDirection;
-                vid2X = rightDirection * resolutionWidth;
+
+            if (videoDisplay2.currentFrontDirection < 0) //0 to -3  range 
+            {
+                videoDisplay2.currentFrontDirection++;
+            }
+            else if (videoDisplay2.currentFrontDirection == 0)
+            {
+                videoDisplay2.currentFrontDirection = -3;
+            }
+            int rightDirection = videoDisplay2.currentFrontDirection;
+            vid2X = rightDirection * resolutionWidth;
         }
 
         public void RotateImagesRight()
@@ -170,9 +170,9 @@ namespace SocketTutorial.FormsServer
 
         public string PerformVideoAction(VideoAction action, string message)
         {
-            string JsonReturn= "failed at PVA";
+            string JsonReturn = "failed at PVA";
 
-            if(txtServer.InvokeRequired)
+            if (txtServer.InvokeRequired)
             {
                 return Invoke(videoFormActionDelegate, action, message).ToString();
             }
@@ -182,20 +182,20 @@ namespace SocketTutorial.FormsServer
                 if (action == VideoAction.InitialisePlayers)
                 {
 
-                        if(videoDisplay!=null)
-                        {
+                    if (videoDisplay != null && !videoDisplay.IsDisposed)
+                    {
                         videoDisplay.Dispose();
                         videoDisplay2.Dispose();
-                        }
-                        videoDisplay = new VideoDisplay(1, message); //expecting direction to reset to 0 if new one opened
-                        videoDisplay2 = new VideoDisplay(2, message);
-                        if (imageDisplay != null)
-                        {
-                            imageDisplay.Dispose();
-                            imageDisplay2.Dispose();
-                        }
+                    }
+                    videoDisplay = new VideoDisplay(1, message); //expecting direction to reset to 0 if new one opened
+                    videoDisplay2 = new VideoDisplay(2, message);
+                    if (imageDisplay != null && !imageDisplay.IsDisposed)
+                    {
+                        imageDisplay.Dispose();
+                        imageDisplay2.Dispose();
+                    }
 
-                    
+
 
                     videoDisplay.Width = screens * resolutionWidth;
                     videoDisplay2.Width = screens * resolutionWidth;
@@ -239,20 +239,22 @@ namespace SocketTutorial.FormsServer
             {
                 if (action == ImageAction.InitialiseImages)
                 {
-                    if (!imageDisplay.IsDisposed)
+                    if (imageDisplay != null && !imageDisplay.IsDisposed)
                     {
                         imageDisplay.Dispose();
                         imageDisplay2.Dispose();
+                        imageDisplay = null;
+                        imageDisplay2 = null;
                     }
 
-                        imageDisplay = new ImageDisplay(1, message); //expecting direction to reset to 0 if new one opened
-                        imageDisplay2 = new ImageDisplay(2, message);
-                        if (!videoDisplay.IsDisposed)
-                        {
-                            videoDisplay.Dispose();
-                            videoDisplay2.Dispose();
-                        }
-                   
+                    imageDisplay = new ImageDisplay(1, message); //expecting direction to reset to 0 if new one opened
+                    imageDisplay2 = new ImageDisplay(2, message);
+                    if (!videoDisplay.IsDisposed && videoDisplay != null)
+                    {
+                        videoDisplay.Dispose();
+                        videoDisplay2.Dispose();
+                    }
+
 
                     imageDisplay.Width = screens * resolutionWidth;
                     imageDisplay2.Width = screens * resolutionWidth;
@@ -265,7 +267,7 @@ namespace SocketTutorial.FormsServer
                     imageDisplay.Show();
                     imageDisplay2.Show();
                     JsonReturn = "{\"messageType\":\"ImageViewer\",\"messageBody\":\"Image Initialised\"}";
-                    
+
                     return JsonReturn;
 
                 }
@@ -329,7 +331,7 @@ namespace SocketTutorial.FormsServer
                         imageDisplay.Show();
                         imageDisplay2.Show();
                     }
-  
+
                     return stringReturnMessage;
 
                 }
@@ -351,7 +353,7 @@ namespace SocketTutorial.FormsServer
                     return stringReturnMessage;
                 }
 
-                else if (message.Contains("sync")) 
+                else if (message.Contains("sync"))
                 {
                     stringReturnMessage = videoDisplay.SyncVideoTime();
                     return stringReturnMessage;
@@ -368,12 +370,12 @@ namespace SocketTutorial.FormsServer
                 }
                 else if (message.Contains("minimize"))
                 {
-                    if (!videoDisplay.IsDisposed)
+                    if (videoDisplay != null && !videoDisplay.IsDisposed)
                     {
                         videoDisplay.Hide();
                         videoDisplay2.Hide();
                     }
-                    if (!imageDisplay.IsDisposed)
+                    if (imageDisplay != null && !imageDisplay.IsDisposed)
                     {
                         imageDisplay.Hide();
                         imageDisplay2.Hide();
@@ -383,12 +385,12 @@ namespace SocketTutorial.FormsServer
                 }
                 else if (message.Contains("maximize"))
                 {
-                    if (!videoDisplay.IsDisposed)
+                    if (videoDisplay != null && !videoDisplay.IsDisposed)
                     {
                         videoDisplay.Show();
                         videoDisplay2.Show();
                     }
-                    if (!imageDisplay.IsDisposed)
+                    if (imageDisplay != null && !imageDisplay.IsDisposed)
                     {
                         imageDisplay.Show();
                         imageDisplay2.Show();
@@ -414,6 +416,6 @@ namespace SocketTutorial.FormsServer
         private void btn_Clear_Click(object sender, EventArgs e)
         {
             txtServer.Text = "";
-        } 
+        }
     }
 }
