@@ -284,7 +284,7 @@ namespace SocketTutorial.FormsServer
         {
             string stringReturnMessage = "";
 
-            if (!videoDisplay.IsDisposed)
+            if (!videoDisplay.IsDisposed && videoDisplay != null)
             {
                 if (message.Contains("stop"))
                 {
@@ -307,7 +307,7 @@ namespace SocketTutorial.FormsServer
 
                 else if (message.Contains("rotate right"))
                 {
-                    if (!videoDisplay.IsDisposed)
+                    if (!videoDisplay.IsDisposed && videoDisplay != null)
                     {
                         RotateVideosRight();
                         stringReturnMessage = videoDisplay.getFacingDirectionJSON();
@@ -315,11 +315,14 @@ namespace SocketTutorial.FormsServer
                         videoDisplay.Location = new Point(vid1X, 0);
                         videoDisplay2.StartPosition = FormStartPosition.Manual;
                         videoDisplay2.Location = new Point(vid2X, 0);
-                        videoDisplay2.Show();
-                        videoDisplay.Show();
-                        videoDisplay2.Show();
+                        if (videoDisplay.WindowState != FormWindowState.Minimized)
+                        {
+                            videoDisplay2.Show();
+                            videoDisplay.Show();
+                            videoDisplay2.Show();
+                        }
                     }
-                    if (!imageDisplay.IsDisposed)
+                    if (!imageDisplay.IsDisposed && imageDisplay != null)
                     {
                         stringReturnMessage = imageDisplay.getFacingDirectionJSON();
                         RotateImagesRight();
@@ -327,9 +330,12 @@ namespace SocketTutorial.FormsServer
                         imageDisplay.Location = new Point(pic1X, 0);
                         imageDisplay2.StartPosition = FormStartPosition.Manual;
                         imageDisplay2.Location = new Point(pic2X, 0);
-                        imageDisplay2.Show();
-                        imageDisplay.Show();
-                        imageDisplay2.Show();
+                        if (imageDisplay.WindowState != FormWindowState.Minimized)
+                        {
+                            imageDisplay2.Show();
+                            imageDisplay.Show();
+                            imageDisplay2.Show();
+                        }
                     }
 
                     return stringReturnMessage;
