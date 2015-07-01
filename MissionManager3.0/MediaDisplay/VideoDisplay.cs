@@ -110,7 +110,12 @@ namespace SocketTutorial.FormsServer
             var currentPlayDuration = TimeSpan.FromMilliseconds(axVLCPlugin21.input.Time);
             string hours = currentPlayDuration.Hours.ToString();
             string minutes = currentPlayDuration.Minutes.ToString();
-            string seconds = currentPlayDuration.Seconds.ToString();
+            int secondsInt = currentPlayDuration.Seconds;
+            if(currentPlayDuration.Milliseconds > 500)
+            {
+                secondsInt++;
+            }
+            string seconds = secondsInt.ToString();
             if (hours.Length == 1)
             {
                 hours = hours.PadLeft(2,'0');
