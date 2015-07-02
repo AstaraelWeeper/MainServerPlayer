@@ -286,7 +286,7 @@ namespace SocketTutorial.FormsServer
         {
             string stringReturnMessage = "";
 
-            if (!videoDisplay.IsDisposed && videoDisplay != null)
+            if (!videoDisplay.IsDisposed && videoDisplay != null || !imageDisplay.IsDisposed && imageDisplay != null)
             {
                 if (message.Contains("stop"))
                 {
@@ -415,7 +415,7 @@ namespace SocketTutorial.FormsServer
             }
             else
             {
-                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"No Video Player\"}";
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"No Player\"}";
                 return stringReturnMessage;
             }
 
