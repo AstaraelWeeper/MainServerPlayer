@@ -425,5 +425,10 @@ namespace SocketTutorial.FormsServer
         {
             txtServer.Text = "";
         }
+
+        private void Server_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
