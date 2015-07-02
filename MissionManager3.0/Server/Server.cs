@@ -428,7 +428,7 @@ namespace SocketTutorial.FormsServer
 
         private void Server_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Application.Exit();
+            Environment.Exit(0);
         }
     }
 }
