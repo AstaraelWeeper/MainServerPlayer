@@ -241,7 +241,7 @@ namespace SocketTutorial.FormsServer
             {
                 if (action == ImageAction.InitialiseImages)
                 {
-                    if (imageDisplay != null && !imageDisplay.IsDisposed)
+                    if (imageDisplay != null)
                     {
                         imageDisplay.Dispose();
                         imageDisplay2.Dispose();
@@ -251,10 +251,12 @@ namespace SocketTutorial.FormsServer
 
                     imageDisplay = new ImageDisplay(1, message); //expecting direction to reset to 0 if new one opened
                     imageDisplay2 = new ImageDisplay(2, message);
-                    if (!videoDisplay.IsDisposed && videoDisplay != null)
+                    if (videoDisplay != null)
                     {
                         videoDisplay.Dispose();
                         videoDisplay2.Dispose();
+                        videoDisplay = null;
+                        videoDisplay2 = null;
                     }
 
 
@@ -286,7 +288,7 @@ namespace SocketTutorial.FormsServer
         {
             string stringReturnMessage = "";
 
-            if (!videoDisplay.IsDisposed && videoDisplay != null || !imageDisplay.IsDisposed && imageDisplay != null)
+            if (videoDisplay != null)
             {
                 if (message.Contains("stop"))
                 {
@@ -309,7 +311,7 @@ namespace SocketTutorial.FormsServer
 
                 else if (message.Contains("rotate right"))
                 {
-                    if (!videoDisplay.IsDisposed && videoDisplay != null)
+                    if (videoDisplay != null)
                     {
                         RotateVideosRight();
                         stringReturnMessage = videoDisplay.getFacingDirectionJSON();
@@ -324,7 +326,7 @@ namespace SocketTutorial.FormsServer
                             videoDisplay2.Show();
                         }
                     }
-                    if (!imageDisplay.IsDisposed && imageDisplay != null)
+                    if (imageDisplay != null)
                     {
                         stringReturnMessage = imageDisplay.getFacingDirectionJSON();
                         RotateImagesRight();
@@ -378,12 +380,12 @@ namespace SocketTutorial.FormsServer
                 }
                 else if (message.Contains("minimize"))
                 {
-                    if (videoDisplay != null && !videoDisplay.IsDisposed)
+                    if (videoDisplay != null)
                     {
                         videoDisplay.Hide();
                         videoDisplay2.Hide();
                     }
-                    if (imageDisplay != null && !imageDisplay.IsDisposed)
+                    if (imageDisplay != null)
                     {
                         imageDisplay.Hide();
                         imageDisplay2.Hide();
@@ -393,12 +395,12 @@ namespace SocketTutorial.FormsServer
                 }
                 else if (message.Contains("maximize"))
                 {
-                    if (videoDisplay != null && !videoDisplay.IsDisposed)
+                    if (videoDisplay != null)
                     {
                         videoDisplay.Show();
                         videoDisplay2.Show();
                     }
-                    if (imageDisplay != null && !imageDisplay.IsDisposed)
+                    if (imageDisplay != null)
                     {
                         imageDisplay.Show();
                         imageDisplay2.Show();
