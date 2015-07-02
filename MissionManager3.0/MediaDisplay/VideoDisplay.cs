@@ -89,29 +89,36 @@ namespace SocketTutorial.FormsServer
         {
             
 
-            if (GetDuration(path, out duration))
-            {
+            //if ()
+            //{
+                var duration = TimeSpan.FromMilliseconds(axVLCPlugin21.input.Length);
                 //use the returned time to send
-                returnPlugin = duration.ToString();
+                string time = timeConversion(duration);
                 returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}"; 
                 return returnMessage;
-            }
-            else
-            {
-                returnPlugin = "GetDuration Failed";
-                returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}"; 
-                return returnMessage;
-            }
+            //}
+            //else
+            //{
+            //    returnPlugin = "GetDuration Failed";
+            //    returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}"; 
+            //    return returnMessage;
+            //}
         }
 
         public string SyncVideoTime()
         {
            //need to send like this regularly { "messageType": "VideoPlayerSync", "messageBody" : "00:04:48" }
             var currentPlayDuration = TimeSpan.FromMilliseconds(axVLCPlugin21.input.Time);
-            string hours = currentPlayDuration.Hours.ToString();
-            string minutes = currentPlayDuration.Minutes.ToString();
-            int secondsInt = currentPlayDuration.Seconds;
-            if(currentPlayDuration.Milliseconds > 500)
+            string time = timeConversion(currentPlayDuration);
+            string jsonReturn = "{\"messageType\":\"VideoPlayerSync\",\"messageBody\":\"" + time + "\"}";
+            return jsonReturn;
+        }
+        private string timeConversion(TimeSpan time)
+        {
+            string hours = time.Hours.ToString();
+            string minutes = time.Minutes.ToString();
+            int secondsInt = time.Seconds;
+            if(time.Milliseconds > 500)
             {
                 secondsInt++;
             }
@@ -128,7 +135,7 @@ namespace SocketTutorial.FormsServer
             {
                 seconds = seconds.PadLeft(2,'0');
             }
-            string jsonReturn = "{\"messageType\":\"VideoPlayerSync\",\"messageBody\":\"" + hours + ":" + minutes +":" + seconds + "\"}";
+            string jsonReturn = hours + ":" + minutes +":" + seconds;
             return jsonReturn;
         }
 
@@ -140,25 +147,25 @@ namespace SocketTutorial.FormsServer
             return jsonReturn;
         }
 
-        public static bool GetDuration(string filename, out TimeSpan duration)
-        {
-            try
-            {
-                var shl = new Shell();
-                var fldr = shl.NameSpace(Path.GetDirectoryName(filename));
-                var itm = fldr.ParseName(Path.GetFileName(filename));
+        //public static bool GetDuration(string filename, out TimeSpan duration)
+        //{
+        //    try
+        //    {
+        //        var shl = new Shell();
+        //        var fldr = shl.NameSpace(Path.GetDirectoryName(filename));
+        //        var itm = fldr.ParseName(Path.GetFileName(filename));
 
-                // Index 27 is the video duration [This may not always be the case]
-                var propValue = fldr.GetDetailsOf(itm, 27);
+        //        // Index 27 is the video duration [This may not always be the case]
+        //        var propValue = fldr.GetDetailsOf(itm, 27);
 
-                return TimeSpan.TryParse(propValue, out duration);
-            }
-            catch (Exception)
-            {
-                duration = new TimeSpan();
-                return false;
-            }
-        }
+        //        return TimeSpan.TryParse(propValue, out duration);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        duration = new TimeSpan();
+        //        return false;
+        //    }
+        //}
 
 
         public string Loop(string willLoop)
