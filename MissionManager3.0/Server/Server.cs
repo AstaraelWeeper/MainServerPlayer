@@ -49,6 +49,8 @@ namespace SocketTutorial.FormsServer
         {
             InitializeComponent();
             // getScreenSize();
+            SystemVolume sysvol = new SystemVolume();
+            sysvol.SysVolSetup();
             screenWriterDelegate = new AsynchronousSocketListener.ScreenWriterDelegate(WriteToScreen);
             screenWriterDelegateBT = new BluetoothServer.ScreenWriterDelegate(WriteToScreenBT);
             videoFormActionDelegate = new VideoFormActionDelegate(PerformVideoAction);
@@ -386,7 +388,7 @@ namespace SocketTutorial.FormsServer
                         imageDisplay.Hide();
                         imageDisplay2.Hide();
                     }
-                    stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Minimised\"}";
+                    stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Minimized\"}";
                     return stringReturnMessage;
                 }
                 else if (message.Contains("maximize"))
@@ -401,7 +403,7 @@ namespace SocketTutorial.FormsServer
                         imageDisplay.Show();
                         imageDisplay2.Show();
                     }
-                    stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Maximised\"}";
+                    stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"Maximized\"}";
                     return stringReturnMessage;
                 }
 

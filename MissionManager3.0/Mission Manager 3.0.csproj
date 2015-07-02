@@ -91,6 +91,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server\StateObject.cs" />
+    <Compile Include="SystemVolume.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="MediaDisplay\ImageDisplay.resx">
       <DependentUpon>ImageDisplay.cs</DependentUpon>
     </EmbeddedResource>
