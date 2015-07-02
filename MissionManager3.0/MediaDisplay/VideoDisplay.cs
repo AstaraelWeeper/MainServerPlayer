@@ -160,35 +160,6 @@ namespace SocketTutorial.FormsServer
             }
         }
 
-        public string rotateLeft()
-        {
-            string stringReturnMessage;
-            if (displayNumber == 1)
-            {
-                if (currentFrontDirection > 0) //0 to 3 range 
-                {
-                    currentFrontDirection--;
-                }
-                else if (currentFrontDirection == 0)
-                {
-                    currentFrontDirection = 3;
-                }
-            }
-            else if (displayNumber == 2)
-            {
-                if (currentFrontDirection > -3) //0 to -3  range 
-                {
-                    currentFrontDirection--;
-                }
-                else if (currentFrontDirection == -3)
-                {
-                    currentFrontDirection = 0;
-                }
-            }
-           // xCoord = currentFrontDirection * resolutionWidth;
-            stringReturnMessage = getFacingDirectionJSON();
-            return stringReturnMessage;
-        }
 
         public string Loop(string willLoop)
         {

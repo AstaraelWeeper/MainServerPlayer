@@ -36,7 +36,7 @@ namespace SocketTutorial.FormsServer
         public ImageDisplay imageDisplay2 = null;
 
         int screens = 4; //should be 4 in live no matter how many screens
-        static int resolutionWidth = 1920 / 2;
+        static int resolutionWidth = 1920;
         static int resolutionHight = 1080;
 
         int vid1X = 0;
@@ -48,7 +48,7 @@ namespace SocketTutorial.FormsServer
         public Server()
         {
             InitializeComponent();
-            // getScreenSize();
+            getScreenSize();
             SystemVolume sysvol = new SystemVolume();
             sysvol.SysVolSetup();
             screenWriterDelegate = new AsynchronousSocketListener.ScreenWriterDelegate(WriteToScreen);
