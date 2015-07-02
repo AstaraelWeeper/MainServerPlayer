@@ -184,17 +184,21 @@ namespace SocketTutorial.FormsServer
                 if (action == VideoAction.InitialisePlayers)
                 {
 
-                    if (videoDisplay != null && !videoDisplay.IsDisposed)
+                    if (videoDisplay != null)
                     {
                         videoDisplay.Dispose();
                         videoDisplay2.Dispose();
+                        videoDisplay = null;
+                        videoDisplay2 = null;
                     }
                     videoDisplay = new VideoDisplay(1, message); //expecting direction to reset to 0 if new one opened
                     videoDisplay2 = new VideoDisplay(2, message);
-                    if (imageDisplay != null && !imageDisplay.IsDisposed)
+                    if (imageDisplay != null)
                     {
                         imageDisplay.Dispose();
                         imageDisplay2.Dispose();
+                        imageDisplay = null;
+                        imageDisplay2 = null;
                     }
 
 
@@ -288,27 +292,69 @@ namespace SocketTutorial.FormsServer
         {
             string stringReturnMessage = "";
 
-            if (videoDisplay != null)
+            if (videoDisplay != null || imageDisplay != null)
             {
-                if (message.Contains("stop"))
+                if (videoDisplay != null)
                 {
-                    stringReturnMessage = videoDisplay.Stop();
-                    videoDisplay2.Stop();
-                    return stringReturnMessage;
-                }
-                else if (message.Contains("pause"))
-                {
-                    stringReturnMessage = videoDisplay.Pause();
-                    videoDisplay2.Pause();
-                    return stringReturnMessage;
-                }
-                else if (message.Contains("play"))
-                {
-                    stringReturnMessage = videoDisplay.Play();
-                    videoDisplay2.Play();
-                    return stringReturnMessage;
-                }
+                    if (message.Contains("stop"))
+                    {
+                        stringReturnMessage = videoDisplay.Stop();
+                        videoDisplay2.Stop();
+                        return stringReturnMessage;
+                    }
+                    else if (message.Contains("pause"))
+                    {
+                        stringReturnMessage = videoDisplay.Pause();
+                        videoDisplay2.Pause();
+                        return stringReturnMessage;
+                    }
+                    else if (message.Contains("play"))
+                    {
+                        stringReturnMessage = videoDisplay.Play();
+                        videoDisplay2.Play();
+                        return stringReturnMessage;
+                    }
 
+
+
+                    else if (message.Contains("volumeup"))
+                    {
+                        stringReturnMessage = videoDisplay.IncreaseVolume();
+                        return stringReturnMessage;
+                    }
+                    else if (message.Contains("volumedown"))
+                    {
+                        stringReturnMessage = videoDisplay.DecreaseVolume();
+                        return stringReturnMessage;
+                    }
+                    else if (message.Contains("loop"))
+                    {
+                        stringReturnMessage = videoDisplay.Loop(message);
+                        videoDisplay2.Loop(message);
+                        return stringReturnMessage;
+                    }
+
+                    else if (message.Contains("sync"))
+                    {
+                        stringReturnMessage = videoDisplay.SyncVideoTime();
+                        return stringReturnMessage;
+                    }
+                    else if (message.Contains("move"))
+                    {
+                        TimeSpan newTime;
+
+                        message = message.Substring(message.IndexOf("-") + 1);
+                        newTime = TimeSpan.Parse(message);
+                        stringReturnMessage = videoDisplay.UpdateVideoTime(newTime);
+                        videoDisplay2.UpdateVideoTime(newTime);
+                        return stringReturnMessage;
+                    }
+                    else
+                    {
+                        stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"No Player\"}";
+                        return stringReturnMessage;
+                    }
+                }
                 else if (message.Contains("rotate right"))
                 {
                     if (videoDisplay != null)
@@ -344,39 +390,6 @@ namespace SocketTutorial.FormsServer
 
                     return stringReturnMessage;
 
-                }
-
-                else if (message.Contains("volumeup"))
-                {
-                    stringReturnMessage = videoDisplay.IncreaseVolume();
-                    return stringReturnMessage;
-                }
-                else if (message.Contains("volumedown"))
-                {
-                    stringReturnMessage = videoDisplay.DecreaseVolume();
-                    return stringReturnMessage;
-                }
-                else if (message.Contains("loop"))
-                {
-                    stringReturnMessage = videoDisplay.Loop(message);
-                    videoDisplay2.Loop(message);
-                    return stringReturnMessage;
-                }
-
-                else if (message.Contains("sync"))
-                {
-                    stringReturnMessage = videoDisplay.SyncVideoTime();
-                    return stringReturnMessage;
-                }
-                else if (message.Contains("move"))
-                {
-                    TimeSpan newTime;
-
-                    message = message.Substring(message.IndexOf("-") + 1);
-                    newTime = TimeSpan.Parse(message);
-                    stringReturnMessage = videoDisplay.UpdateVideoTime(newTime);
-                    videoDisplay2.UpdateVideoTime(newTime);
-                    return stringReturnMessage;
                 }
                 else if (message.Contains("minimize"))
                 {
