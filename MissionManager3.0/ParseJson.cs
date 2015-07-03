@@ -168,8 +168,8 @@ namespace SocketTutorial.FormsServer
                 }
                 else if (JsonMessage[1] == "restartmissionmanager")
                 {
-                    System.Diagnostics.Process.Start(Application.ExecutablePath); // to start new instance of application
-                     //this.Close(); //to turn off current app. needs updating
+                    System.Diagnostics.Process.Start(Application.ExecutablePath); // to start new instance of application  
+                    Application.Exit();
                     JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Application Restarted\"}";
                     return JsonReturn;
                 }
@@ -195,7 +195,7 @@ namespace SocketTutorial.FormsServer
             history.Add(filePath);
             for (int i = 0; i < history.Count(); i++) //to test. should remove duplicates.
             {
-                for (int j = i; j < history.Count(); j++)
+                for (int j = (i+1); j < history.Count(); j++)
                 {
                     if (history[i] == history[j])
                     {
@@ -387,7 +387,7 @@ namespace SocketTutorial.FormsServer
 
                 for (int i = 0; i < directoryPaths.Length; i++) //directories builder
                 {
-                    if (directoryNames[i] == "$RECYCLE.BIN" || directoryNames[i] == "Documents and Settings") //skip these
+                    if (directoryNames[i] == "$RECYCLE.BIN" || directoryNames[i] == "Documents and Settings"||directoryNames[i] == "My Documents") //skip these
                     {
                     }
                     else

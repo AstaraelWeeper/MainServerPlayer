@@ -13,6 +13,7 @@ using System.Net.NetworkInformation;
 using InTheHand.Net.Bluetooth;
 using InTheHand.Net;
 using InTheHand.Net.Sockets;
+using System.IO;
 
 namespace SocketTutorial.FormsServer
 {
@@ -43,11 +44,17 @@ namespace SocketTutorial.FormsServer
         int vid2X = 0;
         int pic1X = 0;
         int pic2X = 0;
+        string storedMessagesFilePath = @"C:\Users\Public\MissionManagerLog.txt";
+        List<string> MessageLog = new List<string>();
 
 
         public Server()
         {
             InitializeComponent();
+            if (!File.Exists(storedMessagesFilePath))
+            {
+                File.Create(storedMessagesFilePath).Dispose();
+            }
             getScreenSize();
             SystemVolume sysvol = new SystemVolume();
             sysvol.SysVolSetup();
@@ -74,6 +81,8 @@ namespace SocketTutorial.FormsServer
             else
             {
                 txtServer.Text += "\r\n" + message;
+                MessageLog.Add("\r\n" + message);
+                System.IO.File.WriteAllLines(storedMessagesFilePath, MessageLog);
             }
         }
 
@@ -86,6 +95,8 @@ namespace SocketTutorial.FormsServer
             else
             {
                 txtServer.Text += "\r\n" + message;
+                MessageLog.Add("\r\n" + message);
+                System.IO.File.WriteAllLines(storedMessagesFilePath, MessageLog);
             }
         }
 
