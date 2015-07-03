@@ -17,8 +17,6 @@ namespace SocketTutorial.FormsServer
         public int currentFrontDirection = 0; //0 = front, 1 = right, 2 = back, 3 = left
         public int xCoord = 0;
         public int displayNumber;
-        TimeSpan duration;
-
         static string returnPlugin = "";
         string returnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"" + returnPlugin + "\"}";
 
@@ -94,7 +92,7 @@ namespace SocketTutorial.FormsServer
                 var duration = TimeSpan.FromMilliseconds(axVLCPlugin21.input.Length);
                 //use the returned time to send
                 string time = timeConversion(duration);
-                returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + returnPlugin + "\"}"; 
+                returnMessage = "{\"messageType\":\"LaunchVideo\",\"messageBody\":\"" + time + "\"}"; 
                 return returnMessage;
             //}
             //else
