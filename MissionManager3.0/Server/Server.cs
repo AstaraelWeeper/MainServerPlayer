@@ -297,55 +297,109 @@ namespace SocketTutorial.FormsServer
 
                 if (message.Contains("stop"))
                 {
-                    stringReturnMessage = videoDisplay.Stop();
-                    videoDisplay2.Stop();
+                    if (videoDisplay != null)
+                    {
+                        stringReturnMessage = videoDisplay.Stop();
+                        videoDisplay2.Stop();
+                    }
+                    else
+                    {
+                        stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"No Video Player\"}";                        
+                    }
                     return stringReturnMessage;
                 }
                 else if (message.Contains("pause"))
                 {
-                    stringReturnMessage = videoDisplay.Pause();
-                    videoDisplay2.Pause();
+                    if (videoDisplay != null)
+                    {
+                        stringReturnMessage = videoDisplay.Pause();
+                        videoDisplay2.Pause();                        
+                    }
+                    else
+                    {
+                        stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"No Video Player\"}";
+                    }
                     return stringReturnMessage;
                 }
                 else if (message.Contains("play"))
                 {
-                    stringReturnMessage = videoDisplay.Play();
-                    videoDisplay2.Play();
+                    if (videoDisplay != null)
+                    {
+                        stringReturnMessage = videoDisplay.Play();
+                        videoDisplay2.Play();
+                    }
+                    else
+                    {
+                        stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"No Video Player\"}";
+                    }
                     return stringReturnMessage;
                 }
 
-
-
                 else if (message.Contains("volumeup"))
                 {
-                    stringReturnMessage = videoDisplay.IncreaseVolume();
+                    if (videoDisplay != null)
+                    {
+                        stringReturnMessage = videoDisplay.IncreaseVolume();
+                    }
+                    else
+                    {
+                        stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"No Video Player\"}";
+                    }
                     return stringReturnMessage;
                 }
                 else if (message.Contains("volumedown"))
                 {
-                    stringReturnMessage = videoDisplay.DecreaseVolume();
+                    if (videoDisplay != null)
+                    {
+                        stringReturnMessage = videoDisplay.DecreaseVolume();
+                    }
+                    else
+                    {
+                        stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"No Video Player\"}";
+                    }
                     return stringReturnMessage;
                 }
                 else if (message.Contains("loop"))
                 {
-                    stringReturnMessage = videoDisplay.Loop(message);
-                    videoDisplay2.Loop(message);
+                    if (videoDisplay != null)
+                    {
+                        stringReturnMessage = videoDisplay.Loop(message);
+                        videoDisplay2.Loop(message);
+                    }
+                    else
+                    {
+                        stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"No Video Player\"}";
+                    }
                     return stringReturnMessage;
                 }
 
                 else if (message.Contains("sync"))
                 {
-                    stringReturnMessage = videoDisplay.SyncVideoTime();
+                    if (videoDisplay != null)
+                    {
+                        stringReturnMessage = videoDisplay.SyncVideoTime();
+                    }
+                    else
+                    {
+                        stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"No Video Player\"}";
+                    }
                     return stringReturnMessage;
                 }
                 else if (message.Contains("move"))
                 {
-                    TimeSpan newTime;
+                    if (videoDisplay != null)
+                    {
+                        TimeSpan newTime;
 
-                    message = message.Substring(message.IndexOf("-") + 1);
-                    newTime = TimeSpan.Parse(message);
-                    stringReturnMessage = videoDisplay.UpdateVideoTime(newTime);
-                    videoDisplay2.UpdateVideoTime(newTime);
+                        message = message.Substring(message.IndexOf("-") + 1);
+                        newTime = TimeSpan.Parse(message);
+                        stringReturnMessage = videoDisplay.UpdateVideoTime(newTime);
+                        videoDisplay2.UpdateVideoTime(newTime);
+                    }
+                    else
+                    {
+                        stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"No Video Player\"}";
+                    }
                     return stringReturnMessage;
                 }
 
@@ -367,7 +421,7 @@ namespace SocketTutorial.FormsServer
                             videoDisplay2.Show();
                         }
                     }
-                    if (imageDisplay != null)
+                    else if (imageDisplay != null)
                     {
                         stringReturnMessage = imageDisplay.getFacingDirectionJSON();
                         RotateImagesRight();
@@ -393,7 +447,7 @@ namespace SocketTutorial.FormsServer
                         videoDisplay.Hide();
                         videoDisplay2.Hide();
                     }
-                    if (imageDisplay != null)
+                    else if (imageDisplay != null)
                     {
                         imageDisplay.Hide();
                         imageDisplay2.Hide();
@@ -408,7 +462,7 @@ namespace SocketTutorial.FormsServer
                         videoDisplay.Show();
                         videoDisplay2.Show();
                     }
-                    if (imageDisplay != null)
+                    else if (imageDisplay != null)
                     {
                         imageDisplay.Show();
                         imageDisplay2.Show();
@@ -425,7 +479,7 @@ namespace SocketTutorial.FormsServer
             }
             else
             {
-                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"No Player\"}";
+                stringReturnMessage = "{\"messageType\":\"VideoPlayer\",\"messageBody\":\"No Players\"}";
                 return stringReturnMessage;
             }
 
