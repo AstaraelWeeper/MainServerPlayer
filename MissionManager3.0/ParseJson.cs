@@ -175,7 +175,7 @@ namespace SocketTutorial.FormsServer
                 }
                 else if (JsonMessage[1] == "shutdown")
                 {
-                    Process.Start("shutdown", "s /t 0");
+                    Process.Start("shutdown", "/s /t 0");
                     JsonReturn = "{\"messageType\":\"System\",\"messageBody\":\"Shutting Down System\"}";
                     return JsonReturn;
                 }
