@@ -40,7 +40,7 @@ namespace SocketTutorial.FormsServer
 
             while (true)
             {
-                allDone.Reset();
+
                 try
                 {
                     if (disconnectedClient)
@@ -73,7 +73,6 @@ namespace SocketTutorial.FormsServer
                 {
                     _screenWriterCallBT("Bluetooth Client has disconnected. Exception:" + exception + "\n");
                 }
-                allDone.WaitOne();
             }
         }
 
