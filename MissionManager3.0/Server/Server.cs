@@ -425,7 +425,7 @@ namespace SocketTutorial.FormsServer
                         videoDisplay.Location = new Point(vid1X, 0);
                         videoDisplay2.StartPosition = FormStartPosition.Manual;
                         videoDisplay2.Location = new Point(vid2X, 0);
-                        if (videoDisplay.WindowState != FormWindowState.Minimized)
+                        if (videoDisplay.WindowState == FormWindowState.Maximized)
                         {
                             videoDisplay2.Show();
                             videoDisplay.Show();
@@ -440,7 +440,7 @@ namespace SocketTutorial.FormsServer
                         imageDisplay.Location = new Point(pic1X, 0);
                         imageDisplay2.StartPosition = FormStartPosition.Manual;
                         imageDisplay2.Location = new Point(pic2X, 0);
-                        if (imageDisplay.WindowState != FormWindowState.Minimized)
+                        if (imageDisplay.WindowState == FormWindowState.Maximized)
                         {
                             imageDisplay2.Show();
                             imageDisplay.Show();
